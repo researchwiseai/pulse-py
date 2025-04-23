@@ -37,76 +37,92 @@ class CoreClient:
          return cls()
 
     def create_embeddings(
-         self, texts: list[str], fast: bool = True
-     ) -> Union[EmbeddingsResponse, Job]:
-         """Generate dense vector embeddings."""
-         params: Dict[str, str] = {}
-         if fast:
-             params["fast"] = "true"
-         response = self.client.post("/embeddings", json={"texts": texts}, params=params)
-         if response.status_code not in (200, 202):
-             raise PulseAPIError(response)
-         data = response.json()
-         if fast:
-             return EmbeddingsResponse.parse_obj(data)
-         job = Job.parse_obj(data)
-         job._client = self.client
-         return job
+        self, texts: list[str], fast: bool = True
+    ) -> Union[EmbeddingsResponse, Job]:
+        """Generate dense vector embeddings."""
+        params: Dict[str, str] = {}
+        if fast:
+            params["fast"] = "true"
+        response = self.client.post(
+            "/embeddings", json={"texts": texts}, params=params
+        )
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+        data = response.json()
+        # Fast sync path: parse directly
+        if fast:
+            # Pydantic v2: use model_validate instead of deprecated parse_obj
+            return EmbeddingsResponse.model_validate(data)
+        # Async/job path: wrap in Job model
+        job = Job.model_validate(data)
+        job._client = self.client
+        return job
 
     def compare_similarity(
-         self, texts: list[str], fast: bool = True, flatten: bool = True
-     ) -> Union[SimilarityResponse, Job]:
-         """Compute cosine similarity."""
-         params: Dict[str, str] = {"flatten": str(flatten).lower()}
-         if fast:
-             params["fast"] = "true"
-         response = self.client.post(
-             "/similarity", json={"texts": texts}, params=params
-         )
-         if response.status_code not in (200, 202):
-             raise PulseAPIError(response)
-         data = response.json()
-         if fast:
-             return SimilarityResponse.parse_obj(data)
-         job = Job.parse_obj(data)
-         job._client = self.client
-         return job
+        self, texts: list[str], fast: bool = True, flatten: bool = True
+    ) -> Union[SimilarityResponse, Job]:
+        """Compute cosine similarity."""
+        params: Dict[str, str] = {"flatten": str(flatten).lower()}
+        if fast:
+            params["fast"] = "true"
+        response = self.client.post(
+            "/similarity", json={"texts": texts}, params=params
+        )
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+        data = response.json()
+        # Fast sync path
+        if fast:
+            return SimilarityResponse.model_validate(data)
+        # Async/job path
+        job = Job.model_validate(data)
+        job._client = self.client
+        return job
 
     def generate_themes(
-         self, texts: list[str], min_themes: int = 2, max_themes: int = 10, fast: bool = True
-     ) -> Union[ThemesResponse, Job]:
-         """Cluster texts into latent themes."""
-         params: Dict[str, str] = {"min_themes": str(min_themes), "max_themes": str(max_themes)}
-         if fast:
-             params["fast"] = "true"
-         response = self.client.post(
-             "/themes", json={"texts": texts}, params=params
-         )
-         if response.status_code not in (200, 202):
-             raise PulseAPIError(response)
-         data = response.json()
-         if fast:
-             return ThemesResponse.parse_obj(data)
-         job = Job.parse_obj(data)
-         job._client = self.client
-         return job
+        self, texts: list[str], min_themes: int = 2, max_themes: int = 10, fast: bool = True
+    ) -> Union[ThemesResponse, Job]:
+        """Cluster texts into latent themes."""
+        params: Dict[str, str] = {
+            "min_themes": str(min_themes),
+            "max_themes": str(max_themes),
+        }
+        if fast:
+            params["fast"] = "true"
+        response = self.client.post(
+            "/themes", json={"texts": texts}, params=params
+        )
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+        data = response.json()
+        # Fast sync path
+        if fast:
+            return ThemesResponse.model_validate(data)
+        # Async/job path
+        job = Job.model_validate(data)
+        job._client = self.client
+        return job
 
     def analyze_sentiment(
-         self, texts: list[str], fast: bool = True
-     ) -> Union[SentimentResponse, Job]:
-         """Classify sentiment."""
-         params: Dict[str, str] = {}
-         if fast:
-             params["fast"] = "true"
-         response = self.client.post("/sentiment", json={"texts": texts}, params=params)
-         if response.status_code not in (200, 202):
-             raise PulseAPIError(response)
-         data = response.json()
-         if fast:
-             return SentimentResponse.parse_obj(data)
-         job = Job.parse_obj(data)
-         job._client = self.client
-         return job
+        self, texts: list[str], fast: bool = True
+    ) -> Union[SentimentResponse, Job]:
+        """Classify sentiment."""
+        params: Dict[str, str] = {}
+        if fast:
+            params["fast"] = "true"
+        response = self.client.post(
+            "/sentiment", json={"texts": texts}, params=params
+        )
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+        data = response.json()
+        # Fast sync path
+        if fast:
+            return SentimentResponse.model_validate(data)
+        # Async/job path
+        job = Job.model_validate(data)
+        job._client = self.client
+        return job
 
     def close(self) -> None:
          """Close underlying HTTP connection."""
