@@ -1,0 +1,58 @@
+ [build-system]
+ requires = ["setuptools>=61", "wheel"]
+ build-backend = "setuptools.build_meta"
+
+ [project]
+ name = "pulse-client"
+ version = "0.1.0"
+ description = "Idiomatic, type-safe Python client for the Pulse REST API"
+ readme = "README.md"
+ authors = [
+     { name="Researchwise AI", email="dev@researchwiseai.com" }
+ ]
+ requires-python = ">=3.8"
+ dependencies = [
+     "httpx",
+     "pydantic>=2.0",
+     "numpy",
+     "pandas",
+     "scikit-learn>=1.4",
+    "diskcache",
+    "tqdm",
+    "typing-extensions",
+    "matplotlib",
+ ]
+
+ [tool.black]
+ line-length = 88
+ target-version = ['py38']
+ include = '\.pyi?$'
+ exclude = '''
+ /(
+   \.git
+  | \.hg
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+ )/
+ '''
+
+ [tool.ruff]
+ line-length = 88
+ target-version = "py38"
+
+ [tool.pytest.ini_options]
+ minversion = "6.0"
+ addopts = "-ra -q"
+ testpaths = ["tests"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-mock",
+]
