@@ -55,4 +55,5 @@
 dev = [
     "pytest>=6.0",
     "pytest-mock",
+    "pytest-vcr",
 ]

@@ -1,0 +1,10 @@
+cassette_library_dir: tests/cassettes
+record_mode: once
+match_requests_on:
+  - method
+  - scheme
+  - host
+  - port
+  - path
+  - query
+  - body
