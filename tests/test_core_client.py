@@ -92,7 +92,8 @@ def test_create_embeddings_fast():
     resp = client.create_embeddings(["a", "b"], fast=True)
     assert isinstance(resp, EmbeddingsResponse)
     assert resp.embeddings == [[1.0, 2.0], [3.0, 4.0]]
-    assert dummy.requests == [("POST", "/embeddings", {"texts": ["a", "b"]}, {"fast": "true"})]
+    # JSON body should use 'inputs' as per OpenAPI spec
+    assert dummy.requests == [("POST", "/embeddings", {"inputs": ["a", "b"]}, {"fast": "true"})]
 
 def test_create_embeddings_job_wait():
     dummy = DummyClient()

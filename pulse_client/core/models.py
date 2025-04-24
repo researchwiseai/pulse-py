@@ -1,7 +1,7 @@
 """Pydantic models for Pulse API responses."""
 
 from pydantic import BaseModel
-from typing import List, Any
+from typing import List, Any, Optional
 
 class EmbeddingsResponse(BaseModel):
      embeddings: List[List[float]]
@@ -14,4 +14,8 @@ class ThemesResponse(BaseModel):
      assignments: List[int]
 
 class SentimentResponse(BaseModel):
-     sentiments: List[Any]
+    sentiments: List[Any]
+
+class ExtractionsResponse(BaseModel):
+    extractions: List[List[List[str]]]
+    requestId: Optional[str] = None

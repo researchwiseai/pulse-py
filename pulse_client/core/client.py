@@ -6,10 +6,11 @@ import httpx
 from pulse_client.config import DEV_BASE_URL, DEFAULT_TIMEOUT
 from pulse_client.core.jobs import Job
 from pulse_client.core.models import (
-     EmbeddingsResponse,
-     SimilarityResponse,
-     ThemesResponse,
-     SentimentResponse,
+    EmbeddingsResponse,
+    SimilarityResponse,
+    ThemesResponse,
+    SentimentResponse,
+    ExtractionsResponse,
 )
 from pulse_client.core.exceptions import PulseAPIError
 
@@ -43,8 +44,10 @@ class CoreClient:
         params: Dict[str, str] = {}
         if fast:
             params["fast"] = "true"
+        # Request body according to OpenAPI spec: inputs
+        body: Dict[str, Any] = {"inputs": texts}
         response = self.client.post(
-            "/embeddings", json={"texts": texts}, params=params
+            "/embeddings", json=body, params=params
         )
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -65,8 +68,10 @@ class CoreClient:
         params: Dict[str, str] = {"flatten": str(flatten).lower()}
         if fast:
             params["fast"] = "true"
+        # Request body according to OpenAPI spec: set for self-similarity
+        body: Dict[str, Any] = {"set": texts}
         response = self.client.post(
-            "/similarity", json={"texts": texts}, params=params
+            "/similarity", json=body, params=params
         )
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -83,14 +88,19 @@ class CoreClient:
         self, texts: list[str], min_themes: int = 2, max_themes: int = 10, fast: bool = True
     ) -> Union[ThemesResponse, Job]:
         """Cluster texts into latent themes."""
-        params: Dict[str, str] = {
-            "min_themes": str(min_themes),
-            "max_themes": str(max_themes),
-        }
+        # Build request body according to OpenAPI spec: inputs and theme options
+        params: Dict[str, str] = {}
+        body: Dict[str, Any] = {"inputs": texts}
+        # Optionally include theme count bounds
+        if min_themes is not None:
+            body["minThemes"] = min_themes
+        if max_themes is not None:
+            body["maxThemes"] = max_themes
+        # Fast flag for sync vs async
         if fast:
             params["fast"] = "true"
         response = self.client.post(
-            "/themes", json={"texts": texts}, params=params
+            "/themes", json=body, params=params
         )
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -107,11 +117,13 @@ class CoreClient:
         self, texts: list[str], fast: bool = True
     ) -> Union[SentimentResponse, Job]:
         """Classify sentiment."""
+        # Build request body according to OpenAPI spec: input array
         params: Dict[str, str] = {}
+        body: Dict[str, Any] = {"input": texts}
         if fast:
             params["fast"] = "true"
         response = self.client.post(
-            "/sentiment", json={"texts": texts}, params=params
+            "/sentiment", json=body, params=params
         )
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -127,3 +139,32 @@ class CoreClient:
     def close(self) -> None:
          """Close underlying HTTP connection."""
          self.client.close()
+    
+    def extract_elements(
+        self,
+        inputs: list[str],
+        themes: list[str],
+        version: Optional[str] = None,
+        fast: bool = True,
+    ) -> Union[ExtractionsResponse, Job]:
+        """Extract elements matching themes from input strings."""
+        # Build request body according to OpenAPI spec: inputs, themes, optional version
+        params: Dict[str, str] = {}
+        body: Dict[str, Any] = {"inputs": inputs, "themes": themes}
+        if version is not None:
+            body["version"] = version
+        if fast:
+            params["fast"] = "true"
+        response = self.client.post(
+            "/extractions", json=body, params=params
+        )
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+        data = response.json()
+        # Fast sync path: parse directly
+        if fast:
+            return ExtractionsResponse.model_validate(data)
+        # Async/job path: wrap in Job model
+        job = Job.model_validate(data)
+        job._client = self.client
+        return job
