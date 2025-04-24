@@ -77,12 +77,15 @@ class ThemeAllocation:
         Returns raw dict including themes, single assignments, and similarity matrix.
         """
         texts = list(ctx.dataset)
-        # Retrieve theme generation result
-        tg = ctx.results.get("theme_generation")
-        if tg is None:
-            raise RuntimeError("theme_generation result not available for allocation")
-        # Use provided themes or those from generation
-        themes = list(self.themes) if self.themes is not None else tg.themes
+        # Determine themes list (static or from another process)
+        if self.themes is not None:
+            themes = list(self.themes)
+        else:
+            alias = getattr(self, '_themes_from_alias', 'theme_generation')
+            tg = ctx.results.get(alias)
+            if tg is None:
+                raise RuntimeError(f"{alias} result not available for allocation")
+            themes = tg.themes
         # base single assignment indices
         assignments = tg.assignments
         # Compute similarity between texts and theme labels
@@ -114,10 +117,16 @@ class ThemeExtraction:
 
     def run(self, ctx: Any) -> Any:
         texts = list(ctx.dataset)
-        prev = ctx.results.get("theme_generation")
-        if prev is None:
-            raise RuntimeError("theme_generation result not available for extraction")
-        used_themes = list(self.themes) if self.themes is not None else prev.themes
+        # Determine themes list (static or from another process)
+        if self.themes is not None:
+            used_themes = list(self.themes)
+        else:
+            alias = getattr(self, '_themes_from_alias', 'theme_generation')
+            prev = ctx.results.get(alias)
+            if prev is None:
+                raise RuntimeError(f"{alias} result not available for extraction")
+            used_themes = prev.themes
+        self.themes = used_themes
         self.themes = used_themes
         fast_flag = self.fast if self.fast is not None else ctx.fast
         return ctx.client.extract_elements(inputs=texts, themes=used_themes, version=self.version, fast=fast_flag)
