@@ -15,6 +15,11 @@ _Revision 6 — April 2025_
 ---
 
 ## **2 Pulse API Overview (v0.3.2 \+ roadmap)**
+- **Request Bodies:**
+  - `/embeddings`: `{ "input": [<strings>] }`
+  - `/similarity`: `{ "set": [<strings>] }` (self) or `{ "set_a": [<strings>], "set_b": [<strings>] }` (cross)
+  - `/themes`: `{ "inputs": [<strings>] }`
+  - `/sentiment`: `{ "input": [<strings>] }`
 
 | Endpoint      | Method | Purpose                                          | Notes                                                       |
 | ------------- | ------ | ------------------------------------------------ | ----------------------------------------------------------- |

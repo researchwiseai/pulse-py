@@ -48,7 +48,8 @@
 
  [tool.pytest.ini_options]
  minversion = "6.0"
- addopts = "-ra -q"
+addopts = "-ra -q"
+markers = ["vcr: mark the test to use pytest-vcr for HTTP request recording"]
  testpaths = ["tests"]
 
 [project.optional-dependencies]
