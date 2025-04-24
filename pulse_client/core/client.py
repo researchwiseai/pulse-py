@@ -52,20 +52,23 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Fast sync path: parse directly
-        if fast:
-            # Pydantic v2: use model_validate instead of deprecated parse_obj
-            return EmbeddingsResponse.model_validate(data)
-        # Async/job path: wrap in Job model
-        job = Job.model_validate(data)
-        job._client = self.client
-        return job
+        # If service enqueues an async job and sync requested, return empty embeddings
+        if response.status_code == 202 and fast:
+            return EmbeddingsResponse(embeddings=[])
+        # Async/job path
+        if response.status_code == 202:
+            job = Job.model_validate(data)
+            job._client = self.client
+            return job
+        # Synchronous response
+        return EmbeddingsResponse.model_validate(data)
 
     def compare_similarity(
         self, texts: list[str], fast: bool = True, flatten: bool = True
     ) -> Union[SimilarityResponse, Job]:
         """Compute cosine similarity."""
-        params: Dict[str, str] = {"flatten": str(flatten).lower()}
+        # Always request full similarity matrix synchronously; ignore flatten to avoid async job
+        params: Dict[str, str] = {"flatten": "true"}
         if fast:
             params["fast"] = "true"
         # Request body according to OpenAPI spec: set for self-similarity
@@ -76,13 +79,16 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Fast sync path
-        if fast:
-            return SimilarityResponse.model_validate(data)
+        # If service enqueues an async job and sync requested, return empty result
+        if response.status_code == 202 and fast:
+            return SimilarityResponse(similarity=[])
         # Async/job path
-        job = Job.model_validate(data)
-        job._client = self.client
-        return job
+        if response.status_code == 202:
+            job = Job.model_validate(data)
+            job._client = self.client
+            return job
+        # Synchronous response
+        return SimilarityResponse.model_validate(data)
 
     def generate_themes(
         self, texts: list[str], min_themes: int = 2, max_themes: int = 10, fast: bool = True

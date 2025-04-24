@@ -3,7 +3,7 @@
 from typing import Sequence, Any
 import pandas as pd
 
-from pulse_client.core.models import ThemesResponse, SentimentResponse
+from pulse_client.core.models import ThemesResponse, SentimentResponse, ExtractionsResponse
 from typing import Optional, Sequence
 import pandas as pd
 
@@ -215,3 +215,34 @@ class ClusterResult:
         ax.set_xlabel("Sample")
         ax.set_ylabel("Distance")
         return ax
+        
+class ThemeExtractionResult:
+    """Results of theme extraction with helper methods."""
+
+    def __init__(
+        self,
+        response: ExtractionsResponse,
+        texts: Sequence[str],
+        themes: Sequence[str],
+    ) -> None:
+        self._response = response
+        self._texts = list(texts)
+        self._themes = list(themes)
+
+    @property
+    def extractions(self) -> list[list[list[str]]]:
+        """Nested list of extracted elements per text per theme."""
+        return self._response.extractions
+
+    def to_dataframe(self) -> pd.DataFrame:
+        """Convert extraction results to a DataFrame with text, theme, and extraction."""
+        rows: list[dict[str, str]] = []
+        for i, text in enumerate(self._texts):
+            for j, theme in enumerate(self._themes):
+                try:
+                    items = self._response.extractions[i][j]
+                except (IndexError, TypeError):
+                    continue
+                for item in items:
+                    rows.append({"text": text, "theme": theme, "extraction": item})
+        return pd.DataFrame(rows)

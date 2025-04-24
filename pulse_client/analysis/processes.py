@@ -96,6 +96,31 @@ class ThemeAllocation:
         # cross-similarity: top-left block cross texts->themes
         sim_matrix = [row[n:n+m] for row in full_sim[:n]]
         return {"themes": themes, "assignments": assignments, "similarity": sim_matrix}
+        
+class ThemeExtraction:
+    """Process: extract elements matching themes from input strings."""
+    id = "theme_extraction"
+    depends_on: Tuple[str, ...] = ("theme_generation",)
+
+    def __init__(
+        self,
+        themes: list[str] | None = None,
+        version: str | None = None,
+        fast: bool | None = None,
+    ):
+        self.themes = themes
+        self.version = version
+        self.fast = fast
+
+    def run(self, ctx: Any) -> Any:
+        texts = list(ctx.dataset)
+        prev = ctx.results.get("theme_generation")
+        if prev is None:
+            raise RuntimeError("theme_generation result not available for extraction")
+        used_themes = list(self.themes) if self.themes is not None else prev.themes
+        self.themes = used_themes
+        fast_flag = self.fast if self.fast is not None else ctx.fast
+        return ctx.client.extract_elements(inputs=texts, themes=used_themes, version=self.version, fast=fast_flag)
 
 
 class Cluster:

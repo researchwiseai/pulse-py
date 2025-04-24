@@ -11,6 +11,7 @@ from pulse_client.analysis.results import (
     SentimentResult,
     ThemeAllocationResult,
     ClusterResult,
+    ThemeExtractionResult,
 )
 
 class Analyzer:
@@ -61,12 +62,13 @@ class Analyzer:
                 wrapped = self._cache[key]
             else:
                 raw = process.run(self)
-                # Wrap raw response in high-level result based on process id
-                if process.id == "theme_generation":
+                # Wrap raw response in high-level result based on original process id
+                orig_id = getattr(process, "_orig_id", process.id)
+                if orig_id == "theme_generation":
                     wrapped = ThemeGenerationResult(raw, texts)
-                elif process.id == "sentiment":
+                elif orig_id == "sentiment":
                     wrapped = SentimentResult(raw, texts)
-                elif process.id == "theme_allocation":
+                elif orig_id == "theme_allocation":
                     wrapped = ThemeAllocationResult(
                         texts,
                         raw["themes"],
@@ -75,13 +77,17 @@ class Analyzer:
                         process.threshold,
                         similarity=raw.get("similarity"),
                     )
-                elif process.id == "cluster":
+                elif orig_id == "cluster":
                     wrapped = ClusterResult(raw, texts)
+                elif orig_id == "theme_extraction":
+                    wrapped = ThemeExtractionResult(raw, texts, process.themes)
                 else:
                     wrapped = raw
                 if self.use_cache and self._cache is not None:
                     self._cache[key] = wrapped
             results[process.id] = wrapped
+            # expose partial results for downstream dependencies
+            self.results = results
         self.results = results
         return AnalysisResult(results)
     def clear_cache(self) -> None:
