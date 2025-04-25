@@ -1,6 +1,6 @@
 """Built-in Process primitives for Analyzer."""
 
-from typing import Any, Tuple, Sequence
+from typing import Any, Tuple
 
 try:
     from typing import Protocol

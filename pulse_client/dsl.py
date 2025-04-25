@@ -1,10 +1,9 @@
 """DSL builder for custom workflows in the Pulse client."""
 
 from collections import defaultdict
-import json
 import os
-import warnings
-from typing import Any, Dict, List, Sequence, Union
+import json
+from typing import Any, Dict, List
 
 import pandas as pd
 from pulse_client.analysis.processes import (
@@ -15,13 +14,6 @@ from pulse_client.analysis.processes import (
     Cluster,
 )
 from pulse_client.analysis.analyzer import Analyzer
-from pulse_client.analysis.results import (
-    ThemeGenerationResult,
-    ThemeAllocationResult,
-    ThemeExtractionResult,
-    SentimentResult,
-    ClusterResult,
-)
 from pulse_client.core.client import CoreClient
 
 

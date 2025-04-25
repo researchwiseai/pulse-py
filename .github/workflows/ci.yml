@@ -24,4 +24,4 @@ jobs:
     - name: Check Notebook formatting
       run: nbqa black --check .
     - name: Lint with Ruff
-      run: ruff .
+      run: ruff check pulse_client tests

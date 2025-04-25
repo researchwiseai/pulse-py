@@ -116,7 +116,8 @@ class Analyzer:
         self.close()
 
     def _make_cache_key(self, process: Process) -> str:
-        import pickle, hashlib
+        import pickle
+        import hashlib
 
         # data to hash: dataset values, process id, process attributes
         data = (

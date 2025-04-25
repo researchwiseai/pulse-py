@@ -1,13 +1,14 @@
 """Tests for persistent on-disk caching in Analyzer."""
 
-import os
-from pathlib import Path
-import shutil
+# import os      # Unused
+# from pathlib import Path  # Unused
+# import shutil  # Unused
 
 import pytest
 
 from pulse_client.analysis.analyzer import Analyzer
-from pulse_client.analysis.processes import Process
+
+# from pulse_client.analysis.processes import Process  # Unused
 
 
 class DummyProcess:
@@ -61,8 +62,8 @@ def test_disable_caching(tmp_path, cache_dir):
     texts = ["a"]
     proc = DummyProcess()
     az = Analyzer(dataset=texts, processes=[proc], cache_dir=cache_dir, use_cache=False)
-    res1 = az.run()
-    res2 = az.run()
+    az.run()
+    az.run()
     # call_count should increment twice
     assert proc.call_count == 2
     az.close()

@@ -78,7 +78,7 @@ Clone the project and install as above.  We recommend using a virtual environmen
    ```bash
    black .                # format Python source
    nbqa black .           # format Jupyter notebooks
-   ruff .                 # run linter
+   ruff check .           # run linter
    ```
 4. Build distributions:
    ```bash

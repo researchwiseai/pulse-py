@@ -1,15 +1,12 @@
 """Result helper classes for analysis processes."""
 
-from typing import Sequence, Any
+from typing import Any, Optional, Sequence
 import pandas as pd
-
 from pulse_client.core.models import (
     ThemesResponse,
     SentimentResponse,
     ExtractionsResponse,
 )
-from typing import Optional, Sequence
-import pandas as pd
 
 
 class ThemeGenerationResult:
@@ -208,7 +205,6 @@ class ClusterResult:
         Plot a hierarchical clustering dendrogram based on the similarity matrix.
         Converts similarity to distances (1 - similarity) and uses SciPy linkage.
         """
-        import numpy as _np
         from scipy.cluster.hierarchy import linkage, dendrogram as _dendrogram
         from scipy.spatial.distance import squareform
         import matplotlib.pyplot as _plt

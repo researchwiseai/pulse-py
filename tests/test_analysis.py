@@ -1,7 +1,8 @@
 """Tests for Analyzer and built-in processes."""
 
 import pytest
-from pydantic import BaseModel
+
+# from pydantic import BaseModel  # Unused import removed
 
 from pulse_client.analysis.analyzer import Analyzer, AnalysisResult
 from pulse_client.analysis.processes import ThemeGeneration, SentimentProcess
