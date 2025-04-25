@@ -3,25 +3,30 @@
  build-backend = "setuptools.build_meta"
 
  [project]
- name = "pulse-client"
- version = "0.1.0"
- description = "Idiomatic, type-safe Python client for the Pulse REST API"
- readme = "README.md"
- authors = [
-     { name="Researchwise AI", email="dev@researchwiseai.com" }
- ]
- requires-python = ">=3.8"
- dependencies = [
-     "httpx",
-     "pydantic>=2.0",
-     "numpy",
-     "pandas",
-     "scikit-learn>=1.4",
+name = "pulse-sdk"
+version = "0.1.0"
+description = "Idiomatic, type-safe Python client for the Pulse REST API"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name="Researchwise AI", email="dev@researchwiseai.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "httpx",
+    "pydantic>=2.0",
+    "numpy",
+    "pandas",
+    "scikit-learn>=1.4",
     "diskcache",
     "tqdm",
     "typing-extensions",
     "matplotlib",
- ]
+]
+
+[project.urls]
+Repository = "https://github.com/researchwiseai/pulse-py"
+Homepage = "https://github.com/researchwiseai/pulse-py#readme"
 
  [tool.black]
  line-length = 88
