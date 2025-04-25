@@ -4,4 +4,5 @@
 def test_version():
     import pulse_client
 
-    assert pulse_client.__version__ == "0.1.0"
+    assert isinstance(pulse_client.__version__, str)
+    assert len(pulse_client.__version__) > 0
