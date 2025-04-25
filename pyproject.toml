@@ -64,4 +64,5 @@ dev = [
     "pytest-vcr",
     "black",
     "nbqa",
+    "ruff",
 ]
