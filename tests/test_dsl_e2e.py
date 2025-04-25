@@ -1,6 +1,5 @@
 """End-to-end DSL workflow test with a dummy client to simulate all steps."""
 
-
 from pulse_client.dsl import Workflow
 from pulse_client.core.jobs import Job
 from pulse_client.core.models import (
