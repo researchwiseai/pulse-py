@@ -390,6 +390,8 @@ class Workflow:
                 wrapped = ThemeExtractionResult(
                     raw, ctx.dataset.tolist(), process.themes
                 )
+                # make extracted elements available as data source
+                sources[process.id] = wrapped.extractions
             else:
                 wrapped = raw
             # Store for downstream

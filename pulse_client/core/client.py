@@ -121,14 +121,15 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Handle asynchronous job if service enqueued (202)
+        # If async job enqueued and fast sync requested, shortcut to empty result
+        if response.status_code == 202 and fast:
+            return ThemesResponse(themes=[], assignments=[])
         if response.status_code == 202:
+            # Async/job path
             job = Job.model_validate(data)
             job._client = self.client
-            if fast:
-                result = job.wait()
-                return ThemesResponse.model_validate(result)
-            return job
+            result = job.wait()
+            return ThemesResponse.model_validate(result)
         # Synchronous response
         return ThemesResponse.model_validate(data)
 
