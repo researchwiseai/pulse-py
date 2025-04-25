@@ -23,7 +23,7 @@ jobs:
         run: python -m build --sdist --wheel
 
       - name: Publish to PyPI via OIDC
-        uses: pypa/gh-action-pypi-publish@v1
+        uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           token-source: oidc
           skip-existing: true
