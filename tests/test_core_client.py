@@ -1,4 +1,5 @@
 """Tests for CoreClient and Job behavior."""
+
 import time
 import pytest
 
@@ -38,19 +39,27 @@ class DummyClient:
         if path == "/embeddings":
             if params.get("fast") == "true":
                 return DummyResponse(200, {"embeddings": [[1.0, 2.0], [3.0, 4.0]]})
-            return DummyResponse(202, {"id": "job1", "status": "queued", "result_url": "/jobs/job1"})
+            return DummyResponse(
+                202, {"id": "job1", "status": "queued", "result_url": "/jobs/job1"}
+            )
         if path == "/similarity":
             if params.get("fast") == "true":
                 return DummyResponse(200, {"similarity": [[0.1, 0.2], [0.3, 0.4]]})
-            return DummyResponse(202, {"id": "job2", "status": "queued", "result_url": "/jobs/job2"})
+            return DummyResponse(
+                202, {"id": "job2", "status": "queued", "result_url": "/jobs/job2"}
+            )
         if path == "/themes":
             if params.get("fast") == "true":
                 return DummyResponse(200, {"themes": ["A", "B"], "assignments": [0, 1]})
-            return DummyResponse(202, {"id": "job3", "status": "queued", "result_url": "/jobs/job3"})
+            return DummyResponse(
+                202, {"id": "job3", "status": "queued", "result_url": "/jobs/job3"}
+            )
         if path == "/sentiment":
             if params.get("fast") == "true":
                 return DummyResponse(200, {"sentiments": ["pos", "neg"]})
-            return DummyResponse(202, {"id": "job4", "status": "queued", "result_url": "/jobs/job4"})
+            return DummyResponse(
+                202, {"id": "job4", "status": "queued", "result_url": "/jobs/job4"}
+            )
         # Default error
         return DummyResponse(400, None, "Bad Request")
 
@@ -72,9 +81,23 @@ class DummyClient:
             # increment counter per job
             self._job_counter += 1
             if self._job_counter < 2:
-                return DummyResponse(200, {"id": path.split('/')[-1], "status": "running", "result_url": path})
+                return DummyResponse(
+                    200,
+                    {
+                        "id": path.split("/")[-1],
+                        "status": "running",
+                        "result_url": path,
+                    },
+                )
             # succeeded
-            return DummyResponse(200, {"id": path.split('/')[-1], "status": "succeeded", "result_url": f"{path}/results"})
+            return DummyResponse(
+                200,
+                {
+                    "id": path.split("/")[-1],
+                    "status": "succeeded",
+                    "result_url": f"{path}/results",
+                },
+            )
         return DummyResponse(404, None, "Not Found")
 
     def close(self):
@@ -93,7 +116,10 @@ def test_create_embeddings_fast():
     assert isinstance(resp, EmbeddingsResponse)
     assert resp.embeddings == [[1.0, 2.0], [3.0, 4.0]]
     # JSON body should use 'inputs' as per OpenAPI spec
-    assert dummy.requests == [("POST", "/embeddings", {"inputs": ["a", "b"]}, {"fast": "true"})]
+    assert dummy.requests == [
+        ("POST", "/embeddings", {"inputs": ["a", "b"]}, {"fast": "true"})
+    ]
+
 
 def test_create_embeddings_job_wait():
     dummy = DummyClient()
@@ -103,20 +129,29 @@ def test_create_embeddings_job_wait():
     result = job.wait(timeout=5)
     assert result == {"embeddings": [[9.0]]}
 
-@pytest.mark.parametrize("method, path, response_key, response_class", [
-    ("compare_similarity", "/similarity", "similarity", SimilarityResponse),
-    ("generate_themes", "/themes", "themes", ThemesResponse),
-    ("analyze_sentiment", "/sentiment", "sentiments", SentimentResponse),
-])
+
+@pytest.mark.parametrize(
+    "method, path, response_key, response_class",
+    [
+        ("compare_similarity", "/similarity", "similarity", SimilarityResponse),
+        ("generate_themes", "/themes", "themes", ThemesResponse),
+        ("analyze_sentiment", "/sentiment", "sentiments", SentimentResponse),
+    ],
+)
 def test_methods_fast(method, path, response_key, response_class):
     dummy = DummyClient()
     client = CoreClient(client=dummy)
     func = getattr(client, method)
     # call with fast=True
-    resp = func(["u", "v"], fast=True) if method != "compare_similarity" else func(["u", "v"], fast=True, flatten=False)
+    resp = (
+        func(["u", "v"], fast=True)
+        if method != "compare_similarity"
+        else func(["u", "v"], fast=True, flatten=False)
+    )
     assert isinstance(resp, response_class)
     # ensure last request path matches
     assert dummy.requests[-1][1] == path
+
 
 def test_error_raises():
     class BadClient(DummyClient):

@@ -1,4 +1,5 @@
 """End-to-end tests for CoreClient against the real Pulse API (recorded via VCR)."""
+
 import pytest
 
 from pulse_client.core.client import CoreClient

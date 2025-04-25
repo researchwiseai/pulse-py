@@ -3,10 +3,13 @@
 from typing import Sequence, Any
 import pandas as pd
 
-from pulse_client.core.models import ThemesResponse, SentimentResponse, ExtractionsResponse
+from pulse_client.core.models import (
+    ThemesResponse,
+    SentimentResponse,
+    ExtractionsResponse,
+)
 from typing import Optional, Sequence
 import pandas as pd
-
 
 
 class ThemeGenerationResult:
@@ -28,10 +31,12 @@ class ThemeGenerationResult:
 
     def to_dataframe(self) -> pd.DataFrame:
         """Convert results to a pandas DataFrame with text and assigned theme."""
-        df = pd.DataFrame({
-            "text": self._texts,
-            "theme_id": self._response.assignments,
-        })
+        df = pd.DataFrame(
+            {
+                "text": self._texts,
+                "theme_id": self._response.assignments,
+            }
+        )
         # Map theme_id to theme label
         df["theme"] = df["theme_id"].apply(lambda i: self._response.themes[i])
         return df
@@ -51,10 +56,12 @@ class SentimentResult:
 
     def to_dataframe(self) -> pd.DataFrame:
         """Convert results to a pandas DataFrame with text and sentiment."""
-        return pd.DataFrame({
-            "text": self._texts,
-            "sentiment": self._response.sentiments,
-        })
+        return pd.DataFrame(
+            {
+                "text": self._texts,
+                "sentiment": self._response.sentiments,
+            }
+        )
 
     def summary(self) -> pd.Series:
         """Return a summary of sentiment counts as a pandas Series."""
@@ -71,7 +78,7 @@ class SentimentResult:
         ax.set_xlabel("Sentiment")
         ax.set_ylabel("Count")
         return ax
- 
+
 
 class ThemeAllocationResult:
     """Results of theme allocation with helper methods."""
@@ -93,9 +100,7 @@ class ThemeAllocationResult:
         # similarity matrix shape (n_texts x n_themes)
         self._similarity = similarity or []  # type: Sequence[Sequence[float]]
 
-    def assign_single(
-        self, threshold: Optional[float] = None
-    ) -> pd.Series:
+    def assign_single(self, threshold: Optional[float] = None) -> pd.Series:
         """Return a Series mapping each text to its single theme label, applying threshold if provided."""
         thr = self._threshold if threshold is None else threshold
         labels = []
@@ -118,7 +123,10 @@ class ThemeAllocationResult:
         """Return a DataFrame of top-k theme labels per text, based on similarity."""
         if not self._similarity:
             # fallback: replicate single assignment
-            data = {f"theme_{j+1}": [self._themes[a] for a in self._assignments] for j in range(k)}
+            data = {
+                f"theme_{j+1}": [self._themes[a] for a in self._assignments]
+                for j in range(k)
+            }
         else:
             data = {}
             for j in range(k):
@@ -152,7 +160,9 @@ class ThemeAllocationResult:
 class ClusterResult:
     """Results of clustering with helper methods."""
 
-    def __init__(self, similarity_matrix: Sequence[Sequence[float]], texts: Sequence[str]) -> None:
+    def __init__(
+        self, similarity_matrix: Sequence[Sequence[float]], texts: Sequence[str]
+    ) -> None:
         import numpy as np
 
         self._matrix = np.array(similarity_matrix)
@@ -208,14 +218,15 @@ class ClusterResult:
         # Condense distance matrix
         condensed = squareform(dist_matrix, checks=False)
         # Compute linkage (Ward method)
-        Z = linkage(condensed, method=kwargs.pop('method', 'ward'))
+        Z = linkage(condensed, method=kwargs.pop("method", "ward"))
         # Plot dendrogram
         fig, ax = _plt.subplots()
         _dendrogram(Z, labels=self._texts, ax=ax, **kwargs)
         ax.set_xlabel("Sample")
         ax.set_ylabel("Distance")
         return ax
-        
+
+
 class ThemeExtractionResult:
     """Results of theme extraction with helper methods."""
 

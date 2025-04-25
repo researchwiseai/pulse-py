@@ -14,6 +14,7 @@ from pulse_client.core.models import (
 )
 from pulse_client.core.exceptions import PulseAPIError
 
+
 class CoreClient:
     """Synchronous CoreClient for Pulse API."""
 
@@ -26,16 +27,18 @@ class CoreClient:
         """Initialize CoreClient with optional HTTPX client (for testing)."""
         self.base_url = base_url
         self.timeout = timeout
-        self.client = client if client is not None else httpx.Client(
-            base_url=self.base_url, timeout=self.timeout
+        self.client = (
+            client
+            if client is not None
+            else httpx.Client(base_url=self.base_url, timeout=self.timeout)
         )
 
     @classmethod
     def with_client_credentials(
-         cls, domain: str, client_id: str, client_secret: str
-     ) -> "CoreClient":
-         # TODO: implement OAuth2 credentials
-         return cls()
+        cls, domain: str, client_id: str, client_secret: str
+    ) -> "CoreClient":
+        # TODO: implement OAuth2 credentials
+        return cls()
 
     def create_embeddings(
         self, texts: list[str], fast: bool = True
@@ -46,9 +49,7 @@ class CoreClient:
             params["fast"] = "true"
         # Request body according to OpenAPI spec: inputs
         body: Dict[str, Any] = {"inputs": texts}
-        response = self.client.post(
-            "/embeddings", json=body, params=params
-        )
+        response = self.client.post("/embeddings", json=body, params=params)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
@@ -73,9 +74,7 @@ class CoreClient:
             params["fast"] = "true"
         # Request body according to OpenAPI spec: set for self-similarity
         body: Dict[str, Any] = {"set": texts}
-        response = self.client.post(
-            "/similarity", json=body, params=params
-        )
+        response = self.client.post("/similarity", json=body, params=params)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
@@ -91,7 +90,11 @@ class CoreClient:
         return SimilarityResponse.model_validate(data)
 
     def generate_themes(
-        self, texts: list[str], min_themes: int = 2, max_themes: int = 10, fast: bool = True
+        self,
+        texts: list[str],
+        min_themes: int = 2,
+        max_themes: int = 10,
+        fast: bool = True,
     ) -> Union[ThemesResponse, Job]:
         """Cluster texts into latent themes."""
         # Build request body according to OpenAPI spec: inputs and theme options
@@ -105,9 +108,7 @@ class CoreClient:
         # Fast flag for sync vs async
         if fast:
             params["fast"] = "true"
-        response = self.client.post(
-            "/themes", json=body, params=params
-        )
+        response = self.client.post("/themes", json=body, params=params)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
@@ -128,9 +129,7 @@ class CoreClient:
         body: Dict[str, Any] = {"input": texts}
         if fast:
             params["fast"] = "true"
-        response = self.client.post(
-            "/sentiment", json=body, params=params
-        )
+        response = self.client.post("/sentiment", json=body, params=params)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
@@ -143,9 +142,9 @@ class CoreClient:
         return job
 
     def close(self) -> None:
-         """Close underlying HTTP connection."""
-         self.client.close()
-    
+        """Close underlying HTTP connection."""
+        self.client.close()
+
     def extract_elements(
         self,
         inputs: list[str],
@@ -161,9 +160,7 @@ class CoreClient:
             body["version"] = version
         if fast:
             params["fast"] = "true"
-        response = self.client.post(
-            "/extractions", json=body, params=params
-        )
+        response = self.client.post("/extractions", json=body, params=params)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()

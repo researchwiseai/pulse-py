@@ -1,4 +1,5 @@
 """Tests for result helper classes."""
+
 import pandas as pd
 import pytest
 
@@ -49,23 +50,30 @@ def test_sentiment_result_methods():
     # axis should have bars equal to number of unique sentiments
     assert len(ax.patches) == len(expected)
 
-@pytest.mark.parametrize("invalid, exc", [
-    (ThemesResponse, ValidationError),
-    (SentimentResponse, ValidationError),
-])
+
+@pytest.mark.parametrize(
+    "invalid, exc",
+    [
+        (ThemesResponse, ValidationError),
+        (SentimentResponse, ValidationError),
+    ],
+)
 def test_result_wrappers_invalid_input(invalid, exc):
     # Passing wrong type or missing args should error
     with pytest.raises(exc):
         # Attempt to create without proper args
         invalid()
-  
+
+
 def test_theme_allocation_result_methods():
     texts = ["doc1", "doc2", "doc3"]
     themes = ["Alpha", "Beta"]
     assignments = [0, 1, 0]
     from pulse_client.analysis.results import ThemeAllocationResult
 
-    result = ThemeAllocationResult(texts, themes, assignments, single_label=True, threshold=0.5)
+    result = ThemeAllocationResult(
+        texts, themes, assignments, single_label=True, threshold=0.5
+    )
     # assign_single returns Series
     single = result.assign_single()
     assert list(single.index) == texts
@@ -80,6 +88,7 @@ def test_theme_allocation_result_methods():
     # ensure the y-ticks match themes
     y_labels = [t.get_text() for t in ax.get_yticklabels()]
     assert set(y_labels) == set(themes)
+
 
 def test_theme_allocation_with_similarity():
     # Test assign_single and assign_multi when similarity matrix provided
@@ -102,6 +111,7 @@ def test_theme_allocation_with_similarity():
     multi = result.assign_multi(k=2)
     assert multi["theme_1"].tolist() == ["B", "C"]
     assert multi["theme_2"].tolist() == ["C", "A"]
+
 
 def test_cluster_result_methods():
     texts = ["a", "b", "c"]

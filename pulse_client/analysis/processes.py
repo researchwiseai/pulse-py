@@ -3,9 +3,10 @@
 from typing import Any, Tuple, Sequence
 
 try:
-     from typing import Protocol
+    from typing import Protocol
 except ImportError:
-     from typing_extensions import Protocol
+    from typing_extensions import Protocol
+
 
 class Process(Protocol):
     """Process primitive protocol."""
@@ -13,12 +14,12 @@ class Process(Protocol):
     id: str
     depends_on: Tuple[str, ...]
 
-    def run(self, ctx: Any) -> Any:
-        ...
+    def run(self, ctx: Any) -> Any: ...
 
 
 class ThemeGeneration:
     """Process: cluster texts into latent themes."""
+
     id = "theme_generation"
     depends_on: Tuple[str, ...] = ()
 
@@ -44,6 +45,7 @@ class ThemeGeneration:
 
 class SentimentProcess:
     """Process: classify sentiment for texts."""
+
     id = "sentiment"
     depends_on: Tuple[str, ...] = ()
 
@@ -58,6 +60,7 @@ class SentimentProcess:
 
 class ThemeAllocation:
     """Process: allocate themes to texts based on generation results."""
+
     id = "theme_allocation"
     depends_on: Tuple[str, ...] = ("theme_generation",)
 
@@ -81,7 +84,7 @@ class ThemeAllocation:
         if self.themes is not None:
             themes = list(self.themes)
         else:
-            alias = getattr(self, '_themes_from_alias', 'theme_generation')
+            alias = getattr(self, "_themes_from_alias", "theme_generation")
             tg = ctx.results.get(alias)
             if tg is None:
                 raise RuntimeError(f"{alias} result not available for allocation")
@@ -97,11 +100,13 @@ class ThemeAllocation:
         n = len(texts)
         m = len(themes)
         # cross-similarity: top-left block cross texts->themes
-        sim_matrix = [row[n:n+m] for row in full_sim[:n]]
+        sim_matrix = [row[n : n + m] for row in full_sim[:n]]
         return {"themes": themes, "assignments": assignments, "similarity": sim_matrix}
-        
+
+
 class ThemeExtraction:
     """Process: extract elements matching themes from input strings."""
+
     id = "theme_extraction"
     depends_on: Tuple[str, ...] = ("theme_generation",)
 
@@ -121,7 +126,7 @@ class ThemeExtraction:
         if self.themes is not None:
             used_themes = list(self.themes)
         else:
-            alias = getattr(self, '_themes_from_alias', 'theme_generation')
+            alias = getattr(self, "_themes_from_alias", "theme_generation")
             prev = ctx.results.get(alias)
             if prev is None:
                 raise RuntimeError(f"{alias} result not available for extraction")
@@ -129,11 +134,14 @@ class ThemeExtraction:
         self.themes = used_themes
         self.themes = used_themes
         fast_flag = self.fast if self.fast is not None else ctx.fast
-        return ctx.client.extract_elements(inputs=texts, themes=used_themes, version=self.version, fast=fast_flag)
+        return ctx.client.extract_elements(
+            inputs=texts, themes=used_themes, version=self.version, fast=fast_flag
+        )
 
 
 class Cluster:
     """Process: compute similarity matrix for clustering."""
+
     id = "cluster"
     depends_on: Tuple[str, ...] = ()
 

@@ -1,4 +1,5 @@
 """DSL builder for custom workflows in the Pulse client."""
+
 from collections import defaultdict
 import json
 import os
@@ -78,10 +79,10 @@ class Workflow:
         )
         self._add_process(process)
         # determine input source for texts
-        alias = source or 'dataset'
-        if alias != 'dataset' and alias not in self._sources:
+        alias = source or "dataset"
+        if alias != "dataset" and alias not in self._sources:
             raise ValueError(f"Unknown source for theme_generation: '{alias}'")
-        setattr(process, '_inputs', [alias])
+        setattr(process, "_inputs", [alias])
         return self
 
     def theme_allocation(
@@ -101,10 +102,14 @@ class Workflow:
         )
         self._add_process(process)
         # wire text inputs
-        inp = inputs or 'dataset'
-        if inp != 'dataset' and inp not in self._sources and inp not in [p.id for p in self._processes]:
+        inp = inputs or "dataset"
+        if (
+            inp != "dataset"
+            and inp not in self._sources
+            and inp not in [p.id for p in self._processes]
+        ):
             raise ValueError(f"Unknown inputs source for theme_allocation: '{inp}'")
-        setattr(process, '_inputs', [inp])
+        setattr(process, "_inputs", [inp])
         # wire themes list if dynamic
         if themes is None:
             # determine alias for theme source
@@ -112,10 +117,17 @@ class Workflow:
                 alias = themes_from
             else:
                 # find last theme_generation alias
-                alias = next((p.id for p in reversed(self._processes[:-1]) if getattr(p, '_orig_id', p.id) == 'theme_generation'), None)
+                alias = next(
+                    (
+                        p.id
+                        for p in reversed(self._processes[:-1])
+                        if getattr(p, "_orig_id", p.id) == "theme_generation"
+                    ),
+                    None,
+                )
             if not alias:
                 raise ValueError("No theme_generation found for theme_allocation")
-            setattr(process, '_themes_from_alias', alias)
+            setattr(process, "_themes_from_alias", alias)
         return self
 
     def theme_extraction(
@@ -135,19 +147,30 @@ class Workflow:
         )
         self._add_process(process)
         # wire text inputs
-        inp = inputs or 'dataset'
-        if inp != 'dataset' and inp not in self._sources and inp not in [p.id for p in self._processes]:
+        inp = inputs or "dataset"
+        if (
+            inp != "dataset"
+            and inp not in self._sources
+            and inp not in [p.id for p in self._processes]
+        ):
             raise ValueError(f"Unknown inputs source for theme_extraction: '{inp}'")
-        setattr(process, '_inputs', [inp])
+        setattr(process, "_inputs", [inp])
         # wire themes list if dynamic
         if themes is None:
             if themes_from:
                 alias = themes_from
             else:
-                alias = next((p.id for p in reversed(self._processes[:-1]) if getattr(p, '_orig_id', p.id) == 'theme_generation'), None)
+                alias = next(
+                    (
+                        p.id
+                        for p in reversed(self._processes[:-1])
+                        if getattr(p, "_orig_id", p.id) == "theme_generation"
+                    ),
+                    None,
+                )
             if not alias:
                 raise ValueError("No theme_generation found for theme_extraction")
-            setattr(process, '_themes_from_alias', alias)
+            setattr(process, "_themes_from_alias", alias)
         return self
 
     def sentiment(
@@ -160,10 +183,14 @@ class Workflow:
         process = SentimentProcess(fast=fast)
         self._add_process(process)
         # determine input source
-        alias = source or 'dataset'
-        if alias != 'dataset' and alias not in self._sources and alias not in [p.id for p in self._processes]:
+        alias = source or "dataset"
+        if (
+            alias != "dataset"
+            and alias not in self._sources
+            and alias not in [p.id for p in self._processes]
+        ):
             raise ValueError(f"Unknown source for sentiment: '{alias}'")
-        setattr(process, '_inputs', [alias])
+        setattr(process, "_inputs", [alias])
         return self
 
     def cluster(
@@ -177,10 +204,14 @@ class Workflow:
         process = Cluster(fast=fast)
         self._add_process(process)
         # determine input source for clustering
-        alias = source or 'dataset'
-        if alias != 'dataset' and alias not in self._sources and alias not in [p.id for p in self._processes]:
+        alias = source or "dataset"
+        if (
+            alias != "dataset"
+            and alias not in self._sources
+            and alias not in [p.id for p in self._processes]
+        ):
             raise ValueError(f"Unknown source for cluster: '{alias}'")
-        setattr(process, '_inputs', [alias])
+        setattr(process, "_inputs", [alias])
         return self
 
     @classmethod
@@ -223,20 +254,22 @@ class Workflow:
         Otherwise, delegates to the existing Analyzer engine.
         """
         # Extract client and fast flag for DSL
-        client = kwargs.get('client', None)
-        fast = kwargs.get('fast', None)
+        client = kwargs.get("client", None)
+        fast = kwargs.get("fast", None)
         # Dataset positional argument
         dataset = args[0] if args else None
         # DSL mode if any sources registered
         if self._sources:
             # Register default dataset source if provided
-            if dataset is not None and 'dataset' not in self._sources:
-                self._sources['dataset'] = dataset
+            if dataset is not None and "dataset" not in self._sources:
+                self._sources["dataset"] = dataset
             return self._run_dsl(client=client, fast=fast)
         # Linear mode: use Analyzer
         return Analyzer(dataset=dataset, processes=self._processes, **kwargs).run()
 
-    def _run_dsl(self, client: CoreClient | None = None, fast: bool | None = None) -> Any:
+    def _run_dsl(
+        self, client: CoreClient | None = None, fast: bool | None = None
+    ) -> Any:
         """
         Internal runner for advanced DSL mode with named sources and DAG execution.
         """
@@ -248,6 +281,7 @@ class Workflow:
             ClusterResult,
             ThemeExtractionResult,
         )
+
         # Default client
         client = client or CoreClient()
         # Initialize context streams
@@ -257,20 +291,28 @@ class Workflow:
         # Execute processes in declaration order
         for process in self._processes:
             # Validate and get dataset input
-            inputs = getattr(process, '_inputs', ['dataset'])
+            inputs = getattr(process, "_inputs", ["dataset"])
             if not inputs:
                 raise RuntimeError(f"No input source for process '{process.id}'")
             ds_alias = inputs[0]
             if ds_alias not in sources:
-                raise ValueError(f"Source '{ds_alias}' not found for process '{process.id}'")
+                raise ValueError(
+                    f"Source '{ds_alias}' not found for process '{process.id}'"
+                )
             ds_data = sources[ds_alias]
+
             # Build context
             class Ctx:
                 pass
+
             ctx = Ctx()
             ctx.client = client
             # fast flag per process, fallback to DSL-level
-            ctx.fast = process.fast if getattr(process, 'fast', None) is not None else (fast if fast is not None else True)
+            ctx.fast = (
+                process.fast
+                if getattr(process, "fast", None) is not None
+                else (fast if fast is not None else True)
+            )
             # Dataset as pandas Series
             if isinstance(ds_data, pd.Series):
                 ctx.dataset = ds_data
@@ -279,29 +321,35 @@ class Workflow:
             ctx.results = results
             # Run and wrap result
             raw = process.run(ctx)
-            orig = getattr(process, '_orig_id', process.id)
-            if orig == 'theme_generation':
+            orig = getattr(process, "_orig_id", process.id)
+            if orig == "theme_generation":
                 wrapped = ThemeGenerationResult(raw, ctx.dataset.tolist())
                 # make themes available as data source
                 sources[process.id] = wrapped.themes
-            elif orig == 'sentiment':
+            elif orig == "sentiment":
                 wrapped = SentimentResult(raw, ctx.dataset.tolist())
                 sources[process.id] = wrapped.sentiments
-            elif orig == 'theme_allocation':
+            elif orig == "theme_allocation":
                 wrapped = ThemeAllocationResult(
-                    ctx.dataset.tolist(), raw['themes'], raw['assignments'],
-                    process.single_label, process.threshold, similarity=raw.get('similarity')
+                    ctx.dataset.tolist(),
+                    raw["themes"],
+                    raw["assignments"],
+                    process.single_label,
+                    process.threshold,
+                    similarity=raw.get("similarity"),
                 )
-            elif orig == 'cluster':
+            elif orig == "cluster":
                 wrapped = ClusterResult(raw, ctx.dataset.tolist())
-            elif orig == 'theme_extraction':
-                wrapped = ThemeExtractionResult(raw, ctx.dataset.tolist(), process.themes)
+            elif orig == "theme_extraction":
+                wrapped = ThemeExtractionResult(
+                    raw, ctx.dataset.tolist(), process.themes
+                )
             else:
                 wrapped = raw
             # Store for downstream
             results[process.id] = wrapped
         # Return a results container
-        return type('DSLResult', (), results)()
+        return type("DSLResult", (), results)()
 
     def graph(self) -> Dict[str, List[str]]:
         """

@@ -14,6 +14,7 @@ from pulse_client.analysis.results import (
     ThemeExtractionResult,
 )
 
+
 class Analyzer:
     """High-level orchestrator for Pulse API processes with caching."""
 
@@ -90,6 +91,7 @@ class Analyzer:
             self.results = results
         self.results = results
         return AnalysisResult(results)
+
     def clear_cache(self) -> None:
         """Clear the on-disk cache, if enabled."""
         if self._cache is not None:
@@ -120,10 +122,17 @@ class Analyzer:
         data = (
             tuple(self.dataset.tolist()),
             process.id,
-            tuple(sorted((k, getattr(process, k)) for k in vars(process) if not k.startswith("_"))),
+            tuple(
+                sorted(
+                    (k, getattr(process, k))
+                    for k in vars(process)
+                    if not k.startswith("_")
+                )
+            ),
         )
         pickled = pickle.dumps(data)
         return hashlib.sha256(pickled).hexdigest()
+
 
 class AnalysisResult:
     """Container for analysis results, exposing process outcomes as attributes."""

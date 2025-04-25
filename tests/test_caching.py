@@ -1,4 +1,5 @@
 """Tests for persistent on-disk caching in Analyzer."""
+
 import os
 from pathlib import Path
 import shutil
@@ -11,6 +12,7 @@ from pulse_client.analysis.processes import Process
 
 class DummyProcess:
     """A dummy process that counts how many times run() is called."""
+
     id = "dummy"
     depends_on = ()
 
