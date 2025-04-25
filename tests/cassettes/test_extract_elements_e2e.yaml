@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: '{"inputs":["sample text"],"themes":["theme1"]}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '46'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/extractions?fast=true
+  response:
+    body:
+      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/535acdc8262246f792b8f59a2cfd2315"}'
+    headers:
+      Apigw-Requestid:
+      - JlTd2haxjoEEQ0w=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '79'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 25 Apr 2025 14:16:06 GMT
+    status:
+      code: 202
+      message: Accepted
+version: 1

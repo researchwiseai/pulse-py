@@ -1,0 +1,82 @@
+interactions:
+- request:
+    body: '{"inputs":["example text"]}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '27'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/embeddings?fast=true
+  response:
+    body:
+      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/bd91672f33be42e7bf00bb99bb3c4575"}'
+    headers:
+      Apigw-Requestid:
+      - JlTeIhUVDoEEPhg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '79'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 25 Apr 2025 14:16:08 GMT
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: '{"set":["example text"]}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '24'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity?flatten=true&fast=true
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAzWOvQrCQBCE+zzFsJWCWKRMZ+MT2InIelnNwf2E2z01iO8uRtPtfDPMzp59kB6W
+        MXJRgbpBIm9xGLxCSskFD1Y4rio9LlOHYwO8GgAgl3uhDmQ5nzVyCLT5GdEnH2ukDu2f2DTOUS6F
+        pyXmkwtV/f3rWKnyx/JkZ9ThykEXFkWVb3PF7luBWNXgcjL2CWwIwmpoIUGiJFvpevkysg302z3r
+        S+6XBQCpGM33qQHezWn7AfFMFBISAQAA
+    headers:
+      Apigw-Requestid:
+      - JlTeXiYzDoEEPjQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '195'
+      Content-Type:
+      - text/plain
+      Date:
+      - Fri, 25 Apr 2025 14:16:09 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 400
+      message: Bad Request
+version: 1

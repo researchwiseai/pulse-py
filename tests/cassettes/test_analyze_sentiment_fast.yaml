@@ -1,0 +1,41 @@
+interactions:
+- request:
+    body: '{"input":["happy","sad"]}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '25'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/sentiment?fast=true
+  response:
+    body:
+      string: "Failed to parse schema. This error was caused by: [\n  {\n    \"code\":
+        \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"undefined\",\n
+        \   \"path\": [\n      \"body\",\n      \"inputs\"\n    ],\n    \"message\":
+        \"Required\"\n  }\n]."
+    headers:
+      Apigw-Requestid:
+      - JlW3EhFHjoEEPOQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '220'
+      Content-Type:
+      - text/plain
+      Date:
+      - Fri, 25 Apr 2025 14:39:15 GMT
+    status:
+      code: 400
+      message: Bad Request
+version: 1

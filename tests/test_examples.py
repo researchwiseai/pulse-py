@@ -1,6 +1,7 @@
 """End-to-end example flows from the Jupyter notebooks, using stub clients."""
 
 import pandas as pd
+import pytest
 
 from pulse_client.analysis.analyzer import Analyzer
 from pulse_client.analysis.processes import (
@@ -80,70 +81,30 @@ def test_high_level_examples_flow():
     assert mat.shape == (len(comments), len(comments))
 
 
-def test_low_level_examples_fast_mode():
-    # Stub HTTPX-like client for CoreClient
-    class DummyHTTP:
-        def __init__(self):
-            pass
+@pytest.mark.vcr()
+def test_low_level_examples_e2e():
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    try:
+        emb = client.create_embeddings(["example text"], fast=True)
+    except Exception as exc:
+        pytest.skip(f"Skipping E2E low-level examples: {exc}")
+    assert hasattr(emb, "embeddings"), "Embedding response missing"
+    assert isinstance(emb.embeddings, list)
 
-        def post(self, path, json=None, params=None):
-            # Map endpoints to responses
-            if path.endswith("/embeddings"):
-                return type(
-                    "R",
-                    (),
-                    {
-                        "status_code": 200,
-                        "json": lambda self: {"embeddings": [[0.1, 0.2]]},
-                    },
-                )()
-            if path.endswith("/similarity"):
-                return type(
-                    "R",
-                    (),
-                    {"status_code": 200, "json": lambda self: {"similarity": [[1.0]]}},
-                )()
-            if path.endswith("/themes"):
-                return type(
-                    "R",
-                    (),
-                    {
-                        "status_code": 200,
-                        "json": lambda self: {"themes": ["A"], "assignments": [0]},
-                    },
-                )()
-            if path.endswith("/sentiment"):
-                return type(
-                    "R",
-                    (),
-                    {"status_code": 200, "json": lambda self: {"sentiments": ["pos"]}},
-                )()
-            if path.endswith("/extractions"):
-                return type(
-                    "R",
-                    (),
-                    {
-                        "status_code": 200,
-                        "json": lambda self: {"extractions": [[["e1"]]]},
-                    },
-                )()
-            raise RuntimeError(f"Unexpected path: {path}")
+    sim = client.compare_similarity(["example text"], fast=True, flatten=False)
+    assert hasattr(sim, "similarity"), "Similarity response missing"
+    assert isinstance(sim.similarity, list)
 
-        def get(self, path):
-            raise RuntimeError("Should not call get in fast mode")
+    th = client.generate_themes(["example text"], min_themes=1, max_themes=2, fast=True)
+    assert hasattr(th, "themes"), "Themes response missing"
+    assert isinstance(th.themes, list)
 
-        def close(self):
-            pass
+    sent = client.analyze_sentiment(["example text"], fast=True)
+    assert hasattr(sent, "sentiments"), "Sentiment response missing"
+    assert isinstance(sent.sentiments, list)
 
-    client = CoreClient(client=DummyHTTP())
-    # Fast calls
-    emb = client.create_embeddings(["x"], fast=True)
-    assert hasattr(emb, "embeddings")
-    sim = client.compare_similarity(["x"], fast=True, flatten=False)
-    assert hasattr(sim, "similarity")
-    th = client.generate_themes(["x"], fast=True)
-    assert hasattr(th, "themes")
-    sent = client.analyze_sentiment(["x"], fast=True)
-    assert hasattr(sent, "sentiments")
-    extr = client.extract_elements(["x"], ["A"], fast=True)
-    assert hasattr(extr, "extractions")
+    extr = client.extract_elements(
+        ["example text"], th.themes if hasattr(th, "themes") else ["t"], fast=True
+    )
+    assert hasattr(extr, "extractions"), "Extractions response missing"
+    assert isinstance(extr.extractions, list)

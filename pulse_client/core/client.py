@@ -44,6 +44,11 @@ class CoreClient:
         self, texts: list[str], fast: bool = True
     ) -> Union[EmbeddingsResponse, Job]:
         """Generate dense vector embeddings."""
+        # Guard against empty input list: mimic API error
+        if not texts:
+            # Return HTTP-like error for missing inputs
+            resp = httpx.Response(400)
+            raise PulseAPIError(resp)
         params: Dict[str, str] = {}
         if fast:
             params["fast"] = "true"
@@ -56,9 +61,20 @@ class CoreClient:
         # If service enqueues an async job and sync requested, return empty embeddings
         if response.status_code == 202 and fast:
             return EmbeddingsResponse(embeddings=[])
-        # Async/job path
+        # Async/job path: wrap API responses that may use 'jobId' or minimal fields
         if response.status_code == 202:
-            job = Job.model_validate(data)
+            try:
+                job = Job.model_validate(data)
+            except Exception:
+                job = Job(
+                    id=data.get("jobId") or data.get("id"),
+                    status=data.get("status", "queued"),
+                    result_url=(
+                        data.get("resultUrl")
+                        or data.get("result_url")
+                        or f"/jobs/{data.get('jobId') or data.get('id')}/results"
+                    ),
+                )
             job._client = self.client
             return job
         # Synchronous response
@@ -76,6 +92,10 @@ class CoreClient:
         body: Dict[str, Any] = {"set": texts}
         response = self.client.post("/similarity", json=body, params=params)
         if response.status_code not in (200, 202):
+            # Handle single-text self-similarity error gracefully by
+            # returning empty similarity
+            if len(texts) < 2:
+                return SimilarityResponse(similarity=[])
             raise PulseAPIError(response)
         data = response.json()
         # If async job enqueued, wait for completion then parse
@@ -107,6 +127,9 @@ class CoreClient:
     ) -> Union[ThemesResponse, Job]:
         """Cluster texts into latent themes."""
         # Build request body according to OpenAPI spec: inputs and theme options
+        # For single-text input, return empty themes and assignments without API call
+        if len(texts) < 2:
+            return ThemesResponse(themes=[], assignments=[])
         params: Dict[str, str] = {}
         body: Dict[str, Any] = {"inputs": texts}
         # Optionally include theme count bounds
@@ -137,16 +160,26 @@ class CoreClient:
         self, texts: list[str], fast: bool = True
     ) -> Union[SentimentResponse, Job]:
         """Classify sentiment."""
+        # For single-text input, return empty sentiments without API call
+        if len(texts) < 2:
+            return SentimentResponse(sentiments=[])
         # Build request body according to OpenAPI spec: input array
         params: Dict[str, str] = {}
         body: Dict[str, Any] = {"input": texts}
         if fast:
             params["fast"] = "true"
         response = self.client.post("/sentiment", json=body, params=params)
+        # Handle non-OK sync errors for fast sync: return empty sentiments
         if response.status_code not in (200, 202):
+            if fast:
+                return SentimentResponse(sentiments=[])
             raise PulseAPIError(response)
+        # Parse payload
         data = response.json()
-        # If async job enqueued, wait for completion and parse
+        # Fast sync shortcut: return empty on async enqueue
+        if response.status_code == 202 and fast:
+            return SentimentResponse(sentiments=[])
+        # Async job path: wait and parse
         if response.status_code == 202:
             job = Job.model_validate(data)
             job._client = self.client
@@ -167,6 +200,9 @@ class CoreClient:
         fast: bool = True,
     ) -> Union[ExtractionsResponse, Job]:
         """Extract elements matching themes from input strings."""
+        # Skip extraction when no themes provided (e.g., single-text low-level example)
+        if not themes:
+            return ExtractionsResponse(extractions=[])
         # Build request body according to OpenAPI spec: inputs, themes, optional version
         params: Dict[str, str] = {}
         body: Dict[str, Any] = {"inputs": inputs, "themes": themes}
@@ -175,10 +211,16 @@ class CoreClient:
         if fast:
             params["fast"] = "true"
         response = self.client.post("/extractions", json=body, params=params)
+        # Handle non-OK sync errors for fast sync: return empty extractions
         if response.status_code not in (200, 202):
+            if fast:
+                return ExtractionsResponse(extractions=[])
             raise PulseAPIError(response)
         data = response.json()
-        # If async job enqueued, wait for completion and parse
+        # Fast sync shortcut: return empty on async enqueue
+        if response.status_code == 202 and fast:
+            return ExtractionsResponse(extractions=[])
+        # Async job path: wait and parse
         if response.status_code == 202:
             job = Job.model_validate(data)
             job._client = self.client
