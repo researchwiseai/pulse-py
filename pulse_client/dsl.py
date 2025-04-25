@@ -17,9 +17,11 @@ from pulse_client.analysis.analyzer import Analyzer
 from pulse_client.core.client import CoreClient
 from pulse_client.core.models import SentimentResponse as CoreSentimentResponse
 
+
 # Helpers to flatten and reconstruct nested inputs
 def _flatten_and_shape(x: Any):
     shape: List[int] = []
+
     def _get_shape(a: Any, lvl: int = 0):
         nonlocal shape
         if isinstance(a, list):
@@ -29,6 +31,7 @@ def _flatten_and_shape(x: Any):
                 shape[lvl] = max(shape[lvl], len(a))
             if a:
                 _get_shape(a[0], lvl + 1)
+
     def _flatten(a: Any) -> List[Any]:
         if isinstance(a, list):
             out: List[Any] = []
@@ -36,16 +39,20 @@ def _flatten_and_shape(x: Any):
                 out.extend(_flatten(v))
             return out
         return [a]
+
     _get_shape(x)
     flat = _flatten(x)
     return shape, flat
 
+
 def _reconstruct(flat: List[Any], shape: List[int]):
     it = iter(flat)
+
     def _build(level: int):
         if level >= len(shape):
             return next(it)
         return [_build(level + 1) for _ in range(shape[level])]
+
     return _build(0)
 
 
@@ -408,11 +415,11 @@ class Workflow:
             for dep in getattr(p, "depends_on", ()):  # type: ignore[attr-defined]
                 deps.extend(id_to_aliases.get(dep, []))
             # collect dynamic inputs from DSL wiring (skip 'dataset')
-            for inp in getattr(p, '_inputs', []):
-                if inp != 'dataset' and inp in proc_ids:
+            for inp in getattr(p, "_inputs", []):
+                if inp != "dataset" and inp in proc_ids:
                     deps.append(inp)
             # collect theme-source wiring
-            theme_src = getattr(p, '_themes_from_alias', None)
+            theme_src = getattr(p, "_themes_from_alias", None)
             if theme_src and theme_src in proc_ids:
                 deps.append(theme_src)
             # remove duplicates preserving order
