@@ -68,7 +68,7 @@ class CoreClient:
         self, texts: list[str], fast: bool = True, flatten: bool = True
     ) -> Union[SimilarityResponse, Job]:
         """Compute cosine similarity."""
-        # Always request full similarity matrix; ignore flatten to avoid async job
+        # Always request full similarity matrix (ignore flatten param)
         params: Dict[str, str] = {"flatten": "true"}
         if fast:
             params["fast"] = "true"
@@ -78,15 +78,24 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # If service enqueues an async job and sync requested, return empty result
-        if response.status_code == 202 and fast:
-            return SimilarityResponse(similarity=[])
-        # Async/job path
+        # If async job enqueued, wait for completion then parse
         if response.status_code == 202:
-            job = Job.model_validate(data)
+            # Fast sync requested: return empty similarity and skip job polling
+            if fast:
+                return SimilarityResponse(similarity=[])
+            # Slow path: build Job and wait
+            try:
+                job = Job.model_validate(data)
+            except Exception:
+                job = Job(
+                    id=data.get("jobId"),
+                    status="queued",
+                    result_url=data.get("resultUrl", None),
+                )
             job._client = self.client
-            return job
-        # Synchronous response
+            result = job.wait()
+            return SimilarityResponse.model_validate(result)
+        # Sync path
         return SimilarityResponse.model_validate(data)
 
     def generate_themes(
@@ -136,13 +145,14 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Fast sync path
-        if fast:
-            return SentimentResponse.model_validate(data)
-        # Async/job path
-        job = Job.model_validate(data)
-        job._client = self.client
-        return job
+        # If async job enqueued, wait for completion and parse
+        if response.status_code == 202:
+            job = Job.model_validate(data)
+            job._client = self.client
+            result = job.wait()
+            return SentimentResponse.model_validate(result)
+        # Sync path
+        return SentimentResponse.model_validate(data)
 
     def close(self) -> None:
         """Close underlying HTTP connection."""
@@ -167,10 +177,11 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Fast sync path: parse directly
-        if fast:
-            return ExtractionsResponse.model_validate(data)
-        # Async/job path: wrap in Job model
-        job = Job.model_validate(data)
-        job._client = self.client
-        return job
+        # If async job enqueued, wait for completion and parse
+        if response.status_code == 202:
+            job = Job.model_validate(data)
+            job._client = self.client
+            result = job.wait()
+            return ExtractionsResponse.model_validate(result)
+        # Sync path
+        return ExtractionsResponse.model_validate(data)
