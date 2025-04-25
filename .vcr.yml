@@ -6,5 +6,4 @@ match_requests_on:
   - host
   - port
   - path
-  - query
   - body

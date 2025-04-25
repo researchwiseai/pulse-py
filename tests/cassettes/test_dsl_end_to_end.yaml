@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: '{"setA":["everything was very tasty","it was a little too noisy"],"setB":["Food
+      Quality","Service","Environment"],"fast":true,"flatten":false}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '142'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA91SQWrDMBC8+xWDziYPyL2BXEtPLSGsrW0tiCVXK6U1wX8PltJii9wKhVYXod2Z
+        2dGwOzIn1ggOA3lhSNtxTxs8dUbA3juPDxK0FIU1mnGLlwq4VACgWqdZbaGMPdPJ6GO0xllV52Z6
+        PMwKojJrPpfbDSgjEnnZW/fvTgjjwLcB3xj+HLgNrGcceU9jCfDcsjlnQLSaX41lXYIGCl3hJdUb
+        p0tBQAkHtaodCrmeRegteX/k92g86yVhqu4QlaU+MZ6dTsF9Mab636V3pJ/lV//NXze/uTXVAll6
+        zR5XiMXwfY4Oxg4xLfpUHTZX/o9fAysEAAA=
+    headers:
+      Apigw-Requestid:
+      - JmNjxjxIDoEEJqA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '254'
+      Content-Type:
+      - text/plain
+      Date:
+      - Fri, 25 Apr 2025 20:52:40 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 400
+      message: Bad Request
+version: 1

@@ -36,32 +36,65 @@ class SimilarityResponse(BaseModel):
     )
     requestId: Optional[str] = Field(None, description="Unique request identifier")
 
-    @model_validator(mode="before")
-    def _normalize_legacy(cls, values: dict) -> dict:
-        """
-        Normalize legacy payloads that use a top-level 'similarity' matrix field.
-        """
-        if "similarity" in values:
-            sim = values.pop("similarity") or []
-            n = len(sim)
-            flat = [v for row in sim for v in row]
-            values.update(
-                {
-                    "scenario": "self",
-                    "mode": "matrix",
-                    "n": n,
-                    "matrix": sim,
-                    "flattened": flat,
-                }
-            )
-        return values
-
     @property
     def similarity(self) -> List[List[float]]:
         """
-        Backward-compatible alias for the full similarity matrix.
+        Return the full similarity matrix. If `matrix` is provided, use it.
+        Otherwise reconstruct from `flattened` based on the `scenario`.
         """
-        return self.matrix or []
+        if self.matrix:
+            return self.matrix
+
+        flat = self.flattened
+
+        if self.scenario == "self":
+            # flattened upper triangle (with or without diagonal)
+            n = self.n
+            total = len(flat)
+            full_tri_len = n * (n + 1) // 2
+            no_diag_tri_len = n * (n - 1) // 2
+
+            # init zero matrix
+            mat = [[0.0] * n for _ in range(n)]
+            idx = 0
+
+            if total == full_tri_len:
+                # includes diagonal
+                for i in range(n):
+                    for j in range(i, n):
+                        mat[i][j] = flat[idx]
+                        mat[j][i] = flat[idx]
+                        idx += 1
+            elif total == no_diag_tri_len:
+                # excludes diagonal: assume diagonal = 1
+                for i in range(n):
+                    mat[i][i] = 1.0
+                for i in range(n):
+                    for j in range(i + 1, n):
+                        mat[i][j] = flat[idx]
+                        mat[j][i] = flat[idx]
+                        idx += 1
+            else:
+                raise ValueError(
+                    f"Unexpected length {total} for self-similarity with n={n}"
+                )
+
+            return mat
+
+        elif self.scenario == "cross":
+            # flattened full cross-matrix of shape (n x m)
+            n = self.n
+            total = len(flat)
+            if n <= 0 or total % n != 0:
+                raise ValueError(
+                    f"Cannot reshape flattened length {total} into {n} rows"
+                )
+            m = total // n
+            return [flat[i * m : (i + 1) * m] for i in range(n)]
+
+        else:
+            # unknown scenario
+            return []
 
 
 class Theme(BaseModel):
@@ -71,7 +104,7 @@ class Theme(BaseModel):
     label: str = Field(..., description="Descriptive title of the theme")
     description: str = Field(..., description="One-sentence summary of the theme")
     representatives: List[str] = Field(
-        ..., min_items=2, max_items=2, description="Two representative input strings"
+        ..., min_length=2, max_length=2, description="Two representative input strings"
     )
 
 

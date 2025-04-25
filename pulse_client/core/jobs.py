@@ -32,6 +32,9 @@ class Job(BaseModel):
         if response.status_code != 200:
             raise PulseAPIError(response)
         data = response.json()
+        # Ensure jobId is preserved if not returned in status payload
+        if "jobId" not in data:
+            data["jobId"] = self.id
         # Pydantic v2: use model_validate instead of deprecated parse_obj
         job = Job.model_validate(data)
         job._client = self._client

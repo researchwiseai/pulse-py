@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"inputs":["happy","sad"],"fast":true}'
+    body: '{"set":["x","y"],"fast":true,"flatten":false}'
     headers:
       accept:
       - '*/*'
@@ -9,7 +9,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '38'
+      - '45'
       content-type:
       - application/json
       host:
@@ -17,21 +17,21 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/sentiment
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
   response:
     body:
-      string: '{"results":[{"sentiment":"positive","confidence":0.9892745614051819},{"sentiment":"negative","confidence":0.9963441491127014}],"requestId":"61c53ee9-0e0b-4d74-b2f0-be827d54bed5"}'
+      string: '{"scenario":"self","mode":"flattened","n":2,"flattened":[0.5377824499206663],"requestId":"d5ba6977-a4b5-42fa-8dca-f4bf2fe6ba6a"}'
     headers:
       Apigw-Requestid:
-      - JmC3sh1UDoEEKCA=
+      - JmC3EgNQjoEEJeA=
       Connection:
       - keep-alive
       Content-Length:
-      - '178'
+      - '128'
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:39:42 GMT
+      - Fri, 25 Apr 2025 19:39:38 GMT
     status:
       code: 200
       message: OK

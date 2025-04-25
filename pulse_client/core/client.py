@@ -49,7 +49,8 @@ class CoreClient:
         # Request body according to OpenAPI spec: inputs
         body: Dict[str, Any] = {"inputs": texts}
         if fast:
-            body["fast"] = "true"
+            # API expects a JSON boolean for fast
+            body["fast"] = True
         response = self.client.post("/embeddings", json=body)
 
         if response.status_code not in (200, 202):
@@ -104,24 +105,14 @@ class CoreClient:
             body["setB"] = set_b
 
         if fast:
-            body["fast"] = "true"
-
-        body["flatten"] = "true" if flatten else "false"
+            body["fast"] = True
+        # API expects JSON boolean for flatten
+        body["flatten"] = flatten
 
         response = self.client.post("/similarity", json=body)
 
         # handle error / single-item self-similarity fallback
         if response.status_code not in (200, 202):
-            if set is not None and len(set) < 2:
-                placeholder = {
-                    "scenario": "self",
-                    "mode": "flatten" if flatten else "matrix",
-                    "n": len(set),
-                    "flattened": [],
-                    "matrix": [],
-                    "requestId": None,
-                }
-                return SimilarityResponse.model_validate(placeholder)
             raise PulseAPIError(response)
 
         data = response.json()
@@ -163,7 +154,8 @@ class CoreClient:
             body["maxThemes"] = max_themes
         # Fast flag for sync vs async
         if fast:
-            body["fast"] = "true"
+            # API expects a JSON boolean for fast
+            body["fast"] = True
         response = self.client.post("/themes", json=body)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -192,7 +184,8 @@ class CoreClient:
         # Build request body according to OpenAPI spec: input array
         body: Dict[str, Any] = {"inputs": texts}
         if fast:
-            body["fast"] = "true"
+            # API expects a JSON boolean for fast
+            body["fast"] = True
         response = self.client.post("/sentiment", json=body)
         # Raise on any error response
         if response.status_code not in (200, 202):
@@ -234,7 +227,8 @@ class CoreClient:
         if version is not None:
             body["version"] = version
         if fast:
-            body["fast"] = "true"
+            # API expects a JSON boolean for fast
+            body["fast"] = True
         response = self.client.post("/extractions", json=body)
         # Raise on any error response
         if response.status_code not in (200, 202):

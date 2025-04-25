@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"inputs":["sample text","sample text 2"],"themes":["theme1"]}'
+    body: '{"set":["alpha","beta"],"flatten":false}'
     headers:
       accept:
       - '*/*'
@@ -9,7 +9,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '62'
+      - '40'
       content-type:
       - application/json
       host:
@@ -17,13 +17,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/extractions
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
   response:
     body:
-      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49"}'
+      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb"}'
     headers:
       Apigw-Requestid:
-      - JmDXyisajoEEMuA=
+      - JmC_Eif_DoEEMOg=
       Connection:
       - keep-alive
       Content-Length:
@@ -31,7 +31,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:08 GMT
+      - Fri, 25 Apr 2025 19:40:29 GMT
     status:
       code: 202
       message: Accepted
@@ -49,13 +49,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDYDjFFDoEEMtw=
+      - JmC_OivGDoEEM_Q=
       Connection:
       - keep-alive
       Content-Length:
@@ -63,7 +63,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:08 GMT
+      - Fri, 25 Apr 2025 19:40:29 GMT
     status:
       code: 200
       message: OK
@@ -81,13 +81,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDYYj-TDoEEMUg=
+      - JmC_ihTjjoEEMCQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -95,7 +95,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:10 GMT
+      - Fri, 25 Apr 2025 19:40:31 GMT
     status:
       code: 200
       message: OK
@@ -113,13 +113,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDYtjDYjoEEMjw=
+      - JmC_3gVFjoEEMRw=
       Connection:
       - keep-alive
       Content-Length:
@@ -127,7 +127,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:12 GMT
+      - Fri, 25 Apr 2025 19:40:33 GMT
     status:
       code: 200
       message: OK
@@ -145,13 +145,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDZBjDRDoEEM6Q=
+      - JmDAMh1aDoEEMQw=
       Connection:
       - keep-alive
       Content-Length:
@@ -159,7 +159,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:15 GMT
+      - Fri, 25 Apr 2025 19:40:36 GMT
     status:
       code: 200
       message: OK
@@ -177,13 +177,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDZWijcDoEEMFg=
+      - JmDAgitpDoEEMUg=
       Connection:
       - keep-alive
       Content-Length:
@@ -191,7 +191,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:17 GMT
+      - Fri, 25 Apr 2025 19:40:38 GMT
     status:
       code: 200
       message: OK
@@ -209,13 +209,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDZriykDoEEMDA=
+      - JmDA1hEbDoEEM-g=
       Connection:
       - keep-alive
       Content-Length:
@@ -223,7 +223,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:19 GMT
+      - Fri, 25 Apr 2025 19:40:40 GMT
     status:
       code: 200
       message: OK
@@ -241,13 +241,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDZ_hNiDoEEMJg=
+      - JmDBRi_-joEEMOg=
       Connection:
       - keep-alive
       Content-Length:
@@ -255,7 +255,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:21 GMT
+      - Fri, 25 Apr 2025 19:40:42 GMT
     status:
       code: 200
       message: OK
@@ -273,13 +273,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDaUhXBjoEEMkg=
+      - JmDBliD5joEEMug=
       Connection:
       - keep-alive
       Content-Length:
@@ -287,7 +287,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:23 GMT
+      - Fri, 25 Apr 2025 19:40:45 GMT
     status:
       code: 200
       message: OK
@@ -305,13 +305,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDapjqOjoEEMQw=
+      - JmDB6icSjoEEMYQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -319,7 +319,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:25 GMT
+      - Fri, 25 Apr 2025 19:40:47 GMT
     status:
       code: 200
       message: OK
@@ -337,13 +337,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDa-gkJjoEEMfw=
+      - JmDCPhqfjoEENGQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -351,7 +351,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:27 GMT
+      - Fri, 25 Apr 2025 19:40:49 GMT
     status:
       code: 200
       message: OK
@@ -369,13 +369,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDbSi2vjoEEMLQ=
+      - JmDCkhvJjoEENGQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -383,7 +383,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:29 GMT
+      - Fri, 25 Apr 2025 19:40:51 GMT
     status:
       code: 200
       message: OK
@@ -401,13 +401,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDbnjT-DoEEMvQ=
+      - JmDC4hrVDoEEMTA=
       Connection:
       - keep-alive
       Content-Length:
@@ -415,7 +415,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:31 GMT
+      - Fri, 25 Apr 2025 19:40:53 GMT
     status:
       code: 200
       message: OK
@@ -433,13 +433,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDb7g99DoEEMKw=
+      - JmDDNjW3joEEMDQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -447,7 +447,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:33 GMT
+      - Fri, 25 Apr 2025 19:40:55 GMT
     status:
       code: 200
       message: OK
@@ -465,13 +465,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDcQh_yjoEEMKQ=
+      - JmDDiimPjoEEMQw=
       Connection:
       - keep-alive
       Content-Length:
@@ -479,7 +479,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:35 GMT
+      - Fri, 25 Apr 2025 19:40:57 GMT
     status:
       code: 200
       message: OK
@@ -497,13 +497,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDckgXZDoEEM0A=
+      - JmDD5hqojoEEMQA=
       Connection:
       - keep-alive
       Content-Length:
@@ -511,7 +511,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:37 GMT
+      - Fri, 25 Apr 2025 19:40:59 GMT
     status:
       code: 200
       message: OK
@@ -529,13 +529,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDc5hmDjoEEMKg=
+      - JmDENh2HDoEEM-g=
       Connection:
       - keep-alive
       Content-Length:
@@ -543,7 +543,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:39 GMT
+      - Fri, 25 Apr 2025 19:41:01 GMT
     status:
       code: 200
       message: OK
@@ -561,13 +561,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDdOhCYDoEEMfw=
+      - JmDEigxJjoEEMKQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -575,7 +575,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:41 GMT
+      - Fri, 25 Apr 2025 19:41:03 GMT
     status:
       code: 200
       message: OK
@@ -593,13 +593,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDdiiq0DoEEMmw=
+      - JmDE3jHdDoEEMYQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -607,7 +607,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:43 GMT
+      - Fri, 25 Apr 2025 19:41:05 GMT
     status:
       code: 200
       message: OK
@@ -625,13 +625,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDd3j-gDoEEMZw=
+      - JmDFMikrjoEEMCQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -639,7 +639,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:45 GMT
+      - Fri, 25 Apr 2025 19:41:08 GMT
     status:
       code: 200
       message: OK
@@ -657,13 +657,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDeMjfXjoEEMhA=
+      - JmDFgiwEDoEEM0g=
       Connection:
       - keep-alive
       Content-Length:
@@ -671,7 +671,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:48 GMT
+      - Fri, 25 Apr 2025 19:41:10 GMT
     status:
       code: 200
       message: OK
@@ -689,13 +689,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDeggtXjoEEMBw=
+      - JmDF1j5iDoEEMfw=
       Connection:
       - keep-alive
       Content-Length:
@@ -703,7 +703,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:50 GMT
+      - Fri, 25 Apr 2025 19:41:12 GMT
     status:
       code: 200
       message: OK
@@ -721,13 +721,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDe1iWvDoEEMZg=
+      - JmDGLhYAjoEEMCg=
       Connection:
       - keep-alive
       Content-Length:
@@ -735,7 +735,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:52 GMT
+      - Fri, 25 Apr 2025 19:41:14 GMT
     status:
       code: 200
       message: OK
@@ -753,13 +753,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDfKgi9joEEM7Q=
+      - JmDGfjIdjoEEM7Q=
       Connection:
       - keep-alive
       Content-Length:
@@ -767,7 +767,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:54 GMT
+      - Fri, 25 Apr 2025 19:41:16 GMT
     status:
       code: 200
       message: OK
@@ -785,13 +785,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDfejBdDoEEMFA=
+      - JmDG0hmqDoEEMFA=
       Connection:
       - keep-alive
       Content-Length:
@@ -799,7 +799,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:56 GMT
+      - Fri, 25 Apr 2025 19:41:18 GMT
     status:
       code: 200
       message: OK
@@ -817,13 +817,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDfzgvlDoEEMQw=
+      - JmDHJg0XjoEEMPQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -831,7 +831,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:43:58 GMT
+      - Fri, 25 Apr 2025 19:41:20 GMT
     status:
       code: 200
       message: OK
@@ -849,13 +849,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDgHgx1joEEMQg=
+      - JmDHejEDjoEEMpA=
       Connection:
       - keep-alive
       Content-Length:
@@ -863,7 +863,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:44:00 GMT
+      - Fri, 25 Apr 2025 19:41:22 GMT
     status:
       code: 200
       message: OK
@@ -881,13 +881,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
       string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JmDgcitHDoEEMZg=
+      - JmDHyiGUjoEEM3A=
       Connection:
       - keep-alive
       Content-Length:
@@ -895,7 +895,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:44:02 GMT
+      - Fri, 25 Apr 2025 19:41:24 GMT
     status:
       code: 200
       message: OK
@@ -913,21 +913,21 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/8798befb12904b91ae14fb6382baf6cb
   response:
     body:
-      string: '{"status":"pending"}'
+      string: '{"jobId":"06ba7705-67e8-4540-8a66-4d374cb6aaf2","status":"completed","resultUrl":"https://core-dev-pulsefilesystembucket-bvkfxrtm.s3.eu-west-1.amazonaws.com/jobs/embeddings/06ba7705-67e8-4540-8a66-4d374cb6aaf2/response.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIA33Y6QTYAWELXXAOV%2F20250425%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20250425T194126Z&X-Amz-Expires=900&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCWV1LXdlc3QtMSJHMEUCIE%2BpBNm83uvW1FWMf68QcJXEfNS2pQeN%2BEV2uYfF%2FEyyAiEA3Ppde3Inmol%2BR2XK%2BTi6gCukd8XiPTAlb9Ik0F0TdYMqqwMINRAAGgw4MTU1NzA5MTg5MTMiDESL16IvnaFLqk7jaCqIAx3MNxwemZrch3f3cuRd3bcMJ42HlTZ5UvgYVi3khoP6OT98HZX7XxMQVp%2FaExIV8kkQfoAsO9sAFRMe%2B4qHWY84DstfGXaMy7nFJID6qimToJlgHgzxGNg46jtH7rC9ZhjahZT7IcvdHEd7bzTEQ3bIxJjrgNN4gtG5ijQSWkfA2MGl1FX4um306k0s3XnHLV9MNETTo332T%2BzaE19jsSYp9CsEHH8iN58JMr%2FJ1DQvlG17NXrjPr%2FEh7V29XFpsUHfvitq44XWEeCFmjXD%2FNssESvl0ghvUjO%2FIlNohgQQJUMWHRLxD9IvzUkBSUXOOsUUphKQWCM%2B7OgldfAAXTYtTDweHFwTEK3xVwr3wNvEKist1TkbBv00SWvmBvrsRqk75b9rTnBpSkRfl%2FGRNlPiF6qBcYblEZkmjTMqmpbYz2%2Fvdqim%2FaW1kVkkS8BMvHOD2QX0X5eOtrZV76yJT78eW81fXY3EchYRn1gs71BZ0WUWuR6mh1Q7ZNqR%2FJMnaFLf%2BNTNVEHQMLjKr8AGOp0BttRArUmAvVWGj2uYosHKouU4j%2BduFoCYrQSnuZnw4GEjLDmCyYH07AmWxkpOURZzBk%2FMaoyT9SkrxQEKie0jO18Mu2mTJlaRqCa%2BAOYXYSr4BwoOtyx%2BwhRrdHOJtuE85BdEe%2B3KJtIFapJYdShEAC4omB0Cb2W%2B%2B%2BtTJV4MH5UTLyt8YsehN2jfFlyfeUPi2LkJrpAx3QOLw8QqLA%3D%3D&X-Amz-Signature=b8cfd857107108cde9be75d86d24764f1aca45351598cd7802eca1f6932b25a1&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"}'
     headers:
       Apigw-Requestid:
-      - JmDgwg7oDoEEMug=
+      - JmDIHgVQjoEEM8g=
       Connection:
       - keep-alive
       Content-Length:
-      - '20'
+      - '1610'
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:44:04 GMT
+      - Fri, 25 Apr 2025 19:41:26 GMT
     status:
       code: 200
       message: OK
@@ -941,89 +941,42 @@ interactions:
       connection:
       - keep-alive
       host:
-      - dev.core.researchwiseai.com
+      - core-dev-pulsefilesystembucket-bvkfxrtm.s3.eu-west-1.amazonaws.com
       user-agent:
       - python-httpx/0.28.1
     method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
+    uri: https://core-dev-pulsefilesystembucket-bvkfxrtm.s3.eu-west-1.amazonaws.com/jobs/embeddings/06ba7705-67e8-4540-8a66-4d374cb6aaf2/response.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIA33Y6QTYAWELXXAOV%2F20250425%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20250425T194126Z&X-Amz-Expires=900&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCWV1LXdlc3QtMSJHMEUCIE%2BpBNm83uvW1FWMf68QcJXEfNS2pQeN%2BEV2uYfF%2FEyyAiEA3Ppde3Inmol%2BR2XK%2BTi6gCukd8XiPTAlb9Ik0F0TdYMqqwMINRAAGgw4MTU1NzA5MTg5MTMiDESL16IvnaFLqk7jaCqIAx3MNxwemZrch3f3cuRd3bcMJ42HlTZ5UvgYVi3khoP6OT98HZX7XxMQVp%2FaExIV8kkQfoAsO9sAFRMe%2B4qHWY84DstfGXaMy7nFJID6qimToJlgHgzxGNg46jtH7rC9ZhjahZT7IcvdHEd7bzTEQ3bIxJjrgNN4gtG5ijQSWkfA2MGl1FX4um306k0s3XnHLV9MNETTo332T%2BzaE19jsSYp9CsEHH8iN58JMr%2FJ1DQvlG17NXrjPr%2FEh7V29XFpsUHfvitq44XWEeCFmjXD%2FNssESvl0ghvUjO%2FIlNohgQQJUMWHRLxD9IvzUkBSUXOOsUUphKQWCM%2B7OgldfAAXTYtTDweHFwTEK3xVwr3wNvEKist1TkbBv00SWvmBvrsRqk75b9rTnBpSkRfl%2FGRNlPiF6qBcYblEZkmjTMqmpbYz2%2Fvdqim%2FaW1kVkkS8BMvHOD2QX0X5eOtrZV76yJT78eW81fXY3EchYRn1gs71BZ0WUWuR6mh1Q7ZNqR%2FJMnaFLf%2BNTNVEHQMLjKr8AGOp0BttRArUmAvVWGj2uYosHKouU4j%2BduFoCYrQSnuZnw4GEjLDmCyYH07AmWxkpOURZzBk%2FMaoyT9SkrxQEKie0jO18Mu2mTJlaRqCa%2BAOYXYSr4BwoOtyx%2BwhRrdHOJtuE85BdEe%2B3KJtIFapJYdShEAC4omB0Cb2W%2B%2B%2BtTJV4MH5UTLyt8YsehN2jfFlyfeUPi2LkJrpAx3QOLw8QqLA%3D%3D&X-Amz-Signature=b8cfd857107108cde9be75d86d24764f1aca45351598cd7802eca1f6932b25a1&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject
   response:
     body:
-      string: '{"status":"pending"}'
+      string: !!binary |
+        H4sIAAAAAAAAA03IMQ4CIRAF0Lv8GgwiDAM38AzGYnYZEpOVjQtWxrvb+sr3wVi1y/HYUTB0azB4
+        7lVR0DaZU7tWGHQUb/6m3NwpMmdO55wjOR9zuBsc+nrrmNeKAkeLpOSipaRsQwzOshDZUC8prAuJ
+        NI/vD977gN2AAAAA
     headers:
-      Apigw-Requestid:
-      - JmDhFgTKDoEEMTA=
-      Connection:
-      - keep-alive
+      Accept-Ranges:
+      - bytes
+      Content-Encoding:
+      - gzip
       Content-Length:
-      - '20'
+      - '126'
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 19:44:06 GMT
-    status:
-      code: 200
-      message: OK
-- request:
-    body: ''
-    headers:
-      accept:
-      - '*/*'
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      host:
-      - dev.core.researchwiseai.com
-      user-agent:
-      - python-httpx/0.28.1
-    method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
-  response:
-    body:
-      string: '{"status":"pending"}'
-    headers:
-      Apigw-Requestid:
-      - JmDhagz1DoEEMXg=
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '20'
-      Content-Type:
-      - application/json
-      Date:
-      - Fri, 25 Apr 2025 19:44:08 GMT
-    status:
-      code: 200
-      message: OK
-- request:
-    body: ''
-    headers:
-      accept:
-      - '*/*'
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      host:
-      - dev.core.researchwiseai.com
-      user-agent:
-      - python-httpx/0.28.1
-    method: GET
-    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/30ff1cdccda148e189fc39ed588dbc49
-  response:
-    body:
-      string: '{"status":"pending"}'
-    headers:
-      Apigw-Requestid:
-      - JmDhvjyOjoEEM_A=
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '20'
-      Content-Type:
-      - application/json
-      Date:
-      - Fri, 25 Apr 2025 19:44:10 GMT
+      - Fri, 25 Apr 2025 19:41:27 GMT
+      ETag:
+      - '"e8e3509461963d59dadb1dc5090fdb8e"'
+      Last-Modified:
+      - Fri, 25 Apr 2025 19:41:01 GMT
+      Server:
+      - AmazonS3
+      x-amz-id-2:
+      - fptx4ZG8FvgBZIA5MM5zPWeVKf+mEe/xjGv4fBQWhgqptJM1mrSsPO99EZdB+RqkZZyfDnme30A=
+      x-amz-meta-encodingversion:
+      - '2025-04-20'
+      x-amz-request-id:
+      - RD59JCWF93D57W0D
+      x-amz-server-side-encryption:
+      - AES256
     status:
       code: 200
       message: OK

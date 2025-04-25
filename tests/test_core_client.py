@@ -19,33 +19,91 @@ def disable_sleep(monkeypatch):
 
 def test_create_embeddings_fast():
     client = CoreClient()
-    # fast=True should error on queued 202 response
-    with pytest.raises(PulseAPIError):
-        client.create_embeddings(["a", "b"], fast=True)
+    response = client.create_embeddings(["a", "b"], fast=True)
+
+    # Check that the response is a valid EmbeddingResponse object
+    assert response is not None
+    assert hasattr(response, "embeddings")
+    assert hasattr(response, "requestId")
+
+    assert len(response.embeddings) == 2
+    assert response.embeddings[0].vector is not None
+    assert response.embeddings[1].vector is not None
+    assert response.embeddings[0].text is not None
+    assert response.embeddings[1].text is not None
 
 
 def test_compare_similarity_fast():
     client = CoreClient()
-    # fast=True should error on queued 202 response
-    with pytest.raises(PulseAPIError):
-        client.compare_similarity(["x", "y"], fast=True, flatten=False)
+
+    response = client.compare_similarity(set=["x", "y"], fast=True, flatten=False)
+    # Check that the response is a valid SimilarityResponse object
+    assert response is not None
+    assert hasattr(response, "requestId")
+    assert hasattr(response, "matrix")
+    assert hasattr(response, "flattened")
+    assert hasattr(response, "scenario")
+    assert hasattr(response, "mode")
+    assert hasattr(response, "n")
+
+    # requestId should be a string
+    assert isinstance(response.requestId, str)
+    # similarity should be a list of lists of floats
+    assert isinstance(response.similarity, list)
+    assert all(isinstance(row, list) for row in response.similarity)
+    assert all(isinstance(val, float) for row in response.similarity for val in row)
+
+    # scenario should be either self or cross
+    assert response.scenario in ["self", "cross"]
+    # mode should be either matrix or flattened
+    assert response.mode in ["matrix", "flattened"]
+    # n should be an integer
+    assert isinstance(response.n, int)
 
 
 def test_generate_themes_fast():
     client = CoreClient()
-    # fast=True should error on queued 202 response
-    with pytest.raises(PulseAPIError):
-        client.generate_themes(["x", "y"], min_themes=1, max_themes=3, fast=True)
+    response = client.generate_themes(
+        ["apple", "orange", "banana", "melon", "goat", "horse", "cow", "pig"],
+        min_themes=1,
+        max_themes=3,
+        fast=True,
+    )
+    # Check that the response is a valid ThemesResponse object
+    assert hasattr(response, "themes")
+    assert hasattr(response, "requestId")
+
+    assert len(response.themes) == 2
+    assert hasattr(response.themes[0], "shortLabel")
+    assert hasattr(response.themes[0], "label")
+    assert hasattr(response.themes[0], "description")
+    assert hasattr(response.themes[0], "representatives")
+    assert hasattr(response.themes[1], "shortLabel")
+    assert hasattr(response.themes[1], "label")
+    assert hasattr(response.themes[1], "description")
+    assert hasattr(response.themes[1], "representatives")
 
 
 def test_analyze_sentiment_fast():
     client = CoreClient()
-    # fast=True should error on queued 202 response
-    with pytest.raises(PulseAPIError):
-        client.analyze_sentiment(["happy", "sad"], fast=True)
+    response = client.analyze_sentiment(["happy", "sad"], fast=True)
+    # Check that the response is a valid SentimentResponse object
+    assert hasattr(response, "results")
+    assert hasattr(response, "requestId")
+    assert len(response.results) == 2
+    assert hasattr(response.results[0], "sentiment")
+    assert hasattr(response.results[0], "confidence")
+    assert hasattr(response.results[1], "sentiment")
+    assert hasattr(response.results[1], "confidence")
+    assert response.results[0].sentiment in ["positive", "negative", "neutral", "mixed"]
+    assert response.results[1].sentiment in ["positive", "negative", "neutral", "mixed"]
+    assert isinstance(response.results[0].confidence, float)
+    assert isinstance(response.results[1].confidence, float)
+    assert 0 <= response.results[0].confidence <= 1
+    assert 0 <= response.results[1].confidence <= 1
 
 
 def test_error_raises():
     client = CoreClient()
     with pytest.raises(PulseAPIError):
-        client.create_embeddings([], fast=True)
+        client.create_embeddings([False], fast=True)

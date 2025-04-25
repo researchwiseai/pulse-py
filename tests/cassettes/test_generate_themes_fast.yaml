@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"inputs":["x","y"],"minThemes":1,"maxThemes":3,"fast":"true"}'
+    body: '{"inputs":["apple","orange","banana","melon","goat","horse","cow","pig"],"minThemes":1,"maxThemes":3,"fast":true}'
     headers:
       accept:
       - '*/*'
@@ -9,7 +9,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '62'
+      - '113'
       content-type:
       - application/json
       host:
@@ -21,25 +21,26 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAAzXOQQqDMBCF4X1O8Zi1eAD37Qm6K1LGZKoBNSGTaqX07qUal49v4J8r+1EcckDk
-        pAK1g0xc4zZ4haQUElZWWH6pOHRbg7sBPgYAyAYn1ID8vPDo3SNvUag6TN5RbBb39y6EUXg+KYkV
-        vxykOfm5PyVyHuhI7LsLbisG0JM10z7acj+JKvf7D5fSQ4lVODMoDQN8TVv/AFFT3ETyAAAA
+        H4sIAAAAAAAAA53OQWsCMRQE4L8S5rxbrLpV9+alIPTUa/GQ3UzcQEzSvGehiP+9aA8tQi+9DjPM
+        d4ZOPFLQv50hU676YgdG9Hiup6CCBvE+cJSxhqIhJ/R4pZSchGIqo1U6o9m44D0rkxr9LBSTvfG3
+        +QMaVJZKYVKr4eN2DVtKJBrkatOB2F+aO802haONvzk/yf889nv/B+iQraLBlKtcOftr6f1E0Z1D
+        D+9X7Gadazlbde1y/bRoB7ex7XyzdvPxcVxy8Lh8ARqmuq5cAQAA
     headers:
       Apigw-Requestid:
-      - Jl3BcjD4joEEPFw=
+      - JmC3OgOwDoEEJpw=
       Connection:
       - keep-alive
       Content-Length:
-      - '168'
+      - '210'
       Content-Type:
-      - text/plain
+      - application/json
       Date:
-      - Fri, 25 Apr 2025 18:18:49 GMT
+      - Fri, 25 Apr 2025 19:39:41 GMT
       content-encoding:
       - gzip
       vary:
       - Accept-Encoding
     status:
-      code: 400
-      message: Bad Request
+      code: 200
+      message: OK
 version: 1

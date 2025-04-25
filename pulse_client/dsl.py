@@ -82,14 +82,23 @@ class Workflow:
         self._sources[name] = data
         return self
 
-    def _add_process(self, process: Any) -> None:
+    def _add_process(self, process: Any, name: str | None = None) -> None:
         orig_id = process.id
-        count = self._id_counts[orig_id] + 1
+        # increment counter for this process type
+        count = self._id_counts.get(orig_id, 0) + 1
         self._id_counts[orig_id] = count
+        # preserve original process id for result wrapping
         setattr(process, "_orig_id", orig_id)
-        if count > 1:
+        if name:
+            # user-specified alias: must be unique among sources and processes
+            if name in self._sources or name in [p.id for p in self._processes]:
+                raise ValueError(f"Process name '{name}' already registered")
+            setattr(process, "id", name)
+        elif count > 1:
+            # auto-aliased numbered id (e.g. sentiment_2)
             alias = f"{orig_id}_{count}"
             setattr(process, "id", alias)
+        # first occurrence retains original id
         self._processes.append(process)
 
     def theme_generation(
@@ -100,6 +109,7 @@ class Workflow:
         context: Any = None,
         fast: bool | None = None,
         source: str | None = None,
+        name: str | None = None,
     ) -> "Workflow":
         """Add a theme generation step to the workflow."""
         process = ThemeGeneration(
@@ -108,10 +118,15 @@ class Workflow:
             context=context,
             fast=fast,
         )
-        self._add_process(process)
+        self._add_process(process, name=name)
         # determine input source for texts
         alias = source or "dataset"
-        if alias != "dataset" and alias not in self._sources:
+        # allow text source from named sources or prior process outputs
+        if (
+            alias != "dataset"
+            and alias not in self._sources
+            and alias not in [p.id for p in self._processes]
+        ):
             raise ValueError(f"Unknown source for theme_generation: '{alias}'")
         setattr(process, "_inputs", [alias])
         return self
@@ -124,16 +139,35 @@ class Workflow:
         threshold: float = 0.5,
         inputs: str | None = None,
         themes_from: str | None = None,
+        name: str | None = None,
     ) -> "Workflow":
         """Add a theme allocation step with explicit input wiring."""
+        # auto-inject theme_generation for dynamic themes if not already present
+        text_alias = inputs or "dataset"
+        if themes is None and themes_from is None:
+            # validate text source alias
+            if (
+                text_alias != "dataset"
+                and text_alias not in self._sources
+                and text_alias not in [p.id for p in self._processes]
+            ):
+                raise ValueError(
+                    f"Unknown inputs source for theme_allocation: '{text_alias}'"
+                )
+            # inject default theme_generation on the same texts
+            if not any(
+                getattr(p, "_orig_id", p.id) == "theme_generation"
+                for p in self._processes
+            ):
+                self.theme_generation(source=text_alias)
         process = ThemeAllocation(
             themes=themes,
             single_label=single_label,
             threshold=threshold,
         )
-        self._add_process(process)
+        self._add_process(process, name=name)
         # wire text inputs
-        inp = inputs or "dataset"
+        inp = text_alias
         if (
             inp != "dataset"
             and inp not in self._sources
@@ -143,9 +177,14 @@ class Workflow:
         setattr(process, "_inputs", [inp])
         # wire themes list if dynamic
         if themes is None:
-            # determine alias for theme source
             if themes_from:
                 alias = themes_from
+                if alias not in self._sources and alias not in [
+                    p.id for p in self._processes
+                ]:
+                    raise ValueError(
+                        f"Unknown themes source for theme_allocation: '{alias}'"
+                    )
             else:
                 # find last theme_generation alias
                 alias = next(
@@ -169,6 +208,7 @@ class Workflow:
         fast: bool | None = None,
         inputs: str | None = None,
         themes_from: str | None = None,
+        name: str | None = None,
     ) -> "Workflow":
         """Add a theme extraction step with explicit input wiring."""
         process = ThemeExtraction(
@@ -176,7 +216,7 @@ class Workflow:
             version=version,
             fast=fast,
         )
-        self._add_process(process)
+        self._add_process(process, name=name)
         # wire text inputs
         inp = inputs or "dataset"
         if (
@@ -190,6 +230,12 @@ class Workflow:
         if themes is None:
             if themes_from:
                 alias = themes_from
+                if alias not in self._sources and alias not in [
+                    p.id for p in self._processes
+                ]:
+                    raise ValueError(
+                        f"Unknown themes source for theme_extraction: '{alias}'"
+                    )
             else:
                 alias = next(
                     (
@@ -209,10 +255,11 @@ class Workflow:
         *,
         fast: bool | None = None,
         source: str | None = None,
+        name: str | None = None,
     ) -> "Workflow":
         """Add a sentiment analysis step with optional source override."""
         process = SentimentProcess(fast=fast)
-        self._add_process(process)
+        self._add_process(process, name=name)
         # determine input source
         alias = source or "dataset"
         if (
@@ -230,10 +277,11 @@ class Workflow:
         k: int = 2,
         source: str | None = None,
         fast: bool | None = None,
+        name: str | None = None,
     ) -> "Workflow":
         """Add a clustering step with optional source override."""
         process = Cluster(fast=fast)
-        self._add_process(process)
+        self._add_process(process, name=name)
         # determine input source for clustering
         alias = source or "dataset"
         if (
@@ -350,6 +398,8 @@ class Workflow:
             else:
                 ctx.dataset = pd.Series(ds_data)
             ctx.results = results
+            # expose named and generated sources to processes
+            ctx.sources = sources
             # Run and wrap result
             raw = process.run(ctx)
             orig = getattr(process, "_orig_id", process.id)
