@@ -112,13 +112,16 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Fast sync path
-        if fast:
-            return ThemesResponse.model_validate(data)
-        # Async/job path
-        job = Job.model_validate(data)
-        job._client = self.client
-        return job
+        # Handle asynchronous job if service enqueued (202)
+        if response.status_code == 202:
+            job = Job.model_validate(data)
+            job._client = self.client
+            if fast:
+                result = job.wait()
+                return ThemesResponse.model_validate(result)
+            return job
+        # Synchronous response
+        return ThemesResponse.model_validate(data)
 
     def analyze_sentiment(
         self, texts: list[str], fast: bool = True

@@ -15,6 +15,38 @@ from pulse_client.analysis.processes import (
 )
 from pulse_client.analysis.analyzer import Analyzer
 from pulse_client.core.client import CoreClient
+from pulse_client.core.models import SentimentResponse as CoreSentimentResponse
+
+# Helpers to flatten and reconstruct nested inputs
+def _flatten_and_shape(x: Any):
+    shape: List[int] = []
+    def _get_shape(a: Any, lvl: int = 0):
+        nonlocal shape
+        if isinstance(a, list):
+            if len(shape) <= lvl:
+                shape.append(len(a))
+            else:
+                shape[lvl] = max(shape[lvl], len(a))
+            if a:
+                _get_shape(a[0], lvl + 1)
+    def _flatten(a: Any) -> List[Any]:
+        if isinstance(a, list):
+            out: List[Any] = []
+            for v in a:
+                out.extend(_flatten(v))
+            return out
+        return [a]
+    _get_shape(x)
+    flat = _flatten(x)
+    return shape, flat
+
+def _reconstruct(flat: List[Any], shape: List[int]):
+    it = iter(flat)
+    def _build(level: int):
+        if level >= len(shape):
+            return next(it)
+        return [_build(level + 1) for _ in range(shape[level])]
+    return _build(0)
 
 
 class Workflow:
@@ -319,8 +351,23 @@ class Workflow:
                 # make themes available as data source
                 sources[process.id] = wrapped.themes
             elif orig == "sentiment":
-                wrapped = SentimentResult(raw, ctx.dataset.tolist())
-                sources[process.id] = wrapped.sentiments
+                # Support nested input: flatten, call, reconstruct
+                data_in = ds_data
+                try:
+                    shape, flat_texts = _flatten_and_shape(data_in)
+                    # call sentiment on flat list
+                    ctx.dataset = pd.Series(flat_texts)
+                    flat_raw = process.run(ctx)
+                    flat_sents = flat_raw.sentiments
+                    nested = _reconstruct(flat_sents, shape)
+                    # wrap nested sentiments
+                    raw2 = CoreSentimentResponse(sentiments=nested)
+                    wrapped = SentimentResult(raw2, flat_texts)
+                    sources[process.id] = nested
+                except Exception:
+                    # fallback to default behavior
+                    wrapped = SentimentResult(raw, ctx.dataset.tolist())
+                    sources[process.id] = wrapped.sentiments
             elif orig == "theme_allocation":
                 wrapped = ThemeAllocationResult(
                     ctx.dataset.tolist(),
@@ -352,11 +399,28 @@ class Workflow:
         for p in self._processes:
             orig = getattr(p, "_orig_id", p.id)
             id_to_aliases[orig].append(p.id)
+        # Build adjacency: include both declared depends_on and wired inputs
+        proc_ids = [p.id for p in self._processes]
         for p in self._processes:
             alias = p.id
-            orig = getattr(p, "_orig_id", p.id)
+            # collect static dependencies based on orig_id.depends_on
             deps: List[str] = []
             for dep in getattr(p, "depends_on", ()):  # type: ignore[attr-defined]
                 deps.extend(id_to_aliases.get(dep, []))
-            edges[alias] = deps
+            # collect dynamic inputs from DSL wiring (skip 'dataset')
+            for inp in getattr(p, '_inputs', []):
+                if inp != 'dataset' and inp in proc_ids:
+                    deps.append(inp)
+            # collect theme-source wiring
+            theme_src = getattr(p, '_themes_from_alias', None)
+            if theme_src and theme_src in proc_ids:
+                deps.append(theme_src)
+            # remove duplicates preserving order
+            seen = set()
+            cleaned: List[str] = []
+            for d in deps:
+                if d not in seen:
+                    seen.add(d)
+                    cleaned.append(d)
+            edges[alias] = cleaned
         return edges
