@@ -60,10 +60,10 @@ esac
 echo "Bumping version: $current_version -> $new_version"
 
 # Update pyproject.toml
-sed -i -E "s/^version = \"[^"]+\"/version = \"$new_version\"/" pyproject.toml
+sed -i -E "s#^version = \".*\"#version = \"$new_version\"#" pyproject.toml
 
 # Update package __version__
-sed -i -E "s/^__version__ = \"[^"]+\"/__version__ = \"$new_version\"/" pulse_client/__init__.py
+sed -i -E "s#__version__ = \".*\"#__version__ = \"$new_version\"#" pulse_client/__init__.py
 
 # Commit and tag
 git add pyproject.toml pulse_client/__init__.py
