@@ -21,11 +21,3 @@ repos:
     rev: v0.0.241
     hooks:
       - id: ruff
-
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest
-        entry: pytest -q --disable-warnings --maxfail=1 --vcr-record=none
-        language: system
-        types: [python]

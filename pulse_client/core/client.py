@@ -68,7 +68,7 @@ class CoreClient:
         self, texts: list[str], fast: bool = True, flatten: bool = True
     ) -> Union[SimilarityResponse, Job]:
         """Compute cosine similarity."""
-        # Always request full similarity matrix synchronously; ignore flatten to avoid async job
+        # Always request full similarity matrix; ignore flatten to avoid async job
         params: Dict[str, str] = {"flatten": "true"}
         if fast:
             params["fast"] = "true"

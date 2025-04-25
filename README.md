@@ -82,6 +82,7 @@ Clone the project and install as above.  We recommend using a virtual environmen
    ```bash
    pytest --vcr-record=none
    ```
+   (tests are run in CI on push)
 3. Run code formatters & linters:
    ```bash
    black .                      # format Python source

@@ -98,7 +98,8 @@ class ThemeAllocationResult:
         self._similarity = similarity or []  # type: Sequence[Sequence[float]]
 
     def assign_single(self, threshold: Optional[float] = None) -> pd.Series:
-        """Return a Series mapping each text to its single theme label, applying threshold if provided."""
+        """Return a Series mapping each text to its single theme label.
+        Applies threshold if provided."""
         thr = self._threshold if threshold is None else threshold
         labels = []
         for idx, assign in enumerate(self._assignments):
@@ -242,7 +243,8 @@ class ThemeExtractionResult:
         return self._response.extractions
 
     def to_dataframe(self) -> pd.DataFrame:
-        """Convert extraction results to a DataFrame with text, theme, and extraction."""
+        """Convert extraction results to a DataFrame.
+        Columns: text, theme, extraction."""
         rows: list[dict[str, str]] = []
         for i, text in enumerate(self._texts):
             for j, theme in enumerate(self._themes):
