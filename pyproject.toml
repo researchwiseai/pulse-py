@@ -63,4 +63,5 @@ dev = [
     "pytest-mock",
     "pytest-vcr",
     "black",
+    "nbqa",
 ]

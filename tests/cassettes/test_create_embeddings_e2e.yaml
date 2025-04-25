@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: '{"inputs":["test e2e","pulse client"]}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '38'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/embeddings?fast=true
+  response:
+    body:
+      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/53636a717f984e8ba705435c8f946896"}'
+    headers:
+      Apigw-Requestid:
+      - JkRRbhFVDoEEMRw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '79'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 25 Apr 2025 06:44:13 GMT
+    status:
+      code: 202
+      message: Accepted
+version: 1

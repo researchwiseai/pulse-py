@@ -1,23 +1,27 @@
- name: CI
-
- on:
-   push:
-     branches: [main]
-   pull_request:
-     branches: [main]
-
- jobs:
-   lint-and-test:
-     runs-on: ubuntu-latest
-     steps:
-       - uses: actions/checkout@v3
-       - uses: actions/setup-python@v4
-         with:
-           python-version: '3.x'
-       - run: pip install .[dev]
-       - name: Run black
-         run: black --check .
-       - name: Run ruff
-         run: ruff .
-       - name: Run tests
-         run: pytest -q
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[dev]
+    - name: Run tests
+      run: pytest -q --disable-warnings --maxfail=1
+    - name: Check Python formatting
+      run: black --check .
+    - name: Check Notebook formatting
+      run: nbqa black --check .
+    - name: Lint with Ruff
+      run: ruff .
