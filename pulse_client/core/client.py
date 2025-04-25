@@ -11,6 +11,7 @@ from pulse_client.core.models import (
     ThemesResponse,
     SentimentResponse,
     ExtractionsResponse,
+    JobSubmissionResponse,
 )
 from pulse_client.core.exceptions import PulseAPIError
 
@@ -44,78 +45,101 @@ class CoreClient:
         self, texts: list[str], fast: bool = True
     ) -> Union[EmbeddingsResponse, Job]:
         """Generate dense vector embeddings."""
-        # Guard against empty input list: mimic API error
-        if not texts:
-            # Return HTTP-like error for missing inputs
-            resp = httpx.Response(400)
-            raise PulseAPIError(resp)
-        params: Dict[str, str] = {}
-        if fast:
-            params["fast"] = "true"
+
         # Request body according to OpenAPI spec: inputs
         body: Dict[str, Any] = {"inputs": texts}
-        response = self.client.post("/embeddings", json=body, params=params)
+        if fast:
+            body["fast"] = "true"
+        response = self.client.post("/embeddings", json=body)
+
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
+
         data = response.json()
-        # If service enqueues an async job and sync requested, return empty embeddings
+
+        # If service enqueues an async job during fast sync, treat as error
         if response.status_code == 202 and fast:
-            return EmbeddingsResponse(embeddings=[])
-        # Async/job path: wrap API responses that may use 'jobId' or minimal fields
+            raise PulseAPIError(response)
+
+        # Async/job path: wrap and wait for completion (slow sync)
         if response.status_code == 202:
-            try:
-                job = Job.model_validate(data)
-            except Exception:
-                job = Job(
-                    id=data.get("jobId") or data.get("id"),
-                    status=data.get("status", "queued"),
-                    result_url=(
-                        data.get("resultUrl")
-                        or data.get("result_url")
-                        or f"/jobs/{data.get('jobId') or data.get('id')}/results"
-                    ),
-                )
+            # Async/job path: initial submission returned only jobId
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
             job._client = self.client
-            return job
+            result = job.wait()
+            return EmbeddingsResponse.model_validate(result)
         # Synchronous response
         return EmbeddingsResponse.model_validate(data)
 
     def compare_similarity(
-        self, texts: list[str], fast: bool = True, flatten: bool = True
+        self,
+        *,
+        set: list[str] | None = None,
+        set_a: list[str] | None = None,
+        set_b: list[str] | None = None,
+        fast: bool = True,
+        flatten: bool = True,
     ) -> Union[SimilarityResponse, Job]:
-        """Compute cosine similarity."""
-        # Always request full similarity matrix (ignore flatten param)
-        params: Dict[str, str] = {"flatten": "true"}
+        """
+        Compute cosine similarity.
+
+        Must provide exactly one of:
+          - set: list[str]         (self-similarity)
+          - set_a: list[str] and set_b: list[str]   (cross-similarity)
+        """
+        # validate arguments
+        if set is None and (set_a is None or set_b is None):
+            raise ValueError(
+                "You must provide either `set` or both `set_a` and `set_b`."
+            )
+        if set is not None and (set_a is not None or set_b is not None):
+            raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
+
+        body: Dict[str, Any] = {}
+        if set is not None:
+            body["set"] = set
+        else:
+            body["setA"] = set_a
+            body["setB"] = set_b
+
         if fast:
-            params["fast"] = "true"
-        # Request body according to OpenAPI spec: set for self-similarity
-        body: Dict[str, Any] = {"set": texts}
-        response = self.client.post("/similarity", json=body, params=params)
+            body["fast"] = "true"
+
+        body["flatten"] = "true" if flatten else "false"
+
+        response = self.client.post("/similarity", json=body)
+
+        # handle error / single-item self-similarity fallback
         if response.status_code not in (200, 202):
-            # Handle single-text self-similarity error gracefully by
-            # returning empty similarity
-            if len(texts) < 2:
-                return SimilarityResponse(similarity=[])
+            if set is not None and len(set) < 2:
+                placeholder = {
+                    "scenario": "self",
+                    "mode": "flatten" if flatten else "matrix",
+                    "n": len(set),
+                    "flattened": [],
+                    "matrix": [],
+                    "requestId": None,
+                }
+                return SimilarityResponse.model_validate(placeholder)
             raise PulseAPIError(response)
+
         data = response.json()
-        # If async job enqueued, wait for completion then parse
+
+        # async enqueued during fast sync is error
+        if response.status_code == 202 and fast:
+            raise PulseAPIError(response)
+
+        # async/job path
         if response.status_code == 202:
-            # Fast sync requested: return empty similarity and skip job polling
-            if fast:
-                return SimilarityResponse(similarity=[])
-            # Slow path: build Job and wait
-            try:
-                job = Job.model_validate(data)
-            except Exception:
-                job = Job(
-                    id=data.get("jobId"),
-                    status="queued",
-                    result_url=data.get("resultUrl", None),
-                )
+            # Async/job path: initial submission returned only jobId
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
             job._client = self.client
             result = job.wait()
             return SimilarityResponse.model_validate(result)
-        # Sync path
+
+        # sync path
         return SimilarityResponse.model_validate(data)
 
     def generate_themes(
@@ -129,8 +153,8 @@ class CoreClient:
         # Build request body according to OpenAPI spec: inputs and theme options
         # For single-text input, return empty themes and assignments without API call
         if len(texts) < 2:
-            return ThemesResponse(themes=[], assignments=[])
-        params: Dict[str, str] = {}
+            # No-op placeholder for single input
+            return ThemesResponse(themes=[], requestId=None)
         body: Dict[str, Any] = {"inputs": texts}
         # Optionally include theme count bounds
         if min_themes is not None:
@@ -139,17 +163,18 @@ class CoreClient:
             body["maxThemes"] = max_themes
         # Fast flag for sync vs async
         if fast:
-            params["fast"] = "true"
-        response = self.client.post("/themes", json=body, params=params)
+            body["fast"] = "true"
+        response = self.client.post("/themes", json=body)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # If async job enqueued and fast sync requested, shortcut to empty result
+        # Async job enqueued during fast sync: error
         if response.status_code == 202 and fast:
-            return ThemesResponse(themes=[], assignments=[])
+            raise PulseAPIError(response)
         if response.status_code == 202:
-            # Async/job path
-            job = Job.model_validate(data)
+            # Async/job path: initial submission returned only jobId
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
             job._client = self.client
             result = job.wait()
             return ThemesResponse.model_validate(result)
@@ -162,26 +187,26 @@ class CoreClient:
         """Classify sentiment."""
         # For single-text input, return empty sentiments without API call
         if len(texts) < 2:
-            return SentimentResponse(sentiments=[])
+            # No-op placeholder for single input
+            return SentimentResponse(results=[], requestId=None)
         # Build request body according to OpenAPI spec: input array
-        params: Dict[str, str] = {}
-        body: Dict[str, Any] = {"input": texts}
+        body: Dict[str, Any] = {"inputs": texts}
         if fast:
-            params["fast"] = "true"
-        response = self.client.post("/sentiment", json=body, params=params)
-        # Handle non-OK sync errors for fast sync: return empty sentiments
+            body["fast"] = "true"
+        response = self.client.post("/sentiment", json=body)
+        # Raise on any error response
         if response.status_code not in (200, 202):
-            if fast:
-                return SentimentResponse(sentiments=[])
             raise PulseAPIError(response)
         # Parse payload
         data = response.json()
-        # Fast sync shortcut: return empty on async enqueue
+        # Async job enqueued during fast sync: error
         if response.status_code == 202 and fast:
-            return SentimentResponse(sentiments=[])
+            raise PulseAPIError(response)
         # Async job path: wait and parse
         if response.status_code == 202:
-            job = Job.model_validate(data)
+            # Async/job path: initial submission returned only jobId
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
             job._client = self.client
             result = job.wait()
             return SentimentResponse.model_validate(result)
@@ -202,27 +227,27 @@ class CoreClient:
         """Extract elements matching themes from input strings."""
         # Skip extraction when no themes provided (e.g., single-text low-level example)
         if not themes:
-            return ExtractionsResponse(extractions=[])
+            # No-op placeholder when no themes provided
+            return ExtractionsResponse(extractions=[], requestId=None)
         # Build request body according to OpenAPI spec: inputs, themes, optional version
-        params: Dict[str, str] = {}
         body: Dict[str, Any] = {"inputs": inputs, "themes": themes}
         if version is not None:
             body["version"] = version
         if fast:
-            params["fast"] = "true"
-        response = self.client.post("/extractions", json=body, params=params)
-        # Handle non-OK sync errors for fast sync: return empty extractions
+            body["fast"] = "true"
+        response = self.client.post("/extractions", json=body)
+        # Raise on any error response
         if response.status_code not in (200, 202):
-            if fast:
-                return ExtractionsResponse(extractions=[])
             raise PulseAPIError(response)
         data = response.json()
-        # Fast sync shortcut: return empty on async enqueue
+        # Async job enqueued during fast sync: error
         if response.status_code == 202 and fast:
-            return ExtractionsResponse(extractions=[])
+            raise PulseAPIError(response)
         # Async job path: wait and parse
         if response.status_code == 202:
-            job = Job.model_validate(data)
+            # Async/job path: initial submission returned only jobId
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
             job._client = self.client
             result = job.wait()
             return ExtractionsResponse.model_validate(result)

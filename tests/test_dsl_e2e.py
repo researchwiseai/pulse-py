@@ -3,8 +3,10 @@
 from pulse_client.dsl import Workflow
 from pulse_client.core.jobs import Job
 from pulse_client.core.models import (
+    Theme,
     ThemesResponse,
-    SentimentResponse,
+    SentimentResponse as CoreSentimentResponse,
+    SentimentResult as CoreSentimentResult,
     SimilarityResponse,
     ExtractionsResponse,
 )
@@ -14,9 +16,20 @@ class DummyDSLClient:
     """Stub CoreClient for DSL end-to-end test."""
 
     def generate_themes(self, texts, min_themes, max_themes, fast):
-        themes = ["T1", "T2"]
-        assignments = [0] * len(texts)
-        return ThemesResponse(themes=themes, assignments=assignments)
+        # Return spec-based Theme objects
+        th1 = Theme(
+            shortLabel="T1",
+            label="Label T1",
+            description="Desc T1",
+            representatives=["r1", "r2"],
+        )
+        th2 = Theme(
+            shortLabel="T2",
+            label="Label T2",
+            description="Desc T2",
+            representatives=["r3", "r4"],
+        )
+        return ThemesResponse(themes=[th1, th2], requestId=None)
 
     def theme_allocation(self, inputs, themes, fast, flatten=False):
         # Not used directly by DSL, allocation uses analyzer + processes
@@ -34,7 +47,11 @@ class DummyDSLClient:
         return ExtractionsResponse(extractions=extractions)
 
     def analyze_sentiment(self, texts, fast):
-        return SentimentResponse(sentiments=["pos" for _ in texts])
+        # Return spec-based sentiment "positive" for each
+        results = [
+            CoreSentimentResult(sentiment="positive", confidence=1.0) for _ in texts
+        ]
+        return CoreSentimentResponse(results=results, requestId=None)
 
 
 def test_dsl_end_to_end_with_dummy():

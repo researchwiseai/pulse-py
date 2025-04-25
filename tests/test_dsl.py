@@ -8,7 +8,6 @@ from pulse_client.dsl import Workflow
 from pulse_client.analysis.analyzer import AnalysisResult
 from pulse_client.core.models import (
     ThemesResponse,
-    SentimentResponse,
     SimilarityResponse,
     ExtractionsResponse,
 )
@@ -21,11 +20,25 @@ class DummyDSLClient:
         self.called = {}
 
     def generate_themes(self, texts, min_themes, max_themes, fast):
+        from pulse_client.core.models import Theme
+
         self.called["generate_themes"] = dict(
             texts=list(texts), min_themes=min_themes, max_themes=max_themes, fast=fast
         )
-        assignments = [0 for _ in texts]
-        return ThemesResponse(themes=["T1", "T2"], assignments=assignments)
+        # Return dummy Theme objects
+        th1 = Theme(
+            shortLabel="T1",
+            label="Label T1",
+            description="Desc T1",
+            representatives=["r1", "r2"],
+        )
+        th2 = Theme(
+            shortLabel="T2",
+            label="Label T2",
+            description="Desc T2",
+            representatives=["r3", "r4"],
+        )
+        return ThemesResponse(themes=[th1, th2], requestId=None)
 
     def extract_elements(self, inputs, themes, version, fast):
         self.called["extract_elements"] = dict(
@@ -40,8 +53,17 @@ class DummyDSLClient:
         return ExtractionsResponse(extractions=extractions)
 
     def analyze_sentiment(self, texts, fast):
+        from pulse_client.core.models import (
+            SentimentResult as CoreSentimentResult,
+            SentimentResponse as CoreSentimentResponse,
+        )
+
         self.called["analyze_sentiment"] = dict(texts=list(texts), fast=fast)
-        return SentimentResponse(sentiments=["neu" for _ in texts])
+        # Return spec-based 'neutral' sentiments
+        results = [
+            CoreSentimentResult(sentiment="neutral", confidence=1.0) for _ in texts
+        ]
+        return CoreSentimentResponse(results=results, requestId=None)
 
     def compare_similarity(self, texts, fast=True, flatten=True):
         self.called["compare_similarity"] = dict(
@@ -93,7 +115,8 @@ def test_workflow_run_and_results():
     df = te.to_dataframe()
     assert isinstance(df, pd.DataFrame)
     sent = results.sentiment
-    assert sent.sentiments == ["neu", "neu"]
+    # spec-based sentiment labels
+    assert sent.sentiments == ["neutral", "neutral"]
     cl = results.cluster
     mat = cl.matrix
     assert mat.shape == (2, 2)

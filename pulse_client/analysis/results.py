@@ -18,25 +18,28 @@ class ThemeGenerationResult:
 
     @property
     def themes(self) -> list[str]:
-        """List of theme labels."""
-        return self._response.themes
+        """List of theme shortLabels."""
+        return [theme.shortLabel for theme in self._response.themes]
 
-    @property
-    def assignments(self) -> list[int]:
-        """List of theme indices assigned to each text."""
-        return self._response.assignments
+    # legacy assignments removed; assignment is handled by ThemeAllocation process
 
     def to_dataframe(self) -> pd.DataFrame:
-        """Convert results to a pandas DataFrame with text and assigned theme."""
-        df = pd.DataFrame(
-            {
-                "text": self._texts,
-                "theme_id": self._response.assignments,
-            }
-        )
-        # Map theme_id to theme label
-        df["theme"] = df["theme_id"].apply(lambda i: self._response.themes[i])
-        return df
+        """
+        Convert theme metadata to a pandas DataFrame with columns:
+        [shortLabel, label, description, representative_1, representative_2]
+        """
+        data = []
+        for theme in self._response.themes:
+            data.append(
+                {
+                    "shortLabel": theme.shortLabel,
+                    "label": theme.label,
+                    "description": theme.description,
+                    "representative_1": theme.representatives[0],
+                    "representative_2": theme.representatives[1],
+                }
+            )
+        return pd.DataFrame(data)
 
 
 class SentimentResult:

@@ -17,13 +17,13 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/embeddings?fast=true
+    uri: https://dev.core.researchwiseai.com/pulse/v1/embeddings
   response:
     body:
-      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/bd91672f33be42e7bf00bb99bb3c4575"}'
+      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/7cab2e92db4e4d30b4c22dea2e0e8ef5"}'
     headers:
       Apigw-Requestid:
-      - JlTeIhUVDoEEPhg=
+      - Jl3CphjljoEEP9A=
       Connection:
       - keep-alive
       Content-Length:
@@ -31,12 +31,12 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 25 Apr 2025 14:16:08 GMT
+      - Fri, 25 Apr 2025 18:18:57 GMT
     status:
       code: 202
       message: Accepted
 - request:
-    body: '{"set":["example text"]}'
+    body: ''
     headers:
       accept:
       - '*/*'
@@ -44,39 +44,27 @@ interactions:
       - gzip, deflate
       connection:
       - keep-alive
-      content-length:
-      - '24'
-      content-type:
-      - application/json
       host:
       - dev.core.researchwiseai.com
       user-agent:
       - python-httpx/0.28.1
-    method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity?flatten=true&fast=true
+    method: GET
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/7cab2e92db4e4d30b4c22dea2e0e8ef5
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAAzWOvQrCQBCE+zzFsJWCWKRMZ+MT2InIelnNwf2E2z01iO8uRtPtfDPMzp59kB6W
-        MXJRgbpBIm9xGLxCSskFD1Y4rio9LlOHYwO8GgAgl3uhDmQ5nzVyCLT5GdEnH2ukDu2f2DTOUS6F
-        pyXmkwtV/f3rWKnyx/JkZ9ThykEXFkWVb3PF7luBWNXgcjL2CWwIwmpoIUGiJFvpevkysg302z3r
-        S+6XBQCpGM33qQHezWn7AfFMFBISAQAA
+      string: '{"status":"pending"}'
     headers:
       Apigw-Requestid:
-      - JlTeXiYzDoEEPjQ=
+      - Jl3CxhT1joEEPVQ=
       Connection:
       - keep-alive
       Content-Length:
-      - '195'
+      - '20'
       Content-Type:
-      - text/plain
+      - application/json
       Date:
-      - Fri, 25 Apr 2025 14:16:09 GMT
-      content-encoding:
-      - gzip
-      vary:
-      - Accept-Encoding
+      - Fri, 25 Apr 2025 18:18:57 GMT
     status:
-      code: 400
-      message: Bad Request
+      code: 200
+      message: OK
 version: 1

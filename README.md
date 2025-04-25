@@ -80,16 +80,21 @@ Clone the project and install as above.  We recommend using a virtual environmen
    ```
 2. Run tests without re-recording cassettes:
    ```bash
+   make test
+   # or, directly:
    pytest --vcr-record=none
    ```
-   (tests are run in CI on push)
-3. Run code formatters & linters:
+3. To reset and re-record all VCR cassettes from scratch:
+   ```bash
+   make vcr-record
+   ```
+4. Run code formatters & linters:
    ```bash
    black .                      # format Python source
    nbqa black .                 # format Jupyter notebooks
    ruff check pulse_client tests  # lint only code and tests
    ```
-4. Build distributions:
+5. Build distributions:
    ```bash
    python -m build
    ```

@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"inputs":["x","y"],"minThemes":1,"maxThemes":3}'
+    body: '{"inputs":["x","y"],"minThemes":1,"maxThemes":3,"fast":"true"}'
     headers:
       accept:
       - '*/*'
@@ -9,7 +9,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '48'
+      - '62'
       content-type:
       - application/json
       host:
@@ -17,22 +17,29 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/themes?fast=true
+    uri: https://dev.core.researchwiseai.com/pulse/v1/themes
   response:
     body:
-      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/4117d51cb2cb411aba48d5f422745e99"}'
+      string: !!binary |
+        H4sIAAAAAAAAAzXOQQqDMBCF4X1O8Zi1eAD37Qm6K1LGZKoBNSGTaqX07qUal49v4J8r+1EcckDk
+        pAK1g0xc4zZ4haQUElZWWH6pOHRbg7sBPgYAyAYn1ID8vPDo3SNvUag6TN5RbBb39y6EUXg+KYkV
+        vxykOfm5PyVyHuhI7LsLbisG0JM10z7acj+JKvf7D5fSQ4lVODMoDQN8TVv/AFFT3ETyAAAA
     headers:
       Apigw-Requestid:
-      - JlW20gcEDoEEPTA=
+      - Jl3BcjD4joEEPFw=
       Connection:
       - keep-alive
       Content-Length:
-      - '79'
+      - '168'
       Content-Type:
-      - application/json
+      - text/plain
       Date:
-      - Fri, 25 Apr 2025 14:39:15 GMT
+      - Fri, 25 Apr 2025 18:18:49 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
     status:
-      code: 202
-      message: Accepted
+      code: 400
+      message: Bad Request
 version: 1

@@ -6,7 +6,7 @@ import pytest
 
 from pulse_client.analysis.analyzer import Analyzer, AnalysisResult
 from pulse_client.analysis.processes import ThemeGeneration, SentimentProcess
-from pulse_client.core.models import ThemesResponse, SentimentResponse
+from pulse_client.core.models import ThemesResponse
 
 
 class DummyClient:
@@ -16,14 +16,39 @@ class DummyClient:
         self.called = {}
 
     def generate_themes(self, texts, min_themes, max_themes, fast):
+        from pulse_client.core.models import Theme
+
         self.called["generate_themes"] = dict(
             texts=texts, min_themes=min_themes, max_themes=max_themes, fast=fast
         )
-        return ThemesResponse(themes=["A", "B"], assignments=[0, 1])
+        # Return spec-based ThemesResponse with Theme objects
+        themeA = Theme(
+            shortLabel="A",
+            label="Label A",
+            description="Desc A",
+            representatives=["rA1", "rA2"],
+        )
+        themeB = Theme(
+            shortLabel="B",
+            label="Label B",
+            description="Desc B",
+            representatives=["rB1", "rB2"],
+        )
+        return ThemesResponse(themes=[themeA, themeB], requestId=None)
 
     def analyze_sentiment(self, texts, fast):
+        from pulse_client.core.models import (
+            SentimentResult as CoreSentimentResult,
+            SentimentResponse as CoreSentimentResponse,
+        )
+
         self.called["analyze_sentiment"] = dict(texts=texts, fast=fast)
-        return SentimentResponse(sentiments=["pos", "neg"])
+        # return spec-based sentiment results
+        results = [
+            CoreSentimentResult(sentiment="positive", confidence=0.9),
+            CoreSentimentResult(sentiment="negative", confidence=0.8),
+        ]
+        return CoreSentimentResponse(results=results, requestId=None)
 
 
 def test_analyzer_no_processes():
@@ -51,6 +76,7 @@ def test_theme_generation_process():
     from pulse_client.analysis.results import ThemeGenerationResult
 
     assert isinstance(tg, ThemeGenerationResult)
+    # shortLabels should match dummy
     assert tg.themes == ["A", "B"]
 
 
@@ -64,7 +90,8 @@ def test_sentiment_process():
         "fast": True,
     }
     sent = res.sentiment
-    from pulse_client.analysis.results import SentimentResult
+    from pulse_client.analysis.results import SentimentResult as AnalysisSentimentResult
 
-    assert isinstance(sent, SentimentResult)
-    assert sent.sentiments == ["pos", "neg"]
+    assert isinstance(sent, AnalysisSentimentResult)
+    # expect spec-based sentiment labels
+    assert sent.sentiments == ["positive", "negative"]

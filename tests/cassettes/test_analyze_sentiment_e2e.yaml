@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"input":["happy","sad"]}'
+    body: '{"inputs":["happy","sad"]}'
     headers:
       accept:
       - '*/*'
@@ -9,7 +9,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '25'
+      - '26'
       content-type:
       - application/json
       host:
@@ -17,25 +17,54 @@ interactions:
       user-agent:
       - python-httpx/0.28.1
     method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/sentiment?fast=true
+    uri: https://dev.core.researchwiseai.com/pulse/v1/sentiment
   response:
     body:
-      string: "Failed to parse schema. This error was caused by: [\n  {\n    \"code\":
-        \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"undefined\",\n
-        \   \"path\": [\n      \"body\",\n      \"inputs\"\n    ],\n    \"message\":
-        \"Required\"\n  }\n]."
+      string: '{"jobId":"task/core-dev-JobsCluster-nzenfbrm/fab26693a70d4b71899a54d3f6b44328"}'
     headers:
       Apigw-Requestid:
-      - JlTdvhLfjoEEPzw=
+      - Jl3CMjthDoEEPDA=
       Connection:
       - keep-alive
       Content-Length:
-      - '220'
+      - '79'
       Content-Type:
-      - text/plain
+      - application/json
       Date:
-      - Fri, 25 Apr 2025 14:16:04 GMT
+      - Fri, 25 Apr 2025 18:18:54 GMT
     status:
-      code: 400
-      message: Bad Request
+      code: 202
+      message: Accepted
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=task/core-dev-JobsCluster-nzenfbrm/fab26693a70d4b71899a54d3f6b44328
+  response:
+    body:
+      string: '{"status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - Jl3CUgYxjoEEPlw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '20'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 25 Apr 2025 18:18:54 GMT
+    status:
+      code: 200
+      message: OK
 version: 1

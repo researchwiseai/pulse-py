@@ -90,18 +90,18 @@ class ThemeAllocation:
             if tg is None:
                 raise RuntimeError(f"{alias} result not available for allocation")
             themes = tg.themes
-        # base single assignment indices
-        assignments = tg.assignments
         # Compute similarity between texts and theme labels
         merged = texts + themes
-        fast = ctx.fast
-        # request full matrix
-        resp = ctx.client.compare_similarity(merged, fast=fast, flatten=False)
+        fast_flag = ctx.fast
+        # request full matrix (flatten=False for NxN)
+        resp = ctx.client.compare_similarity(merged, fast=fast_flag, flatten=False)
         full_sim = resp.similarity  # (n+m)x(n+m)
         n = len(texts)
         m = len(themes)
-        # cross-similarity: top-left block cross texts->themes
+        # cross-similarity block: texts to themes similarity [n x m]
         sim_matrix = [row[n : n + m] for row in full_sim[:n]]
+        # Determine assignments: best theme index per text
+        assignments = [max(range(len(row)), key=lambda i: row[i]) for row in sim_matrix]
         return {"themes": themes, "assignments": assignments, "similarity": sim_matrix}
 
 

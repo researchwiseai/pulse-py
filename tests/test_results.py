@@ -3,34 +3,58 @@
 import pandas as pd
 import pytest
 
-from pulse_client.analysis.results import ThemeGenerationResult, SentimentResult
-from pulse_client.core.models import ThemesResponse, SentimentResponse
+from pulse_client.analysis.results import (
+    ThemeGenerationResult,
+    SentimentResult as AnalysisSentimentResult,
+)
+from pulse_client.core.models import ThemesResponse
+from pulse_client.core.models import (
+    SentimentResponse as CoreSentimentResponse,
+    SentimentResult as CoreSentimentResult,
+)
 from pydantic import ValidationError
 
 
 def test_theme_generation_result_to_dataframe():
+    # Prepare dummy theme metadata per spec
+    from pulse_client.core.models import Theme
+
     texts = ["hello", "world", "foo"]
-    themes = ["A", "B"]
-    assignments = [0, 1, 0]
-    resp = ThemesResponse(themes=themes, assignments=assignments)
+    themeA = Theme(
+        shortLabel="A",
+        label="Label A",
+        description="Desc A",
+        representatives=["rA1", "rA2"],
+    )
+    themeB = Theme(
+        shortLabel="B",
+        label="Label B",
+        description="Desc B",
+        representatives=["rB1", "rB2"],
+    )
+    resp = ThemesResponse(themes=[themeA, themeB], requestId=None)
     result = ThemeGenerationResult(resp, texts)
-    # Check properties
-    assert result.themes == themes
-    assert result.assignments == assignments
-    # Check DataFrame structure
+    # Check that themes returns shortLabels
+    assert result.themes == ["A", "B"]
+    # Convert theme metadata to DataFrame
     df = result.to_dataframe()
     assert isinstance(df, pd.DataFrame)
-    assert list(df["text"]) == texts
-    assert list(df["theme_id"]) == assignments
-    # theme column maps id to label
-    assert list(df["theme"]) == [themes[i] for i in assignments]
+    # DataFrame should have one row per theme with metadata columns
+    assert list(df["shortLabel"]) == ["A", "B"]
+    assert list(df["label"]) == ["Label A", "Label B"]
+    assert list(df["description"]) == ["Desc A", "Desc B"]
+    assert list(df["representative_1"]) == ["rA1", "rB1"]
+    assert list(df["representative_2"]) == ["rA2", "rB2"]
 
 
 def test_sentiment_result_methods():
     texts = ["I love it", "I hate it", "Meh"]
-    sentiments = ["pos", "neg", "neu"]
-    resp = SentimentResponse(sentiments=sentiments)
-    result = SentimentResult(resp, texts)
+    # Spec-based sentiment labels
+    sentiments = ["positive", "negative", "neutral"]
+    # Build core response with CoreSentimentResult
+    results = [CoreSentimentResult(sentiment=s, confidence=0.5) for s in sentiments]
+    resp = CoreSentimentResponse(results=results, requestId=None)
+    result = AnalysisSentimentResult(resp, texts)
     # Check sentiments property
     assert result.sentiments == sentiments
     # Check to_dataframe
@@ -55,8 +79,9 @@ def test_sentiment_result_methods():
     "invalid, exc",
     [
         (ThemesResponse, ValidationError),
-        (SentimentResponse, ValidationError),
+        (CoreSentimentResponse, ValidationError),
     ],
+    ids=["ThemesResponse", "SentimentResponse"],
 )
 def test_result_wrappers_invalid_input(invalid, exc):
     # Passing wrong type or missing args should error

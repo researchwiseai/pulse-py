@@ -16,7 +16,10 @@ class Job(BaseModel):
     """Represents an asynchronous job in Pulse API."""
 
     id: str = Field(alias="jobId")
-    status: Literal["queued", "running", "succeeded", "failed"]
+    status: Literal["pending", "completed", "error", "failed"] = Field(
+        alias="jobStatus"
+    )
+    message: Optional[str] = Field(default=None, alias="message")
     result_url: Optional[str] = Field(default=None, alias="resultUrl")
 
     _client: httpx.Client = PrivateAttr()
@@ -24,8 +27,8 @@ class Job(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     def refresh(self) -> "Job":
-        """Refresh job status via GET /jobs/{id}."""
-        response = self._client.get(f"/jobs/{self.id}")
+        """Refresh job status via GET /jobs?jobId={id}"""
+        response = self._client.get(f"/jobs?jobId={self.id}")
         if response.status_code != 200:
             raise PulseAPIError(response)
         data = response.json()
@@ -39,15 +42,21 @@ class Job(BaseModel):
         start = time.time()
         while True:
             job = self.refresh()
-            if job.status in ("succeeded", "failed"):
-                if job.status == "failed":
-                    raise RuntimeError(f"Job {self.id} failed")
+            if job.status == "pending":
+                # still processing
+                pass
+            elif job.status == "completed":
+                # completed successfully
                 if job.result_url:
                     response = self._client.get(job.result_url)
                     if response.status_code != 200:
                         raise PulseAPIError(response)
                     return response.json()
                 return job
+            else:
+                # error or failed
+                error_msg = job.message or ""
+                raise RuntimeError(f"Job {self.id} {job.status}: {error_msg}")
             if time.time() - start > timeout:
                 raise TimeoutError(f"Job {self.id} did not finish in {timeout} seconds")
             time.sleep(2.0)
