@@ -14,7 +14,8 @@ class Process(Protocol):
     id: str
     depends_on: Tuple[str, ...]
 
-    def run(self, ctx: Any) -> Any: ...
+    def run(self, ctx: Any) -> Any:
+        ...
 
 
 class ThemeGeneration:

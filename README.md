@@ -65,20 +65,28 @@ jupyter notebook examples/dsl_api.ipynb
 ## Development & Contributing
 Clone the project and install as above.  We recommend using a virtual environment.
 
-1. Install pre-commit hooks:
+1. Set up pre-commit (formats, linters, and tests on each commit). **Ensure your virtual environment is activated** so that `pre-commit` refers to your venv installation:
    ```bash
-   pip install pre-commit
+   # install or upgrade to a recent pre-commit
+   pip install 'pre-commit>=2.9.2'
+   # install git hook scripts
    pre-commit install
+   # run all hooks against all files now
+   pre-commit run --all-files
    ```
-2. Run tests:
+   If you still see an old version, invoke directly via Python:
    ```bash
-   pytest
+   python -m pre_commit run --all-files
+   ```
+2. Run tests without re-recording cassettes:
+   ```bash
+   pytest --vcr-record=none
    ```
 3. Run code formatters & linters:
    ```bash
-   black .                # format Python source
-   nbqa black .           # format Jupyter notebooks
-   ruff check .           # run linter
+   black .                      # format Python source
+   nbqa black .                 # format Jupyter notebooks
+   ruff check pulse_client tests  # lint only code and tests
    ```
 4. Build distributions:
    ```bash

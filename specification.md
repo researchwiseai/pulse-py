@@ -130,7 +130,7 @@ class Process(Protocol):
 | **Sentiment**       | `fast`                                           | —                 |
 | **Cluster**         | `fast`                                           | —                 |
 
-_ThemeAllocation_ bypasses its dependency if `themes` are supplied.  
+_ThemeAllocation_ bypasses its dependency if `themes` are supplied.
 _Cluster_ caches the similarity matrix once; users can later run **K‑Means** or **DBSCAN** (via scikit‑learn) without re‑contacting the API.
 
 ### **5.2 Analyzer Class**

@@ -9,14 +9,19 @@ from pydantic import BaseModel, PrivateAttr
 from pulse_client.core.exceptions import PulseAPIError
 
 
+from pydantic import Field, ConfigDict
+
+
 class Job(BaseModel):
     """Represents an asynchronous job in Pulse API."""
 
-    id: str
+    id: str = Field(alias="jobId")
     status: Literal["queued", "running", "succeeded", "failed"]
-    result_url: Optional[str] = None
+    result_url: Optional[str] = Field(default=None, alias="resultUrl")
 
     _client: httpx.Client = PrivateAttr()
+    # Allow population by field name or alias
+    model_config = ConfigDict(populate_by_name=True)
 
     def refresh(self) -> "Job":
         """Refresh job status via GET /jobs/{id}."""

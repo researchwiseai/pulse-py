@@ -65,4 +65,5 @@ dev = [
     "black",
     "nbqa",
     "ruff",
+    "pre-commit>=2.9.2",
 ]
