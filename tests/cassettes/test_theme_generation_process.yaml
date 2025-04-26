@@ -1,0 +1,67 @@
+interactions:
+- request:
+    body: '{"inputs":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":3,"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1319'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/themes
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA32TQU8bMRCF/8rIl142UUuhkNxQBFIlikpB7aHi4LXfZi289mLPZkGI/16NN6A0
+        0J538r03nydPilt0yGr5+0nlNia+0DW8WqofzoLOHnokh2CgKuV3v1wN2jt+JB0s/dTJgR9VpSyy
+        Sa5nF4NaqlXcILmwpvWAzPkD4RWXKcFrhiWOxC0oOYtckQvGD1Z+wy1cIm6T876izRRRkUdYc1uV
+        XG0Mcna1kyZzVamEPiEjsGa3KUupmxc2jUjY8oQvgBHezzrtAmsXYAVxGZlcJ5gMS6PjttTb5lNs
+        JtqcVnHwlmpQDWakubp9rvYUrlIcbQm6GjCAvumg1+gQeMfmNLSKgVP0ZfiXdiwNb5w8zL7U82iG
+        LJ9jePXaIxmUgSwNTUF6bOBzRaN2TCysyZqsg6ZxRh6ibHRf2nWv7f6h8iKGNXkXBFQPXEC5jeNW
+        LQIjiUgX1kK47hGYOEbqBtOWBqWLdHehgOZ0Cdi8VfhOj7dOz7WR53bIZZlr1k2zY/O7Tnd02iHs
+        jdA10saVM/5b51kwset1zrt32gC21uZOHMuWxkOHsnmuqNwLgg4GFeUCb+So7cuAhMrla+/JDJlj
+        h0R5yv/PlfZSfdR5Snv3PumUeg+ddeCd/5Iwzx4MvBfhbxJJ4FPPUQZ0HTco+BqPMVixfCut7mX7
+        r1YtVbM40IvFkZlZfLKzw0V9Mlt8Pvg4a46PzcmXI2MPF7V6/gMERE0SPAQAAA==
+    headers:
+      Apigw-Requestid:
+      - JoEb0gJsjoEEJfg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '559'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 26 Apr 2025 10:24:20 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
+version: 1

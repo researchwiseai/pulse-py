@@ -1,97 +1,99 @@
 """Tests for Analyzer and built-in processes."""
 
+import pandas as pd
 import pytest
 
 # from pydantic import BaseModel  # Unused import removed
 
 from pulse_client.analysis.analyzer import Analyzer, AnalysisResult
-from pulse_client.analysis.processes import ThemeGeneration, SentimentProcess
-from pulse_client.core.models import ThemesResponse
+from pulse_client.analysis.processes import (
+    ThemeGeneration,
+    SentimentProcess,
+)
+from pulse_client.core.client import CoreClient
+from pulse_client.core.models import SentimentResult, Theme
+
+reviews = [
+    "Had a blast! The rollercoasters were thrilling and the staff were friendly.",
+    "A bit pricey, but the rides were worth it. Great family fun!",
+    "Long lines, but the shows were entertaining. Would come again.",
+    "Disappointing. Many rides were closed, and the food was overpriced.",
+    "Awesome day out! The kids loved the water park.",
+    "The park was clean and well-maintained. A pleasant experience.",
+    "Too crowded, making it difficult to enjoy the rides.",
+    "Excellent customer service. The staff went above and beyond.",
+    "A magical experience! Highly recommend for all ages.",
+    "Not impressed with the variety of rides. Could be better.",
+    "The atmosphere was fantastic. Great music and decorations.",
+    "Spent too much time waiting in line. Needs better queue management.",
+    "My kids had a wonderful time! We'll definitely return.",
+    "The food options were limited and not very tasty.",
+    "A truly unforgettable day at the park. Highly recommended!",
+    "The park was clean and well-kept, but the rides were too short.",
+    "Great value for the money.  Lots of fun for the whole family.",
+    "We had a mixed experience. Some rides were great, others were underwhelming.",
+    "The staff were helpful and courteous.  The park was well-organized.",
+    "The park is beautiful, but the ticket prices are exorbitant.",
+]
 
 
-class DummyClient:
-    """Stub CoreClient with predictable responses."""
+@pytest.fixture(autouse=True)
+def disable_sleep(monkeypatch):
+    import time
 
-    def __init__(self):
-        self.called = {}
-
-    def generate_themes(self, texts, min_themes, max_themes, fast):
-        from pulse_client.core.models import Theme
-
-        self.called["generate_themes"] = dict(
-            texts=texts, min_themes=min_themes, max_themes=max_themes, fast=fast
-        )
-        # Return spec-based ThemesResponse with Theme objects
-        themeA = Theme(
-            shortLabel="A",
-            label="Label A",
-            description="Desc A",
-            representatives=["rA1", "rA2"],
-        )
-        themeB = Theme(
-            shortLabel="B",
-            label="Label B",
-            description="Desc B",
-            representatives=["rB1", "rB2"],
-        )
-        return ThemesResponse(themes=[themeA, themeB], requestId=None)
-
-    def analyze_sentiment(self, texts, fast):
-        from pulse_client.core.models import (
-            SentimentResult as CoreSentimentResult,
-            SentimentResponse as CoreSentimentResponse,
-        )
-
-        self.called["analyze_sentiment"] = dict(texts=texts, fast=fast)
-        # return spec-based sentiment results
-        results = [
-            CoreSentimentResult(sentiment="positive", confidence=0.9),
-            CoreSentimentResult(sentiment="negative", confidence=0.8),
-        ]
-        return CoreSentimentResponse(results=results, requestId=None)
+    monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
+@pytest.mark.vcr()
 def test_analyzer_no_processes():
-    az = Analyzer(dataset=["x", "y"], processes=[], client=DummyClient())
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    az = Analyzer(dataset=reviews, processes=[], client=client)
     res = az.run()
     assert isinstance(res, AnalysisResult)
     with pytest.raises(AttributeError):
         _ = res.theme_generation
 
 
+@pytest.mark.vcr()
 def test_theme_generation_process():
-    client = DummyClient()
-    proc = ThemeGeneration(min_themes=3, max_themes=5, fast=False)
-    az = Analyzer(dataset=["t1", "t2"], processes=[proc], fast=True, client=client)
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    proc = ThemeGeneration(min_themes=2, max_themes=3)
+    az = Analyzer(dataset=reviews, processes=[proc], fast=True, client=client)
     res = az.run()
-    # check that generate_themes was called with fast override False
-    assert client.called["generate_themes"] == {
-        "texts": ["t1", "t2"],
-        "min_themes": 3,
-        "max_themes": 5,
-        "fast": False,
-    }
+
     # result attribute name matches process id
     tg = res.theme_generation
     from pulse_client.analysis.results import ThemeGenerationResult
 
     assert isinstance(tg, ThemeGenerationResult)
-    # shortLabels should match dummy
-    assert tg.themes == ["A", "B"]
+
+    # Validate there are 2 or 3 themes
+    assert len(tg.themes) in [2, 3]
+    # Validate the themes are lists of Theme
+    assert all(isinstance(theme, Theme) for theme in tg.themes)
 
 
+@pytest.mark.vcr()
 def test_sentiment_process():
-    client = DummyClient()
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
     proc = SentimentProcess(fast=True)
-    az = Analyzer(dataset=["s1", "s2", "s3"], processes=[proc], client=client)
+    az = Analyzer(dataset=reviews, processes=[proc], client=client)
     res = az.run()
-    assert client.called["analyze_sentiment"] == {
-        "texts": ["s1", "s2", "s3"],
-        "fast": True,
-    }
+
     sent = res.sentiment
     from pulse_client.analysis.results import SentimentResult as AnalysisSentimentResult
 
     assert isinstance(sent, AnalysisSentimentResult)
-    # expect spec-based sentiment labels
-    assert sent.sentiments == ["positive", "negative"]
+
+    assert len(sent.sentiments) == len(reviews)
+    assert all(isinstance(sentiment, SentimentResult) for sentiment in sent.sentiments)
+    assert all(isinstance(sentiment.sentiment, str) for sentiment in sent.sentiments)
+    assert all(isinstance(sentiment.confidence, float) for sentiment in sent.sentiments)
+
+    # assert that to_dataframe() returns a DataFrame
+    df = sent.to_dataframe()
+    assert isinstance(df, pd.DataFrame)
+    assert len(df) == len(reviews)
+    assert "text" in df.columns
+    assert "sentiment" in df.columns
+    assert "confidence" in df.columns

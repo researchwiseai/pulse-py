@@ -3,9 +3,11 @@
 from typing import Any, Optional, Sequence
 import pandas as pd
 from pulse_client.core.models import (
+    Theme,
     ThemesResponse,
     SentimentResponse,
     ExtractionsResponse,
+    SentimentResult as SentimentResultModel,
 )
 
 
@@ -17,9 +19,8 @@ class ThemeGenerationResult:
         self._texts = list(texts)
 
     @property
-    def themes(self) -> list[str]:
-        """List of theme shortLabels."""
-        return [theme.shortLabel for theme in self._response.themes]
+    def themes(self) -> list[Theme]:
+        return self._response.themes
 
     # legacy assignments removed; assignment is handled by ThemeAllocation process
 
@@ -50,16 +51,17 @@ class SentimentResult:
         self._texts = list(texts)
 
     @property
-    def sentiments(self) -> list[Any]:
+    def sentiments(self) -> list[SentimentResultModel]:
         """List of sentiment labels for each text."""
-        return self._response.sentiments
+        return self._response.results
 
     def to_dataframe(self) -> pd.DataFrame:
         """Convert results to a pandas DataFrame with text and sentiment."""
         return pd.DataFrame(
             {
                 "text": self._texts,
-                "sentiment": self._response.sentiments,
+                "sentiment": [r.sentiment for r in self._response.results],
+                "confidence": [r.confidence for r in self._response.results],
             }
         )
 
