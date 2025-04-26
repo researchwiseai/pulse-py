@@ -9,6 +9,7 @@ from pulse_client.analysis.analyzer import Analyzer, AnalysisResult
 from pulse_client.analysis.processes import (
     ThemeGeneration,
     SentimentProcess,
+    ThemeAllocation,
 )
 from pulse_client.core.client import CoreClient
 from pulse_client.core.models import SentimentResult, Theme
@@ -97,3 +98,71 @@ def test_sentiment_process():
     assert "text" in df.columns
     assert "sentiment" in df.columns
     assert "confidence" in df.columns
+
+
+@pytest.mark.vcr()
+def test_theme_allocation_with_static_themes():
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    static_themes = ["Service", "Atmosphere", "Amenities"]
+    proc = ThemeAllocation(themes=static_themes, single_label=True, threshold=0.3)
+    az = Analyzer(dataset=reviews, processes=[proc], fast=True, client=client)
+    res = az.run()
+
+    ta = res.theme_allocation
+    from pulse_client.analysis.results import ThemeAllocationResult
+
+    assert isinstance(ta, ThemeAllocationResult)
+
+    # assign_single should return a Series of length equal to input texts
+    single = ta.assign_single()
+    assert isinstance(single, pd.Series)
+    assert len(single) == len(reviews)
+    # all assigned themes should be either one of the static themes or None
+    assigned = set(single.dropna().unique())
+    assert assigned.issubset(set(static_themes))
+
+
+@pytest.mark.vcr()
+def test_theme_allocation_with_generator():
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    gen = ThemeGeneration(min_themes=2, max_themes=3)
+    alloc = ThemeAllocation(single_label=False, threshold=0.5)
+    az = Analyzer(dataset=reviews, processes=[gen, alloc], fast=True, client=client)
+    res = az.run()
+
+    tg = res.theme_generation
+    ta = res.theme_allocation
+    from pulse_client.analysis.results import ThemeAllocationResult
+
+    assert isinstance(ta, ThemeAllocationResult)
+
+    # themes used for allocation should match those from generation
+    assert hasattr(ta, "_themes")
+    assert len(ta._themes) == len(tg.themes)
+
+    # assign_multi should return top-k themes per text
+    multi = ta.assign_multi(k=2)
+    assert isinstance(multi, pd.DataFrame)
+    assert multi.shape == (len(reviews), 2)
+
+
+@pytest.mark.vcr()
+def test_theme_allocation_implicit_generation():
+    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    alloc = ThemeAllocation()
+    az = Analyzer(dataset=reviews, processes=[alloc], fast=True, client=client)
+    res = az.run()
+
+    # ThemeGeneration should be implicitly run
+    tg = res.theme_generation
+    from pulse_client.analysis.results import ThemeGenerationResult
+
+    assert isinstance(tg, ThemeGenerationResult)
+
+    ta = res.theme_allocation
+    from pulse_client.analysis.results import ThemeAllocationResult
+
+    assert isinstance(ta, ThemeAllocationResult)
+    # ensure allocation themes come from generation
+    assert hasattr(ta, "_themes")
+    assert len(ta._themes) == len(tg.themes)

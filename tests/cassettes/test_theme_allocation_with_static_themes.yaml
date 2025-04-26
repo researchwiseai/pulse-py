@@ -1,0 +1,135 @@
+interactions:
+- request:
+    body: '{"inputs":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":10,"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1320'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/themes
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6WWz27cRgzGX4XRWbtwUBf+czNcJykQp21stIciB2pErYgdDeUZSutNEKCv0dfr
+        kxQz0mrl9W4vPQoSP3J+JL/Rt0xraihk139+y0ItXj9iQTa7zj5zSXD33JJncoayPLPjm9suqDTk
+        gaa3ATxZVCpBBTyXFABdCajq0SiLC1melRSM5zY+ZtfZO6KyQLMGLKRT0JpAa8/W5tCjZ9JtDpbc
+        Sus8aTXocEUNOQWpjudYZnnmqfUUyCkq9+lc2WNN4MVa8kYwKPkAG/K7dOxWSScWEBSranhZxYOV
+        dhs1P4kCN1E3UAkb1jp9PZY5lbOEW+lsCQVBQarkl9mX7/kB1lsvmzIl/K2jjuB+OtaM8AEbk2IC
+        f6UUuEHWWLVybNwh11tpolqASkwX4nfiRgVLPdmQJ4EhOp+OTlXFJvYynecp1bZHfoLsR3ErsOyi
+        UDE2MdSyGQGTU/KK7NitlvBHgmOkIcAVsouaD23sp4pA05k61TQdj12SXsInojKMSI9U9prxO5EB
+        8a+eX0zuxHU2rVX8WBK9YaBaz4bd6jTY/cA+dWg5Duo0sVHASEgzWu3KWJEjj3anfALmTxywbYWd
+        Jlz36LbjmCeYxkqgct+wpL7BANKTj8pURuHH3avdkVKw5YbjeWOwE4We/BYUg26PzqgldKmtA5F7
+        ZKfk0B2HKS4VZA6imn1UpBE/adGvT3MVB7VsBp1h0MnaRZJBdlROElChYcvKowWQ69mLS96Anv7D
+        BlJ0hHYyyRJuoLWEAZ3ODG6H9pTAmlrd78CsbXG2E9xjoB+S30SRB/L9iVkVN/pSQTX2LH4Ysp0J
+        hynyJdbP1KBfD1TJtlVnY2fynbHx8DQMvFQUAotDy6GJzRoSNtQU5E/Z6t2zIWsj88NalvA4M9PY
+        lEL6wbsK2oqbBnXmt2ON4wJ1Xkm6MAhNzBNp8St0/DVO+2ugv/Rx0ezs3kqCv6Pt5mzfjws5mnrc
+        k7jDtou746ERR+MuezJpPEs8fovtEgZUDtVwD+XQkjfEPZWD6CBleU2W67SbFXjSzrtkz36f5bQ7
+        fMASEAqLQd/A/77RbkB9Z7fQuUr8ilSxsAQlbgF1WrMlfOBVbbf78qh8cwT6jTYS2jrmiGnv9ts4
+        /2mYbXlMgE3B0RpyaLrAJoeSjPiB8sBLRrQ9F6+n+8jfQyz5n7/+DoBTPQeqY6a5OFLQmpTNwa6f
+        8I+9dBrICl00UTZLeO8JdciQEswSv/AOjjcZdspVZ/eGoWzWpOmCiJ4W785n8QUrDjfcl1jRU0dB
+        fy6z6+zHq+L8jN7S4vLCXC3OL4rzBVZnl4u3lxdnV2R+QCovs+//AvP/KVLcCQAA
+    headers:
+      Apigw-Requestid:
+      - JoK1QiAcjoEEM-Q=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1017'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 26 Apr 2025 11:07:54 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"setA":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"setB":["Service","Atmosphere","Amenities"],"fast":true,"flatten":false}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1349'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA91SQWrDMBC8+xWDziYPyL2BXEtPLSGsrW0tiCVXK6U1wX8PltJii9wKhVYXod2Z
+        2dGwOzIn1ggOA3lhSNtxTxs8dUbA3juPDxK0FIU1mnGLlwq4VACgWqdZbaGMPdPJ6GO0xllV52Z6
+        PMwKojJrPpfbDSgjEnnZW/fvTgjjwLcB3xj+HLgNrGcceU9jCfDcsjlnQLSaX41lXYIGCl3hJdUb
+        p0tBQAkHtaodCrmeRegteX/k92g86yVhqu4QlaU+MZ6dTsF9Mab636V3pJ/lV//NXze/uTXVAll6
+        zR5XiMXwfY4Oxg4xLfpUHTZX/o9fAysEAAA=
+    headers:
+      Apigw-Requestid:
+      - JoK1rg6NjoEEMuA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '254'
+      Content-Type:
+      - text/plain
+      Date:
+      - Sat, 26 Apr 2025 11:07:55 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 400
+      message: Bad Request
+version: 1

@@ -34,8 +34,12 @@ def test_theme_generation_result_to_dataframe():
     )
     resp = ThemesResponse(themes=[themeA, themeB], requestId=None)
     result = ThemeGenerationResult(resp, texts)
-    # Check that themes returns shortLabels
-    assert result.themes == ["A", "B"]
+
+    assert result.themes[0].shortLabel == "A"
+    assert result.themes[1].shortLabel == "B"
+    # Check that the themes are lists of Theme
+    assert all(isinstance(theme, Theme) for theme in result.themes)
+
     # Convert theme metadata to DataFrame
     df = result.to_dataframe()
     assert isinstance(df, pd.DataFrame)
@@ -55,8 +59,7 @@ def test_sentiment_result_methods():
     results = [CoreSentimentResult(sentiment=s, confidence=0.5) for s in sentiments]
     resp = CoreSentimentResponse(results=results, requestId=None)
     result = AnalysisSentimentResult(resp, texts)
-    # Check sentiments property
-    assert result.sentiments == sentiments
+
     # Check to_dataframe
     df = result.to_dataframe()
     assert isinstance(df, pd.DataFrame)

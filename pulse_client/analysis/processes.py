@@ -2,6 +2,7 @@
 
 from typing import Any, Tuple
 from pulse_client.core.exceptions import PulseAPIError
+from pulse_client.core.models import Theme as ThemeModel
 
 try:
     from typing import Protocol
@@ -82,33 +83,44 @@ class ThemeAllocation:
         Returns raw dict including themes, single assignments, and similarity matrix.
         """
         texts = list(ctx.dataset)
-        # Determine themes list (static or from another process)
+        # Determine raw themes list (static strings or ThemeModel instances)
         if self.themes is not None:
-            # static themes list
-            themes = list(self.themes)
+            raw_themes = list(self.themes)
         else:
             alias = getattr(self, "_themes_from_alias", "theme_generation")
-            # first try previous process result
             tg = ctx.results.get(alias)
             if tg is not None:
-                themes = tg.themes
+                raw_themes = list(tg.themes)
             else:
-                # fallback to named source
                 src = getattr(ctx, "sources", {})
                 if alias in src:
-                    themes = list(src[alias])
+                    raw_themes = list(src[alias])
                 else:
                     raise RuntimeError(f"{alias} result not available for allocation")
-
+        # Prepare labels for output and texts for similarity input
+        if raw_themes and isinstance(raw_themes[0], ThemeModel):
+            labels = [t.shortLabel for t in raw_themes]
+            sim_texts = [" ".join(t.representatives) for t in raw_themes]
+        else:
+            labels = list(raw_themes)
+            sim_texts = list(raw_themes)
         fast_flag = ctx.fast
-        # request full matrix (flatten=False for NxN), fallback on error
         try:
-            return ctx.client.compare_similarity(
-                set_a=texts, set_b=themes, fast=fast_flag, flatten=False
+            resp = ctx.client.compare_similarity(
+                set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
             )
+            # extract similarity matrix if available
+            similarity = getattr(resp, "similarity", None)
+            # simple assignments placeholder; detailed assignment via result helper
+            assignments = [0 for _ in texts]
+            return {
+                "themes": labels,
+                "assignments": assignments,
+                "similarity": similarity,
+            }
         except PulseAPIError:
             # fallback to simple assignments (all to first theme)
-            return {"themes": themes, "assignments": [0 for _ in texts]}
+            return {"themes": labels, "assignments": [0 for _ in texts]}
 
 
 class ThemeExtraction:

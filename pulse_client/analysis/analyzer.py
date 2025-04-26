@@ -36,6 +36,8 @@ class Analyzer:
             self.dataset = pd.Series(dataset)
         # Processes to execute
         self.processes = list(processes) if processes else []
+        # Automatically include any dependent processes
+        self._resolve_dependencies()
         # Fast/slow flag per process
         self.fast = fast if fast is not None else True
         # Persistent caching setup
@@ -52,6 +54,24 @@ class Analyzer:
         self.auth = auth
         # In-memory results
         self.results: dict[str, Any] = {}
+
+    def _resolve_dependencies(self) -> None:
+        """Automatically include any processes that are
+        dependencies of specified processes."""
+        from pulse_client.analysis.processes import ThemeGeneration
+
+        existing_ids = {p.id for p in self.processes}
+        resolved: list[Process] = []
+        for proc in self.processes:
+            for dep in getattr(proc, "depends_on", ()):
+                if dep not in existing_ids:
+                    if dep == ThemeGeneration.id:
+                        resolved.append(ThemeGeneration())
+                        existing_ids.add(dep)
+                    else:
+                        raise RuntimeError(f"Missing dependency process '{dep}'")
+            resolved.append(proc)
+        self.processes = resolved
 
     def run(self) -> "AnalysisResult":
         """Run the configured processes (with simple caching and wrapping results)."""
