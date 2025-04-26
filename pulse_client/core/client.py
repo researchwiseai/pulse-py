@@ -51,6 +51,7 @@ class CoreClient:
         if fast:
             # API expects a JSON boolean for fast
             body["fast"] = True
+
         response = self.client.post("/embeddings", json=body)
 
         if response.status_code not in (200, 202):

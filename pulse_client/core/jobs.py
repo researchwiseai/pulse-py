@@ -40,7 +40,7 @@ class Job(BaseModel):
         job._client = self._client
         return job
 
-    def wait(self, timeout: float = 60.0) -> Any:
+    def wait(self, timeout: float = 180.0) -> Any:
         """Block until the job finishes or the timeout is hit."""
         start = time.time()
         while True:
