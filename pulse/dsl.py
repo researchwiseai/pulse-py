@@ -6,16 +6,16 @@ import json
 from typing import Any, Dict, List
 
 import pandas as pd
-from pulse_client.analysis.processes import (
+from pulse.analysis.processes import (
     ThemeGeneration,
     ThemeAllocation,
     ThemeExtraction,
     SentimentProcess,
     Cluster,
 )
-from pulse_client.analysis.analyzer import Analyzer
-from pulse_client.core.client import CoreClient
-from pulse_client.core.models import SentimentResponse as CoreSentimentResponse
+from pulse.analysis.analyzer import Analyzer
+from pulse.core.client import CoreClient
+from pulse.core.models import SentimentResponse as CoreSentimentResponse
 
 
 # Helpers to flatten and reconstruct nested inputs
@@ -353,7 +353,7 @@ class Workflow:
         Internal runner for advanced DSL mode with named sources and DAG execution.
         """
         # Lazy import to avoid circular dependencies
-        from pulse_client.analysis.results import (
+        from pulse.analysis.results import (
             ThemeGenerationResult,
             SentimentResult,
             ThemeAllocationResult,

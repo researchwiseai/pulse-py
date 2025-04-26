@@ -2,7 +2,7 @@
 
 from typing import Any, Optional, Sequence
 import pandas as pd
-from pulse_client.core.models import (
+from pulse.core.models import (
     Theme,
     ThemesResponse,
     SentimentResponse,

@@ -1,8 +1,8 @@
 """Unit tests for asynchronous Job model and polling logic."""
 import pytest
 
-from pulse_client.core.jobs import Job
-from pulse_client.core.exceptions import PulseAPIError
+from pulse.core.jobs import Job
+from pulse.core.exceptions import PulseAPIError
 
 
 class DummyResponse:

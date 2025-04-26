@@ -2,9 +2,9 @@
 
 import pytest
 
-from pulse_client.dsl import Workflow
-from pulse_client.core.jobs import Job
-from pulse_client.core.client import CoreClient
+from pulse.dsl import Workflow
+from pulse.core.jobs import Job
+from pulse.core.client import CoreClient
 
 
 @pytest.mark.vcr()

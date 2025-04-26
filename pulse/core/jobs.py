@@ -6,7 +6,7 @@ from typing import Any, Optional, Literal
 import httpx
 from pydantic import BaseModel, PrivateAttr
 
-from pulse_client.core.exceptions import PulseAPIError
+from pulse.core.exceptions import PulseAPIError
 
 
 from pydantic import Field, ConfigDict

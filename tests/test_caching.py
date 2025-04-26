@@ -6,9 +6,9 @@
 
 import pytest
 
-from pulse_client.analysis.analyzer import Analyzer
+from pulse.analysis.analyzer import Analyzer
 
-# from pulse_client.analysis.processes import Process  # Unused
+# from pulse.analysis.processes import Process  # Unused
 
 
 class DummyProcess:

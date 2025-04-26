@@ -34,7 +34,7 @@ Once installed, you can quickly try out the core and DSL APIs.
 ### CoreClient example
 ### CoreClient
 ```python
-from pulse_client.core.client import CoreClient
+from pulse.core.client import CoreClient
 
 client = CoreClient()  # default to dev environment
 emb = client.create_embeddings(["Hello world", "Goodbye"])  # sync "fast" call
@@ -43,8 +43,8 @@ print(emb.embeddings)
 
 ### Analyzer
 ```python
-from pulse_client.analysis.analyzer import Analyzer
-from pulse_client.analysis.processes import ThemeGeneration, SentimentProcess
+from pulse.analysis.analyzer import Analyzer
+from pulse.analysis.processes import ThemeGeneration, SentimentProcess
 
 texts = ["I love pizza", "I hate rain"]
 processes = [ThemeGeneration(min_themes=2), SentimentProcess()]
@@ -92,7 +92,7 @@ Clone the project and install as above.  We recommend using a virtual environmen
    ```bash
    black .                      # format Python source
    nbqa black .                 # format Jupyter notebooks
-   ruff check pulse_client tests  # lint only code and tests
+   ruff check pulse tests  # lint only code and tests
    ```
 5. Build distributions:
    ```bash

@@ -3,9 +3,9 @@
 from typing import Any, Dict, Union, Optional
 import httpx
 
-from pulse_client.config import DEV_BASE_URL, DEFAULT_TIMEOUT
-from pulse_client.core.jobs import Job
-from pulse_client.core.models import (
+from pulse.config import DEV_BASE_URL, DEFAULT_TIMEOUT
+from pulse.core.jobs import Job
+from pulse.core.models import (
     EmbeddingsResponse,
     SimilarityResponse,
     ThemesResponse,
@@ -13,7 +13,7 @@ from pulse_client.core.models import (
     ExtractionsResponse,
     JobSubmissionResponse,
 )
-from pulse_client.core.exceptions import PulseAPIError
+from pulse.core.exceptions import PulseAPIError
 
 
 class CoreClient:

@@ -63,10 +63,10 @@ echo "Bumping version: $current_version -> $new_version"
 sed -i -E "s#^version = \".*\"#version = \"$new_version\"#" pyproject.toml
 
 # Update package __version__
-sed -i -E "s#__version__ = \".*\"#__version__ = \"$new_version\"#" pulse_client/__init__.py
+sed -i -E "s#__version__ = \".*\"#__version__ = \"$new_version\"#" pulse/__init__.py
 
 # Commit and tag
-git add pyproject.toml pulse_client/__init__.py
+git add pyproject.toml pulse/__init__.py
 git commit -m "chore: bump version to $new_version"
 tag="v$new_version"
 git tag "$tag"

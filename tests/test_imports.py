@@ -2,7 +2,7 @@
 
 
 def test_version():
-    import pulse_client
+    import pulse
 
-    assert isinstance(pulse_client.__version__, str)
-    assert len(pulse_client.__version__) > 0
+    assert isinstance(pulse.__version__, str)
+    assert len(pulse.__version__) > 0

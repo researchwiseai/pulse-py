@@ -2,8 +2,8 @@
 
 import pytest
 
-from pulse_client.core.client import CoreClient
-from pulse_client.core.models import EmbeddingDocument
+from pulse.core.client import CoreClient
+from pulse.core.models import EmbeddingDocument
 
 
 @pytest.fixture(autouse=True)

@@ -3,12 +3,12 @@
 import pandas as pd
 import pytest
 
-from pulse_client.analysis.results import (
+from pulse.analysis.results import (
     ThemeGenerationResult,
     SentimentResult as AnalysisSentimentResult,
 )
-from pulse_client.core.models import ThemesResponse
-from pulse_client.core.models import (
+from pulse.core.models import ThemesResponse
+from pulse.core.models import (
     SentimentResponse as CoreSentimentResponse,
     SentimentResult as CoreSentimentResult,
 )
@@ -17,7 +17,7 @@ from pydantic import ValidationError
 
 def test_theme_generation_result_to_dataframe():
     # Prepare dummy theme metadata per spec
-    from pulse_client.core.models import Theme
+    from pulse.core.models import Theme
 
     texts = ["hello", "world", "foo"]
     themeA = Theme(
@@ -97,7 +97,7 @@ def test_theme_allocation_result_methods():
     texts = ["doc1", "doc2", "doc3"]
     themes = ["Alpha", "Beta"]
     assignments = [0, 1, 0]
-    from pulse_client.analysis.results import ThemeAllocationResult
+    from pulse.analysis.results import ThemeAllocationResult
 
     result = ThemeAllocationResult(
         texts, themes, assignments, single_label=True, threshold=0.5
@@ -127,7 +127,7 @@ def test_theme_allocation_with_similarity():
         [0.1, 0.8, 0.3],
         [0.5, 0.2, 0.7],
     ]
-    from pulse_client.analysis.results import ThemeAllocationResult
+    from pulse.analysis.results import ThemeAllocationResult
 
     result = ThemeAllocationResult(
         texts, themes, assignments, single_label=True, threshold=0.6, similarity=sim
@@ -145,7 +145,7 @@ def test_cluster_result_methods():
     texts = ["a", "b", "c"]
     # simple similarity matrix (identity-like)
     matrix = [[1.0, 0.1, 0.2], [0.1, 1.0, 0.3], [0.2, 0.3, 1.0]]
-    from pulse_client.analysis.results import ClusterResult
+    from pulse.analysis.results import ClusterResult
     import numpy as np
 
     result = ClusterResult(matrix, texts)

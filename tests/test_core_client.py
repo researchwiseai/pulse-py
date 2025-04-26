@@ -4,8 +4,8 @@ All HTTP interactions are recorded and replayed; no manual mocks.
 """
 import pytest
 
-from pulse_client.core.client import CoreClient
-from pulse_client.core.exceptions import PulseAPIError
+from pulse.core.client import CoreClient
+from pulse.core.exceptions import PulseAPIError
 
 pytestmark = pytest.mark.vcr(record_mode="new_episodes")
 

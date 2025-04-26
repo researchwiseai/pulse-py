@@ -1,8 +1,8 @@
 """Built-in Process primitives for Analyzer."""
 
 from typing import Any, Tuple
-from pulse_client.core.exceptions import PulseAPIError
-from pulse_client.core.models import Theme as ThemeModel
+from pulse.core.exceptions import PulseAPIError
+from pulse.core.models import Theme as ThemeModel
 
 try:
     from typing import Protocol

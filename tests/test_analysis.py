@@ -5,14 +5,14 @@ import pytest
 
 # from pydantic import BaseModel  # Unused import removed
 
-from pulse_client.analysis.analyzer import Analyzer, AnalysisResult
-from pulse_client.analysis.processes import (
+from pulse.analysis.analyzer import Analyzer, AnalysisResult
+from pulse.analysis.processes import (
     ThemeGeneration,
     SentimentProcess,
     ThemeAllocation,
 )
-from pulse_client.core.client import CoreClient
-from pulse_client.core.models import SentimentResult, Theme
+from pulse.core.client import CoreClient
+from pulse.core.models import SentimentResult, Theme
 
 reviews = [
     "Had a blast! The rollercoasters were thrilling and the staff were friendly.",
@@ -64,7 +64,7 @@ def test_theme_generation_process():
 
     # result attribute name matches process id
     tg = res.theme_generation
-    from pulse_client.analysis.results import ThemeGenerationResult
+    from pulse.analysis.results import ThemeGenerationResult
 
     assert isinstance(tg, ThemeGenerationResult)
 
@@ -82,7 +82,7 @@ def test_sentiment_process():
     res = az.run()
 
     sent = res.sentiment
-    from pulse_client.analysis.results import SentimentResult as AnalysisSentimentResult
+    from pulse.analysis.results import SentimentResult as AnalysisSentimentResult
 
     assert isinstance(sent, AnalysisSentimentResult)
 
@@ -109,7 +109,7 @@ def test_theme_allocation_with_static_themes():
     res = az.run()
 
     ta = res.theme_allocation
-    from pulse_client.analysis.results import ThemeAllocationResult
+    from pulse.analysis.results import ThemeAllocationResult
 
     assert isinstance(ta, ThemeAllocationResult)
 
@@ -132,7 +132,7 @@ def test_theme_allocation_with_generator():
 
     tg = res.theme_generation
     ta = res.theme_allocation
-    from pulse_client.analysis.results import ThemeAllocationResult
+    from pulse.analysis.results import ThemeAllocationResult
 
     assert isinstance(ta, ThemeAllocationResult)
 
@@ -155,12 +155,12 @@ def test_theme_allocation_implicit_generation():
 
     # ThemeGeneration should be implicitly run
     tg = res.theme_generation
-    from pulse_client.analysis.results import ThemeGenerationResult
+    from pulse.analysis.results import ThemeGenerationResult
 
     assert isinstance(tg, ThemeGenerationResult)
 
     ta = res.theme_allocation
-    from pulse_client.analysis.results import ThemeAllocationResult
+    from pulse.analysis.results import ThemeAllocationResult
 
     assert isinstance(ta, ThemeAllocationResult)
     # ensure allocation themes come from generation

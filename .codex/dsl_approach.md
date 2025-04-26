@@ -16,7 +16,7 @@
  ## Python Fluent API
 
  ```python
- from pulse_client.dsl import Workflow
+ from pulse.dsl import Workflow
 
  # Build a pipeline by chaining steps (default inputs come from original dataset or prior outputs):
  wf = (
@@ -74,7 +74,7 @@
  Then execute via Python or CLI:
 
  ```python
- from pulse_client.dsl import Workflow
+ from pulse.dsl import Workflow
 
  wf = Workflow.from_file("my_pipeline.yaml")
  results = wf.run(texts)

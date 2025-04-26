@@ -3,10 +3,10 @@
 from typing import Sequence, Optional, Union, Any
 import pandas as pd
 
-from pulse_client.core.client import CoreClient
-from pulse_client.auth import OAuth2Credentials
-from pulse_client.analysis.processes import Process
-from pulse_client.analysis.results import (
+from pulse.core.client import CoreClient
+from pulse.auth import OAuth2Credentials
+from pulse.analysis.processes import Process
+from pulse.analysis.results import (
     ThemeGenerationResult,
     SentimentResult,
     ThemeAllocationResult,
@@ -58,7 +58,7 @@ class Analyzer:
     def _resolve_dependencies(self) -> None:
         """Automatically include any processes that are
         dependencies of specified processes."""
-        from pulse_client.analysis.processes import ThemeGeneration
+        from pulse.analysis.processes import ThemeGeneration
 
         existing_ids = {p.id for p in self.processes}
         resolved: list[Process] = []
