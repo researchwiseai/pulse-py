@@ -1,10 +1,9 @@
 import os
 from typing import List, Union
 import pandas as pd
-from textblob import TextBlob
 from typing import Optional
 from pulse.analysis.analyzer import Analyzer
-from pulse.analysis.processes import ThemeAllocation
+from pulse.analysis.processes import SentimentProcess, ThemeAllocation
 from pulse.analysis.results import ThemeAllocationResult
 
 
@@ -49,7 +48,12 @@ def sentiment_analysis(input_data: Union[List[str], str]) -> List[float]:
     Uses TextBlob under the hood.
     """
     texts = get_strings(input_data)
-    return [TextBlob(t).sentiment.polarity for t in texts]
+
+    analyzer = Analyzer(processes=[SentimentProcess], dataset=texts)
+
+    resp = analyzer.run()
+
+    return resp.sentiment.sentiments
 
 
 def theme_allocation(

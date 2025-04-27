@@ -22,7 +22,8 @@ dependencies = [
     "tqdm",
     "typing-extensions",
     "matplotlib",
-    "textblob"
+    "textblob",
+    "seaborn"
 ]
 
 [project.urls]

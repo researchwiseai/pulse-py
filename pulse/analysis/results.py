@@ -122,31 +122,28 @@ class ThemeAllocationResult:
                 labels.append(self._themes[assign])
         return pd.Series(labels, index=self._texts, name="theme")
 
-    def assign_multi(self, k: int = 1) -> pd.DataFrame:
+    def assign_multi(self, k: Optional[int] = None) -> pd.DataFrame:
         """Return a DataFrame of top-k theme labels per text, based on similarity."""
-        if not self._similarity:
-            # fallback: replicate single assignment
-            data = {
-                f"theme_{j+1}": [self._themes[a] for a in self._assignments]
-                for j in range(k)
-            }
-        else:
-            data = {}
-            for j in range(k):
-                col = []
-                for sim_row in self._similarity:
-                    # sorted indices by similarity descending
-                    sorted_idx = sorted(
-                        range(len(sim_row)), key=lambda i: sim_row[i], reverse=True
-                    )
-                    if j < len(sorted_idx):
-                        col.append(self._themes[sorted_idx[j]])
-                    else:
-                        col.append(None)
-                data[f"theme_{j+1}"] = col
+        # default k to all themes if not provided
+        if k is None:
+            k = len(self._themes)
+
+        data = {}
+        for j in range(k):
+            col = []
+            for sim_row in self._similarity:
+                # sorted indices by similarity descending
+                sorted_idx = sorted(
+                    range(len(sim_row)), key=lambda i: sim_row[i], reverse=True
+                )
+                if j < len(sorted_idx):
+                    col.append(self._themes[sorted_idx[j]])
+                else:
+                    col.append(None)
+            data[f"theme_{j+1}"] = col
         return pd.DataFrame(data, index=self._texts)
 
-    def heatmap(self, **kwargs) -> Any:
+    def bar_chart(self, **kwargs) -> Any:
         """Plot a bar chart of theme assignment counts using matplotlib."""
         counts = pd.Series(self._assignments).value_counts().sort_index()
         labels = [self._themes[i] for i in counts.index]
@@ -157,6 +154,22 @@ class ThemeAllocationResult:
         ax.barh(labels, values, **kwargs)
         ax.set_xlabel("Count")
         ax.set_ylabel("Theme")
+        return ax
+
+    def heatmap(self, **kwargs) -> Any:
+        """Plot a heatmap of the similarity matrix using seaborn."""
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+
+        if not self._similarity:
+            raise ValueError("No similarity matrix available for heatmap.")
+
+        fig, ax = plt.subplots()
+        sns.heatmap(
+            self._similarity, annot=True, fmt=".2f", cmap="coolwarm", ax=ax, **kwargs
+        )
+        ax.set_xticklabels(self._themes)
+        ax.set_yticklabels(self._texts)
         return ax
 
 
