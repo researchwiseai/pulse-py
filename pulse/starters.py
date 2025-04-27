@@ -49,7 +49,8 @@ def sentiment_analysis(input_data: Union[List[str], str]) -> List[float]:
     """
     texts = get_strings(input_data)
 
-    analyzer = Analyzer(processes=[SentimentProcess], dataset=texts)
+    # Initialize Analyzer with a SentimentProcess instance (not the class)
+    analyzer = Analyzer(processes=[SentimentProcess()], dataset=texts)
 
     resp = analyzer.run()
 

@@ -1519,4 +1519,176 @@ interactions:
     status:
       code: 200
       message: OK
+- request:
+    body: '{"inputs":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":10,"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1320'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/themes
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA41WwW7cNhD9lbEuuewuiiapE98MN04LxHEbF8mhyGFEjlYDU6RCjlZRA/97wZG0
+        1tq7QI4Ch4+Pb9486kchNTWUiot/fxSpDlE+YEmuuCg+saUE6C1cikQ0wsGnYlW4af0zRiYZtOLv
+        Dh3LAKGCU9ssJRO5zZ95M1OfIHiQmgCbLlFDXiDmzSvoUShCi/E+rSDVoU8rRQw7iugc7BZHf3s8
+        Gh8P3BSrIlIbKZEXFN7pDYsb9MN4CPQUCYwLiewInplUIVjoMelJbWRDNiN9DALcZLREFnqWWqtn
+        GqEaMTdwFTpnoSQoSYTipvj6sHoi61WXJDQU4d33liKTN7QQdb96R3HHhpTZ7XTtgx2Hel6FJguY
+        AMvQCSTBqoKaXFt1zlNKK6jyTut4/DKO0M8fB9JyYgkREgqnalTzhJjvvhtyLrfNzKzTyHoD/9Q0
+        kehzAZZhN96lpCF4FXVZEmkmq0UmdFEodGkEykbQrvTk3DrELXr+L3fmiLox9DZNnqSO4AY9btVc
+        S5VzFVwFLzG4U8WHAl8T2RLNPURyKGRBAhiFcbQjp6ZlAeGGJkXr0Cth+JaxE2AkaPQAe0LQD8Fv
+        QZuygrIT9Zi6f1SIvFAUZM9+u4EvajUTGgLcImuT7tostoQATWdqJaO02G+BvUJv4CORTZNBR24T
+        rXzvY5r+FdlkhHypz+i6pV+ntdW4MF78KiRZf5pkukwtGXkeALct+zyomgFs7klA5y07NQ+hCUme
+        Tb3r8ohGaIKn4YSIl1DyhDU8yriY+T5EqYFlA+8joUCFDbsBqs6fTa7c+02nRDmo8xpkn/XPiTED
+        j9zTRF6bTN9DLFnwhJoZ/J3fcQxeM2+MyiaktqZ4oO2TyhVcPZ3ag30nEmEK2XypFwnaekhs0AEt
+        gQ/ioOkSmxVYMiGipulhH7ApGb2hEw34OQU3cAmtI0zoBWgfbHMw4P5iClOhF0zCZm6aclTcBc1j
+        cl9rd9fXi/TTbdedX0h9WDU868915+HSCO9YmJ6beR8OwevYp44FS0d74YGTGle9xtP7aGp2NpJf
+        PD+dB9wfA7hDdhnnlNV7Snn+LQ4QOjnTsLxnm8CFHY2Qj09pBrkZxvUaLSD0wVuKOXRzUpzBF3rh
+        HFiq2LOQGyCSdNEfk3V+ku4Wz4Re4xMZNZ7Fp/8L85bR1vuOn9h1KPB78nnz/AiPnmyoCVFlfvTP
+        ZFXH9+S4zkESqvFN0wSbg/JobjS4HSdjj3YGf/C2ViEmftpFHYIt6U/GJUjs3ACdr0Lckox9zx1B
+        2bd/8wyH7Nkxs2bCmf/vGvJLg+aVW5UjLSp+6pcg0hajzdWLn5bV/OM0CtZOGR+qMX7Hpzp3bLrn
+        iUHX4jDx0nh13HAO/ozgg8CO4gB5eId5to/+ZH19+JoP+dZRkj9tcVH8iq/Kypyfr8vX1S/rVwbL
+        9Rusztev7dvq1cvfXr98e/6mePgfk/AQG78KAAA=
+    headers:
+      Apigw-Requestid:
+      - JsbZ_htgDoEEP8g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1112'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 27 Apr 2025 18:08:42 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"set_a":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"set_b":["Many
+      rides were closed, and the food was overpriced. Not impressed with the variety
+      of rides. Could be better.","Excellent customer service. The staff went above
+      and beyond. The staff were helpful and courteous. The park was well-organized.","Long
+      lines, but the shows were entertaining. Would come again. Spent too much time
+      waiting in line. Needs better queue management.","A bit pricey, but the rides
+      were worth it. Great family fun! The park was clean and well-maintained, but
+      the tickets prices are exorbitant.","The park was clean and well-maintained.
+      A pleasant experience. The atmosphere was fantastic. Great music and decorations.","Awesome
+      day out! The kids loved the water park. My kids had a wonderful time! We''ll
+      definitely return.","A magical experience! Highly recommend for all ages. A
+      truly unforgettable day at the park. Highly recommended!","The food options
+      were limited and not very tasty. The food was overpriced."],"fast":true,"flatten":false}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '2254'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
+  response:
+    body:
+      string: !!binary |
+        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
+        AAA=
+    headers:
+      Apigw-Requestid:
+      - JsbauirWDoEEPfQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1655'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 27 Apr 2025 18:08:44 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
 version: 1

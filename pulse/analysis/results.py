@@ -172,6 +172,20 @@ class ThemeAllocationResult:
         ax.set_yticklabels(self._texts)
         return ax
 
+    def to_dataframe(self) -> pd.DataFrame:
+        """Convert results to a DataFrame with text along the y-axis
+        and themes along the x-axis. Scores are the similarity values.
+        If a cell is empty, it will be null."""
+        data = []
+        for i, text in enumerate(self._texts):
+            for j, theme in enumerate(self._themes):
+                try:
+                    score = self._similarity[i][j]
+                except (IndexError, TypeError):
+                    score = None
+                data.append({"text": text, "theme": theme, "score": score})
+        return pd.DataFrame(data)
+
 
 class ClusterResult:
     """Results of clustering with helper methods."""
