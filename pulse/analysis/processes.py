@@ -1,7 +1,6 @@
 """Built-in Process primitives for Analyzer."""
 
 from typing import Any, Tuple
-from pulse.core.exceptions import PulseAPIError
 from pulse.core.models import Theme as ThemeModel
 
 try:
@@ -105,22 +104,34 @@ class ThemeAllocation:
             labels = list(raw_themes)
             sim_texts = list(raw_themes)
         fast_flag = ctx.fast
-        try:
-            resp = ctx.client.compare_similarity(
-                set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
-            )
-            # extract similarity matrix if available
-            similarity = getattr(resp, "similarity", None)
-            # simple assignments placeholder; detailed assignment via result helper
+
+        resp = ctx.client.compare_similarity(
+            set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
+        )
+        # extract similarity matrix if available
+        similarity = getattr(resp, "similarity", None)
+
+        # If single_label=True, then assign each input to its most similar theme
+        # as long as it is over the threshold. If single_label=False, then we
+        # assign it to all themes that it has a similarity score over the
+        # threshold.
+
+        # compute raw assignments: best matching theme index for each text
+        assignments: list[int]
+        if similarity is not None:
+            assignments = []
+            for sim_row in similarity:
+                # find index of maximum similarity
+                best_idx = max(range(len(sim_row)), key=lambda i: sim_row[i])
+                assignments.append(best_idx)
+        else:
+            # fallback: assign first theme to all texts
             assignments = [0 for _ in texts]
-            return {
-                "themes": labels,
-                "assignments": assignments,
-                "similarity": similarity,
-            }
-        except PulseAPIError:
-            # fallback to simple assignments (all to first theme)
-            return {"themes": labels, "assignments": [0 for _ in texts]}
+        return {
+            "themes": labels,
+            "assignments": assignments,
+            "similarity": similarity,
+        }
 
 
 class ThemeExtraction:

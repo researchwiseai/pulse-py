@@ -1,0 +1,52 @@
+"""Tests for our quick starter helpers"""
+
+import pandas as pd
+import pytest
+
+from pulse.starters import theme_allocation
+
+reviews = [
+    "Had a blast! The rollercoasters were thrilling and the staff were friendly.",
+    "A bit pricey, but the rides were worth it. Great family fun!",
+    "Long lines, but the shows were entertaining. Would come again.",
+    "Disappointing. Many rides were closed, and the food was overpriced.",
+    "Awesome day out! The kids loved the water park.",
+    "The park was clean and well-maintained. A pleasant experience.",
+    "Too crowded, making it difficult to enjoy the rides.",
+    "Excellent customer service. The staff went above and beyond.",
+    "A magical experience! Highly recommend for all ages.",
+    "Not impressed with the variety of rides. Could be better.",
+    "The atmosphere was fantastic. Great music and decorations.",
+    "Spent too much time waiting in line. Needs better queue management.",
+    "My kids had a wonderful time! We'll definitely return.",
+    "The food options were limited and not very tasty.",
+    "A truly unforgettable day at the park. Highly recommended!",
+    "The park was clean and well-kept, but the rides were too short.",
+    "Great value for the money.  Lots of fun for the whole family.",
+    "We had a mixed experience. Some rides were great, others were underwhelming.",
+    "The staff were helpful and courteous.  The park was well-organized.",
+    "The park is beautiful, but the ticket prices are exorbitant.",
+]
+
+
+@pytest.fixture(autouse=True)
+def disable_sleep(monkeypatch):
+    import time
+
+    monkeypatch.setattr(time, "sleep", lambda x: None)
+
+
+@pytest.mark.vcr()
+def test_theme_allocation_implicit_generation():
+    resp = theme_allocation(reviews)
+
+    series = resp.assign_single()
+    assert len(series) == len(reviews)
+    assert isinstance(series, pd.Series)
+
+    df = resp.assign_multi()
+    assert len(df) == len(reviews)
+    assert isinstance(df, pd.DataFrame)
+
+    heatmap = resp.heatmap()
+    assert heatmap is not None

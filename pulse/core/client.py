@@ -102,8 +102,8 @@ class CoreClient:
         if set is not None:
             body["set"] = set
         else:
-            body["setA"] = set_a
-            body["setB"] = set_b
+            body["set_a"] = set_a
+            body["set_b"] = set_b
 
         if fast:
             body["fast"] = True
@@ -114,7 +114,7 @@ class CoreClient:
 
         # handle error / single-item self-similarity fallback
         if response.status_code not in (200, 202):
-            raise PulseAPIError(response)
+            raise PulseAPIError(body)
 
         data = response.json()
 
