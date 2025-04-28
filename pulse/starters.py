@@ -87,8 +87,10 @@ def cluster_analysis(input_data: Union[List[str], str]) -> ClusterResult:
     """
     texts = get_strings(input_data)
 
+    fast = len(texts) <= 200
+
     # Initialize Analyzer with a ClusterProcess instance (not the class)
-    analyzer = Analyzer(processes=[Cluster()], dataset=texts)
+    analyzer = Analyzer(processes=[Cluster()], dataset=texts, fast=fast)
 
     resp = analyzer.run()
 
