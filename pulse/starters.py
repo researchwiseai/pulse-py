@@ -3,8 +3,8 @@ from typing import List, Union
 import pandas as pd
 from typing import Optional
 from pulse.analysis.analyzer import Analyzer
-from pulse.analysis.processes import SentimentProcess, ThemeAllocation
-from pulse.analysis.results import ThemeAllocationResult
+from pulse.analysis.processes import Cluster, SentimentProcess, ThemeAllocation
+from pulse.analysis.results import ClusterResult, SentimentResult, ThemeAllocationResult
 
 
 def _load_text(path: str) -> List[str]:
@@ -42,10 +42,10 @@ def get_strings(source: Union[List[str], str]) -> List[str]:
     raise ValueError(f"Unsupported file type: {ext}")
 
 
-def sentiment_analysis(input_data: Union[List[str], str]) -> List[float]:
+def sentiment_analysis(input_data: Union[List[str], str]) -> List[SentimentResult]:
     """
-    Return a polarity score (-1 to 1) for each string.
-    Uses TextBlob under the hood.
+    Perform sentiment analysis on input data.
+    Returns a list of SentimentResult objects.
     """
     texts = get_strings(input_data)
 
@@ -54,7 +54,7 @@ def sentiment_analysis(input_data: Union[List[str], str]) -> List[float]:
 
     resp = analyzer.run()
 
-    return resp.sentiment.sentiments
+    return resp.sentiment
 
 
 def theme_allocation(
@@ -64,7 +64,7 @@ def theme_allocation(
     Allocate each text to one or more themes.
     If `themes` is a list of strings, use those as seed themes.
     If `themes` is None, automatically generate themes via Analyzer and ThemeGeneration.
-    Returns a dict mapping  theme_name to list of matched texts.
+    Returns a ThemeAllocationResult object.
     """
     texts = get_strings(input_data)
 
@@ -74,3 +74,18 @@ def theme_allocation(
     resp = analyzer.run()
 
     return resp.theme_allocation
+
+
+def cluster_analysis(input_data: Union[List[str], str]) -> ClusterResult:
+    """
+    Perform clustering analysis on input data.
+    Returns a ClusterResult object.
+    """
+    texts = get_strings(input_data)
+
+    # Initialize Analyzer with a ClusterProcess instance (not the class)
+    analyzer = Analyzer(processes=[Cluster()], dataset=texts)
+
+    resp = analyzer.run()
+
+    return resp.cluster

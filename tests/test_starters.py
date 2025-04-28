@@ -3,6 +3,7 @@
 import pandas as pd
 import pytest
 
+from pulse.analysis.results import ClusterResult
 from pulse.starters import theme_allocation
 
 reviews = [
@@ -44,9 +45,40 @@ def test_theme_allocation_implicit_generation():
     assert len(series) == len(reviews)
     assert isinstance(series, pd.Series)
 
-    df = resp.assign_multi()
-    assert len(df) == len(reviews)
-    assert isinstance(df, pd.DataFrame)
+    multi = resp.assign_multi()
+    assert len(multi) == len(reviews)
+    assert isinstance(multi, pd.DataFrame)
 
     heatmap = resp.heatmap()
     assert heatmap is not None
+
+    df = resp.to_dataframe()
+    assert isinstance(df, pd.DataFrame)
+
+
+@pytest.mark.vcr()
+def test_theme_allocation_with_themes():
+    resp = theme_allocation(reviews, themes=["Food & Drink", "Rides", "Staff"])
+
+    series = resp.assign_single()
+    assert len(series) == len(reviews)
+    assert isinstance(series, pd.Series)
+
+    multi = resp.assign_multi()
+    assert len(multi) == len(reviews)
+    assert isinstance(multi, pd.DataFrame)
+
+    heatmap = resp.heatmap()
+    assert heatmap is not None
+
+    df = resp.to_dataframe()
+    assert isinstance(df, pd.DataFrame)
+
+
+@pytest.mark.vcr()
+def test_cluster_analysis():
+    from pulse.starters import cluster_analysis
+
+    resp = cluster_analysis(reviews)
+
+    assert isinstance(resp, ClusterResult)

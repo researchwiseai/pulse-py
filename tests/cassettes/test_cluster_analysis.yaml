@@ -1,0 +1,89 @@
+interactions:
+- request:
+    body: '{"set":["Had a blast! The rollercoasters were thrilling and the staff were
+      friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"fast":true,"flatten":false}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1304'
+      content-type:
+      - application/json
+      host:
+      - dev.core.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
+  response:
+    body:
+      string: !!binary |
+        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
+        wrf//g+yTXXzzA4AAA==
+    headers:
+      Apigw-Requestid:
+      - JslVfg7rjoEEMKQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1780'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 27 Apr 2025 19:16:25 GMT
+      content-encoding:
+      - gzip
+      vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
+version: 1

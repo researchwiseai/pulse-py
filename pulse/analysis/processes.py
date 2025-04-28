@@ -189,6 +189,6 @@ class Cluster:
         texts = list(ctx.dataset)
         fast = self.fast if self.fast is not None else ctx.fast
         # request full matrix (flatten=False for NxN)
-        resp = ctx.client.compare_similarity(texts, fast=fast, flatten=False)
+        resp = ctx.client.compare_similarity(set=texts, fast=fast, flatten=False)
         # resp.similarity is List[List[float]]
         return resp.similarity
