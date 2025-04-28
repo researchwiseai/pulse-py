@@ -97,10 +97,16 @@ def test_theme_allocation_result_methods():
     texts = ["doc1", "doc2", "doc3"]
     themes = ["Alpha", "Beta"]
     assignments = [0, 1, 0]
+    similarity = [[0.7, 0.2], [0.3, 0.6], [0.8, 0.6]]
     from pulse.analysis.results import ThemeAllocationResult
 
     result = ThemeAllocationResult(
-        texts, themes, assignments, single_label=True, threshold=0.5
+        texts,
+        themes,
+        assignments,
+        similarity=similarity,
+        single_label=True,
+        threshold=0.5,
     )
     # assign_single returns Series
     single = result.assign_single()
@@ -114,8 +120,8 @@ def test_theme_allocation_result_methods():
     # bars equal number of themes that appear
     # assignments count: Alpha=2, Beta=1
     # ensure the y-ticks match themes
-    y_labels = [t.get_text() for t in ax.get_yticklabels()]
-    assert set(y_labels) == set(themes)
+    x_labels = [t.get_text() for t in ax.get_xticklabels()]
+    assert set(x_labels) == set(themes)
 
 
 def test_theme_allocation_with_similarity():

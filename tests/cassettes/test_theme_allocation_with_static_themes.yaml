@@ -15,7 +15,7 @@ interactions:
       and well-kept, but the rides were too short.","Great value for the money.  Lots
       of fun for the whole family.","We had a mixed experience. Some rides were great,
       others were underwhelming.","The staff were helpful and courteous.  The park
-      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":10,"fast":true}'
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":50,"fast":true}'
     headers:
       accept:
       - '*/*'
@@ -36,35 +36,34 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
+        CaXxogkAAA==
     headers:
       Apigw-Requestid:
-      - JoK1QiAcjoEEM-Q=
+      - Ju0qpjydDoEEM2g=
       Connection:
       - keep-alive
       Content-Length:
-      - '1017'
+      - '919'
       Content-Type:
       - application/json
       Date:
-      - Sat, 26 Apr 2025 11:07:54 GMT
+      - Mon, 28 Apr 2025 11:34:59 GMT
       content-encoding:
       - gzip
       vary:
@@ -73,7 +72,7 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: '{"setA":["Had a blast! The rollercoasters were thrilling and the staff
+    body: '{"set_a":["Had a blast! The rollercoasters were thrilling and the staff
       were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
       lines, but the shows were entertaining. Would come again.","Disappointing. Many
       rides were closed, and the food was overpriced.","Awesome day out! The kids
@@ -88,7 +87,7 @@ interactions:
       and well-kept, but the rides were too short.","Great value for the money.  Lots
       of fun for the whole family.","We had a mixed experience. Some rides were great,
       others were underwhelming.","The staff were helpful and courteous.  The park
-      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"setB":["Service","Atmosphere","Amenities"],"fast":true,"flatten":false}'
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"set_b":["Service","Atmosphere","Amenities"],"fast":true,"flatten":false}'
     headers:
       accept:
       - '*/*'
@@ -97,7 +96,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '1349'
+      - '1351'
       content-type:
       - application/json
       host:
@@ -109,27 +108,36 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA91SQWrDMBC8+xWDziYPyL2BXEtPLSGsrW0tiCVXK6U1wX8PltJii9wKhVYXod2Z
-        2dGwOzIn1ggOA3lhSNtxTxs8dUbA3juPDxK0FIU1mnGLlwq4VACgWqdZbaGMPdPJ6GO0xllV52Z6
-        PMwKojJrPpfbDSgjEnnZW/fvTgjjwLcB3xj+HLgNrGcceU9jCfDcsjlnQLSaX41lXYIGCl3hJdUb
-        p0tBQAkHtaodCrmeRegteX/k92g86yVhqu4QlaU+MZ6dTsF9Mab636V3pJ/lV//NXze/uTXVAll6
-        zR5XiMXwfY4Oxg4xLfpUHTZX/o9fAysEAAA=
+        H4sIAAAAAAAAA6WUXW4cRwyE7zLPK6H4UyxSN8gZDD8okgwYSGxEUoAAQe4edM/mApNX7tawyC5+
+        fx8fL28/nt+//zyejpf3nx8fx+34/efr2/F0/P78+f79r+N2/DieHLfj22/Pn59vP95ej6cveLQ0
+        WdFDndHTNzxaWQiI8gjC2m94dAHIoFMJM9QNjxgppCyNaSaWFBCmsslxi141h3og0TiW3FL3NEf1
+        ICYmsdqirSa81TlpqFz/i3IoWR7w4rZioWEihgMftyXl1KDcYIIrV83G2KShPRuc3UFFZU1WTxPa
+        jqU2wNyQY9R2HD5qzLAjt9QqWNEZlQ03rSHMQl2W1WFOag0RaaJaphw0tRYAeUtR6cUM0/6e2aQ3
+        o8eQ4OkYGiWjo9Pc1rARrVS4ZSnF3FO4xskWJtC1pM4uG3ZVN2X7a4jGoJtkZW6p5XSyg9Emde11
+        FmS0xoSrjLsGop2rHMhtBBOd6+uonAzuBYzcxxWM7KjZLVDMmii1ZfZ+xVyxmRqzqZrkMlyIdJep
+        Kt22smlc7YwVpdkRIxOgpa2VZJxDNCjKWhZEnlF0U8rDaOvL3LWE53KS4Wvg3SOBrE6VtZ3u0ET6
+        CDQVzqeF090YbpSF/LwLAXSsTNQEp+7vKK8gVR5zJorhyJVOaV3LThQiuiO7Qixtfx0EJ2o9+Ir3
+        qtWUd7axE9ax02gZnQ2lKZT7fgwzU1JaTXFO7WDtO6NaYNW2PDNWbunWmtilCD/tRSvsXKlpqqp9
+        3QvD5rSsjl7BC2bVthJh3g5Mk207P2DQyxNWDAm5rwCdWktpGz9Tm0D7zEysUzijZ7F+dyUUovOc
+        tqc0zemRKb7e/iPY05f/wauvty/XibXFl5m11Repddq+yK2z8VVyna2vsmurL9Lr9H2VX3f1NYLd
+        xZcYdmqvUuwe0Iscu+fkKslO6xdZdu99kWb3jV/j2f20LhLtPOuLTDunvky1r7fj/e2PP98+Pn95
+        PZ4O50vmt3l5COPrQ8ZrPzwz+iHs13p+Tq/neDn++ReMUKSq5wkAAA==
     headers:
       Apigw-Requestid:
-      - JoK1rg6NjoEEMuA=
+      - Ju0rmhn4DoEEMdQ=
       Connection:
       - keep-alive
       Content-Length:
-      - '254'
+      - '781'
       Content-Type:
-      - text/plain
+      - application/json
       Date:
-      - Sat, 26 Apr 2025 11:07:55 GMT
+      - Mon, 28 Apr 2025 11:35:00 GMT
       content-encoding:
       - gzip
       vary:
       - Accept-Encoding
     status:
-      code: 400
-      message: Bad Request
+      code: 200
+      message: OK
 version: 1

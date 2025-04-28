@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"setA":["everything was very tasty","it was a little too noisy"],"setB":["Food
+    body: '{"set_a":["everything was very tasty","it was a little too noisy"],"set_b":["Food
       Quality","Service","Environment"],"fast":true,"flatten":false}'
     headers:
       accept:
@@ -10,7 +10,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '142'
+      - '144'
       content-type:
       - application/json
       host:
@@ -22,27 +22,26 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA91SQWrDMBC8+xWDziYPyL2BXEtPLSGsrW0tiCVXK6U1wX8PltJii9wKhVYXod2Z
-        2dGwOzIn1ggOA3lhSNtxTxs8dUbA3juPDxK0FIU1mnGLlwq4VACgWqdZbaGMPdPJ6GO0xllV52Z6
-        PMwKojJrPpfbDSgjEnnZW/fvTgjjwLcB3xj+HLgNrGcceU9jCfDcsjlnQLSaX41lXYIGCl3hJdUb
-        p0tBQAkHtaodCrmeRegteX/k92g86yVhqu4QlaU+MZ6dTsF9Mab636V3pJ/lV//NXze/uTXVAll6
-        zR5XiMXwfY4Oxg4xLfpUHTZX/o9fAysEAAA=
+        H4sIAAAAAAAAA6XOTWrDMBBA4bvMWjbzI81odIOewXih2jIEEpvYLgRC71686AmyfbzF94Zjamvd
+        bxsUmPbtOCDAY5sbFHjUc7+9IMAKhQMs93qebW0zlAF7yYxJ2BMaOrMH7CmjYXbWFFmzx3g1jSpG
+        JKRJxVAC9phIshujCiURiXqNmJFiNFJ342h8NWNWE0dnUhcew7+pDB8QxjB8ghgD7O35047za4YC
+        YlRZMXVkZF20tHR1wdTV2rK172o8LfD7BxjXq81oAQAA
     headers:
       Apigw-Requestid:
-      - JoK3lhnBDoEEMeg=
+      - Ju0uBi3fDoEEM6g=
       Connection:
       - keep-alive
       Content-Length:
-      - '254'
+      - '204'
       Content-Type:
-      - text/plain
+      - application/json
       Date:
-      - Sat, 26 Apr 2025 11:08:06 GMT
+      - Mon, 28 Apr 2025 11:35:16 GMT
       content-encoding:
       - gzip
       vary:
       - Accept-Encoding
     status:
-      code: 400
-      message: Bad Request
+      code: 200
+      message: OK
 version: 1

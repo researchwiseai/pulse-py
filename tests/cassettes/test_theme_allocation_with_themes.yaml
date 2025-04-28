@@ -15,7 +15,7 @@ interactions:
       and well-kept, but the rides were too short.","Great value for the money.  Lots
       of fun for the whole family.","We had a mixed experience. Some rides were great,
       others were underwhelming.","The staff were helpful and courteous.  The park
-      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":3,"fast":true}'
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":50,"fast":true}'
     headers:
       accept:
       - '*/*'
@@ -24,7 +24,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '1319'
+      - '1320'
       content-type:
       - application/json
       host:
@@ -36,29 +36,36 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA32UT2/bMAzFvwqhyy5OkAVNt+VWBB0woB3WP+hl6IGWaJuoLLkSHTcr+t0HyU7S
-        FuuOlkm+p/ej/aykoZaiWv9+VrHxQS6wJKvW6twJBUF2LTkBdAau2VBUhbJTxR0GJtnld1c9WpYd
-        +Gosy4dnIgG1sHepzVDUgbv0qNbqtuEIWRu031KIUPcUJX4CeuooMDlNEQLVGAy7OpVCSJMLwLaP
-        lF35PC0dOQOBLAoZoDfGyebSWAA7bfv9LA6wHe0X8Dh6H6dgS46FKc5VoQJ1gSI5QeFtDkldeFeD
-        ZZeMlL1kX7HxQ4SBAh3F2dVpwk8vwG2aEsnAwNLkjkk7xZUvNYeN762BkqAkEQpzdf9SvCNyh7an
-        bHLjo7wC8SuwZlcXMFZUPsCldzTdKBXPrqdwvhOZEvXD/3iQ09jFPjVMVMB37FLSh5DFA5qWY2Tv
-        oAusUx6JI1oL22RjFO8oaBoppcsODUlDIWdw5AwDRhh8mMLRPsoH6Z9ByTLq7Y755wjH/McpnPtv
-        G4IOwwNwhJKwF656e+wS1g80DYuACd6TDyULOvlX/Js+im8pwA2FLeuRxCWyE3LoNL0CciNYVcWh
-        8Gq/YBtL6PLyTDv7tv1DIuPqUoRqwgdY+l4gJh0oqcEt+1CA3luMk/JhtfVr5faomqBUqNnmnR9N
-        7THm7Hyo0fEfTKY+gHL+pMna9LG9159DYjC6HPJvpPTbMbiSdt6ZN5jSFmSfuWAga2fZKbIjM4cz
-        6CxhxPRRH1YngbpPrh7Tnv4waq2MWS6/rD4vZifL09XspFytZt+qxbdZuTRYnX5dLMpTVC9/Ae16
-        hyz5BAAA
+        H4sIAAAAAAAAA42WwY7cNgyGX4Xx2RMgyHaz3dt2kTQFEqRNgl6KHGiZHrMji16Jnokb5N0LSfaM
+        Z3fc5mzql/jxJ+lvhbbUUShu//pWhFa8vsOKbHFbfOSaAqCr4U7Vo1EWF4qysNP3N0R1hWYH4sAf
+        Y/EUC+xAW4Ie/a4oi5qC8dzHT8VtcS9dR04DeLKoVINKCt6jZ9KxBG09WwsNGhVfZu09ssWKLesI
+        0ly+9XlRFp56T4GcovI+5VZ8bmmKP5CnSZ3dNh1vBhePvUc3LoOMlUB1CYeWTQsHDFBzwL4Xdspu
+        +7z48r18BO3ey6FOmn8MNNAaL5PCLO3J5gQeYjR06HBLkcs6L6xk0IQqi9TkAkdgB2QF5Y5CpnUS
+        i6zSBQFQjyVZAfVO3BYsu4lsVI2YkjBg05BJ1WoJ6GtPnskZilKfRfKLIrEOd/EQK9TcNGwGq7HA
+        5P6WMZ1NlC8B/N2zmcvyJ9qBFgQ/9OySsSQby0hIuSmbHWkooRGpc/KyJ4/Wwn6SOId5LMUj8/XT
+        5UH9YHTwVMaMxdeT6bJ20oRGPHTiKDlxZgqB/J7N7MqOHCvTmifvoGJNl9JYQjWVdWHAg3htgTXx
+        na/I2eZjAdDHQoivWNHpJaKfFJsmvedTftyKJ0OKa8n2zWAdhZyDGYJKR37ODB4GjCjWDSoOWjlM
+        ch11Ffk4CpRih8KBtYXtQCHWS1tiv7zyvHiPrlyh+PqrIWujzR+/tZwecYgfsZI9JfmKRnH1zHQO
+        8TQ/JOctg1eS4aJJ7y2hSz2SIb3HmJ9Dtwo32fXRqe50aumhH2r9k1QJQ78j6s/RkduzFzd3/9Gf
+        DZro5HVPHm0Wx126Jo8BsnaTHozsqD4z5IXIHfWaHb2cuSKQMF5C+gY7tiO8Ps6UafN0EvqW/JLr
+        0mkxsTnnJklsmni+tuMZg9yOFU8lWhkHGfChJW3Jn6D1XvZ51UCHWzZoy7gyyjlfI10aWcfHpuGQ
+        nvNfzT9pLeZoEmx529oRPJmUZ51pvx9hx3WAFmtAOIiryUevxrn87BJPkbyHPlLjKbSJ2KVZuhiB
+        cXyC9Hl5LzbF/wE729tTs2Y480CVJovn9ov12kaceZ9b+oG1FN2WJKLbYsXT/MuKThT25EdQDHlM
+        HKPnbJIBLXesK2eeEvww2epkyQW+X8nFr9DMJMLQdej5n7QrIw8OrIvSPmH4ixesyYOZ3awt6lGG
+        zpzNXeQRWHKLHa2BUWvZ3yvw3ibTVBaDPoP0JyTWkjeCQeN0Pv8liiJ3oH6wIwyuEb8l1VSmGsez
+        UsHbJ16NXvwSH/EQZ/xvdXFb3FQ3Db64frW5rs2rzVV1/fOmemmuNxVWVzcvq6vq5sVPxfd/AVXh
+        RHSJCgAA
     headers:
       Apigw-Requestid:
-      - Ju0r2hlcDoEENGQ=
+      - Ju1PUimrjoEEMOQ=
       Connection:
       - keep-alive
       Content-Length:
-      - '633'
+      - '1032'
       Content-Type:
       - application/json
       Date:
-      - Mon, 28 Apr 2025 11:35:03 GMT
+      - Mon, 28 Apr 2025 11:38:51 GMT
       content-encoding:
       - gzip
       vary:
@@ -82,11 +89,8 @@ interactions:
       and well-kept, but the rides were too short.","Great value for the money.  Lots
       of fun for the whole family.","We had a mixed experience. Some rides were great,
       others were underwhelming.","The staff were helpful and courteous.  The park
-      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"set_b":["Long
-      lines, but the shows were entertaining. Not impressed with the variety of rides.
-      Could be better.","A bit pricey, but the rides were worth it. The park is beautiful,
-      but the ticket prices are exorbitant.","Excellent customer service. The staff
-      went above and beyond. The park was clean and well-maintained. A pleasant experience."],"fast":true,"flatten":false}'
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"set_b":["Food
+      & Drink","Rides","Staff"],"fast":true,"flatten":false}'
     headers:
       accept:
       - '*/*'
@@ -95,7 +99,7 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '1653'
+      - '1347'
       content-type:
       - application/json
       host:
@@ -107,31 +111,31 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
+        x4PeUh5uL0IP8ooX1P1m/4ht//0PwMFnDdEJAAA=
     headers:
       Apigw-Requestid:
-      - Ju0sMhg0DoEEMXg=
+      - Ju1P5hE4DoEEMhA=
       Connection:
       - keep-alive
       Content-Length:
-      - '771'
+      - '770'
       Content-Type:
       - application/json
       Date:
-      - Mon, 28 Apr 2025 11:35:04 GMT
+      - Mon, 28 Apr 2025 11:38:52 GMT
       content-encoding:
       - gzip
       vary:

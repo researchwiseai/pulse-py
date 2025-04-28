@@ -7,6 +7,7 @@ try:
     from typing import Protocol
 except ImportError:
     from typing_extensions import Protocol
+import random
 
 
 class Process(Protocol):
@@ -28,7 +29,7 @@ class ThemeGeneration:
     def __init__(
         self,
         min_themes: int = 2,
-        max_themes: int = 10,
+        max_themes: int = 50,
         context: Any = None,
         fast: bool | None = None,
     ):
@@ -39,9 +40,18 @@ class ThemeGeneration:
 
     def run(self, ctx: Any) -> Any:
         texts = ctx.dataset.tolist()
-        fast = self.fast if self.fast is not None else ctx.fast
+        fast_flag = self.fast if self.fast is not None else ctx.fast
+
+        # sample randomly according to fast flag
+        sample_size = 200 if fast_flag else 1000
+        if len(texts) > sample_size:
+            texts = random.sample(texts, sample_size)
+
         return ctx.client.generate_themes(
-            texts, min_themes=self.min_themes, max_themes=self.max_themes, fast=fast
+            texts,
+            min_themes=self.min_themes,
+            max_themes=self.max_themes,
+            fast=fast_flag,
         )
 
 
@@ -124,9 +134,6 @@ class ThemeAllocation:
                 # find index of maximum similarity
                 best_idx = max(range(len(sim_row)), key=lambda i: sim_row[i])
                 assignments.append(best_idx)
-        else:
-            # fallback: assign first theme to all texts
-            assignments = [0 for _ in texts]
         return {
             "themes": labels,
             "assignments": assignments,

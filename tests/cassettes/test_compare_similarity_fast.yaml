@@ -20,10 +20,10 @@ interactions:
     uri: https://dev.core.researchwiseai.com/pulse/v1/similarity
   response:
     body:
-      string: '{"scenario":"self","mode":"flattened","n":2,"flattened":[0.5377824499206663],"requestId":"ddc1e791-2891-4b62-b0d3-da1749468c4e"}'
+      string: '{"scenario":"self","mode":"flattened","n":2,"flattened":[0.5377824499206663],"requestId":"9a483328-542b-4e2c-a142-8bdb05abd061"}'
     headers:
       Apigw-Requestid:
-      - JoK25gYiDoEEMoA=
+      - Ju0tXh70joEENGQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -31,7 +31,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sat, 26 Apr 2025 11:08:02 GMT
+      - Mon, 28 Apr 2025 11:35:10 GMT
     status:
       code: 200
       message: OK

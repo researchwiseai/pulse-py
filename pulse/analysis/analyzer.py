@@ -39,7 +39,7 @@ class Analyzer:
         # Automatically include any dependent processes
         self._resolve_dependencies()
         # Fast/slow flag per process
-        self.fast = fast if fast is not None else True
+        self.fast = fast if fast is not None else False
         # Persistent caching setup
         self.cache_dir = cache_dir
         self.use_cache = use_cache

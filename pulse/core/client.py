@@ -97,6 +97,26 @@ class CoreClient:
             )
         if set is not None and (set_a is not None or set_b is not None):
             raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
+        # client-side validation: limit number of similarity calculations
+        # compute number of comparisons: square for self-similarity, product
+        # for cross-similarity
+        if set is not None:
+            n = len(set)
+            num_calcs = n * n
+        else:
+            # set_a and set_b are both defined (validated above)
+            n_a = len(set_a)  # type: ignore[assignment]
+            n_b = len(set_b)  # type: ignore[assignment]
+            num_calcs = n_a * n_b
+        # maximum allowed comparisons: smaller for fast mode
+        max_calcs = 1_000_000 if fast else 2_000_000_000
+        if num_calcs > max_calcs:
+            raise ValueError(
+                f"Number of similarity calculations ({num_calcs}) "
+                + "exceeds the maximum allowed "
+                f"({max_calcs}) for fast={fast}. Reduce input size "
+                + "or adjust parameters."
+            )
 
         body: Dict[str, Any] = {}
         if set is not None:
@@ -114,7 +134,7 @@ class CoreClient:
 
         # handle error / single-item self-similarity fallback
         if response.status_code not in (200, 202):
-            raise PulseAPIError(body)
+            raise PulseAPIError(response)
 
         data = response.json()
 
@@ -138,7 +158,7 @@ class CoreClient:
         self,
         texts: list[str],
         min_themes: int = 2,
-        max_themes: int = 10,
+        max_themes: int = 50,
         fast: bool = True,
     ) -> Union[ThemesResponse, Job]:
         """Cluster texts into latent themes."""

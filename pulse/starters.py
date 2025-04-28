@@ -48,9 +48,10 @@ def sentiment_analysis(input_data: Union[List[str], str]) -> List[SentimentResul
     Returns a list of SentimentResult objects.
     """
     texts = get_strings(input_data)
+    fast = len(texts) <= 200
 
     # Initialize Analyzer with a SentimentProcess instance (not the class)
-    analyzer = Analyzer(processes=[SentimentProcess()], dataset=texts)
+    analyzer = Analyzer(processes=[SentimentProcess()], dataset=texts, fast=fast)
 
     resp = analyzer.run()
 
@@ -67,9 +68,12 @@ def theme_allocation(
     Returns a ThemeAllocationResult object.
     """
     texts = get_strings(input_data)
+    fast = len(texts) <= 200
 
     # 1) Generate or seed themes
-    analyzer = Analyzer(processes=[ThemeAllocation(themes=themes)], dataset=texts)
+    analyzer = Analyzer(
+        processes=[ThemeAllocation(themes=themes)], dataset=texts, fast=fast
+    )
 
     resp = analyzer.run()
 
