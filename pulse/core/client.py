@@ -1,7 +1,9 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
+import os
 from typing import Any, Dict, Union, Optional
 import httpx
+import gzip
 
 from pulse.config import DEV_BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
@@ -14,6 +16,19 @@ from pulse.core.models import (
     JobSubmissionResponse,
 )
 from pulse.core.exceptions import PulseAPIError
+
+
+def _gzip_request_hook(request: httpx.Request) -> None:
+    if os.getenv("DISABLE_GZIP"):
+        return
+    # Only gzip if there is a body
+    if request.content:
+        # compress the existing body
+        compressed = gzip.compress(request.content)
+        request.headers["Content-Encoding"] = "gzip"
+        request.headers["Content-Length"] = str(len(compressed))
+        # assign compressed bytes to the private _content attribute
+        request._content = compressed
 
 
 class CoreClient:
@@ -31,7 +46,11 @@ class CoreClient:
         self.client = (
             client
             if client is not None
-            else httpx.Client(base_url=self.base_url, timeout=self.timeout)
+            else httpx.Client(
+                base_url=self.base_url,
+                timeout=self.timeout,
+                event_hooks={"request": [_gzip_request_hook]},
+            )
         )
 
     @classmethod
