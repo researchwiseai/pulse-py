@@ -1,6 +1,7 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-from typing import Any, Dict, Union, Optional
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Any, Dict, List, Tuple, Union, Optional
 import httpx
 import gzip
 
@@ -15,6 +16,113 @@ from pulse.core.models import (
     JobSubmissionResponse,
 )
 from pulse.core.exceptions import PulseAPIError
+
+MAX_ITEMS = 10_000
+HALF_CHUNK = MAX_ITEMS // 2
+
+
+def _make_self_chunks(items: List[str]) -> List[List[str]]:
+    """Split a single list into chunks sized for self-similarity."""
+    N = len(items)
+    if N <= MAX_ITEMS:
+        return [items]
+    # chunk size for self-similarity, so that chunk+chunk <= MAX_ITEMS
+    C = HALF_CHUNK
+    return [items[i : i + C] for i in range(0, N, C)]
+
+
+def _make_cross_bodies(
+    set_a: List[str], set_b: List[str], flatten: bool
+) -> List[Dict[str, Any]]:
+    """Determine request bodies for cross-similarity with batching."""
+    A, B = len(set_a), len(set_b)
+    # if combined fits
+    if A + B <= MAX_ITEMS:
+        return [{"set_a": set_a, "set_b": set_b, "flatten": flatten}]
+
+    # keep smallest intact if possible
+    if A <= B < MAX_ITEMS:
+        chunk_size = MAX_ITEMS - A
+        chunks_b = [set_b[i : i + chunk_size] for i in range(0, B, chunk_size)]
+        return [{"set_a": set_a, "set_b": b, "flatten": flatten} for b in chunks_b]
+    if B <= A < MAX_ITEMS:
+        chunk_size = MAX_ITEMS - B
+        chunks_a = [set_a[i : i + chunk_size] for i in range(0, A, chunk_size)]
+        return [{"set_a": a, "set_b": set_b, "flatten": flatten} for a in chunks_a]
+
+    # else chunk both halves
+    chunks_a = [set_a[i : i + HALF_CHUNK] for i in range(0, A, HALF_CHUNK)]
+    chunks_b = [set_b[j : j + HALF_CHUNK] for j in range(0, B, HALF_CHUNK)]
+    bodies: List[Dict[str, Any]] = []
+    for i, a in enumerate(chunks_a):
+        for j, b in enumerate(chunks_b):
+            bodies.append({"set_a": a, "set_b": b, "flatten": flatten})
+    return bodies
+
+
+def _stitch_results(
+    results: List[Any],
+    bodies: List[Dict[str, Any]],
+    full_a: List[str],
+    full_b: List[str],
+) -> Any:
+    """
+    Stitch block results back into a full matrix.
+    Expects each result to be a SimilarityResponse-like object
+    with .matrix or .flattened + dims.
+    """
+    # Determine dimensions
+    A, B = len(full_a), len(full_b)
+    # allocate
+    import numpy as np
+
+    matrix = np.zeros((A, B), dtype=float)
+
+    # track offsets
+    offsets_a: List[int] = []
+    offsets_b: List[int] = []
+    idx = 0
+    if full_a is full_b:
+        # self-sim
+        chunks = _make_self_chunks(full_a)
+        k = len(chunks)
+        offsets = [0]
+        for c in chunks:
+            offsets.append(offsets[-1] + len(c))
+        coords: List[Tuple[int, int]] = []
+        for i in range(k):
+            for j in range(i, k):
+                coords.append((i, j))
+        for res, (i, j) in zip(results, coords):
+            block = res.matrix  # shape (len(chunk_i), len(chunk_j))
+            r0, r1 = offsets[i], offsets[i + 1]
+            c0, c1 = offsets[j], offsets[j + 1]
+            matrix[r0:r1, c0:c1] = block
+            if i != j:
+                matrix[c0:c1, r0:r1] = block.T
+    else:
+        # cross-sim
+        # build offsets for each body in order
+        # naive: assume bodies list order corresponds to row by row
+        # first compute chunk lists
+        chunks_a = _make_self_chunks(full_a) if len(full_a) > MAX_ITEMS else [full_a]
+        chunks_b = _make_self_chunks(full_b) if len(full_b) > MAX_ITEMS else [full_b]
+        offsets_a = [0]
+        for c in chunks_a:
+            offsets_a.append(offsets_a[-1] + len(c))
+        offsets_b = [0]
+        for c in chunks_b:
+            offsets_b.append(offsets_b[-1] + len(c))
+        idx = 0
+        for i, a in enumerate(chunks_a):
+            for j, b in enumerate(chunks_b):
+                res = results[idx]
+                block = res.matrix
+                r0, r1 = offsets_a[i], offsets_a[i + 1]
+                c0, c1 = offsets_b[j], offsets_b[j + 1]
+                matrix[r0:r1, c0:c1] = block
+                idx += 1
+    return matrix
 
 
 class GzipClient(httpx.Client):
@@ -120,26 +228,6 @@ class CoreClient:
             )
         if set is not None and (set_a is not None or set_b is not None):
             raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
-        # client-side validation: limit number of similarity calculations
-        # compute number of comparisons: square for self-similarity, product
-        # for cross-similarity
-        if set is not None:
-            n = len(set)
-            num_calcs = n * n
-        else:
-            # set_a and set_b are both defined (validated above)
-            n_a = len(set_a)  # type: ignore[assignment]
-            n_b = len(set_b)  # type: ignore[assignment]
-            num_calcs = n_a * n_b
-        # maximum allowed comparisons: smaller for fast mode
-        max_calcs = 1_000_000 if fast else 2_000_000_000
-        if num_calcs > max_calcs:
-            raise ValueError(
-                f"Number of similarity calculations ({num_calcs}) "
-                + "exceeds the maximum allowed "
-                f"({max_calcs}) for fast={fast}. Reduce input size "
-                + "or adjust parameters."
-            )
 
         body: Dict[str, Any] = {}
         if set is not None:
@@ -176,6 +264,49 @@ class CoreClient:
 
         # sync path
         return SimilarityResponse.model_validate(data)
+
+    def _submit_batch_similarity_job(self, **kwargs) -> Any:
+        # wrapper around compare_similarity to return Job-like
+        # stub here for real implementation
+        return self.compare_similarity(fast=False, **kwargs)
+
+    def batch_similarity(
+        self,
+        *,
+        set: Optional[List[str]] = None,
+        set_a: Optional[List[str]] = None,
+        set_b: Optional[List[str]] = None,
+        flatten: bool = True,
+    ) -> Any:
+        """
+        Batch large similarity requests intelligently under the 10k-item limit.
+        """
+        if set is not None:
+            chunks = _make_self_chunks(set)
+            bodies: List[Dict[str, Any]] = []
+            k = len(chunks)
+            for i in range(k):
+                for j in range(i, k):
+                    if i == j:
+                        bodies.append({"set": chunks[i], "flatten": flatten})
+                    else:
+                        bodies.append(
+                            {"set_a": chunks[i], "set_b": chunks[j], "flatten": flatten}
+                        )
+        else:
+            bodies = _make_cross_bodies(set_a or [], set_b or [], flatten)
+
+        # submit all jobs
+        jobs = [self._submit_batch_similarity_job(**body) for body in bodies]
+
+        # wait for all
+        with ThreadPoolExecutor() as executor:
+            futures = {executor.submit(job.wait): job for job in jobs}
+            results = [f.result() for f in as_completed(futures)]
+
+        full_a = set or set_a or []
+        full_b = set or set_b or []
+        return _stitch_results(results, bodies, full_a, full_b)
 
     def generate_themes(
         self,

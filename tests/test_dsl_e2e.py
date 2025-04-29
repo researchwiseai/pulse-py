@@ -7,6 +7,13 @@ from pulse.core.jobs import Job
 from pulse.core.client import CoreClient
 
 
+@pytest.fixture(autouse=True)
+def disable_sleep(monkeypatch):
+    import time
+
+    monkeypatch.setattr(time, "sleep", lambda x: None)
+
+
 @pytest.mark.vcr()
 def test_dsl_end_to_end():
     comments = ["everything was very tasty", "it was a little too noisy"]
