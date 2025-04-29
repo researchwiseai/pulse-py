@@ -107,12 +107,12 @@ class CoreClient:
         oversized = False
         if set is not None:
             body["set"] = set
-            if len(set) > 316:
+            if len(set) > 200:
                 oversized = True
         else:
             body["set_a"] = set_a
             body["set_b"] = set_b
-            if len(set_a) * len(set_b) > 100_000:
+            if len(set_a) * len(set_b) > 10_000:
                 oversized = True
 
         if fast:
@@ -148,7 +148,7 @@ class CoreClient:
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
-            result = job.wait()
+            result = job.wait(600)
             return SimilarityResponse.model_validate(result)
 
         # sync path
@@ -207,7 +207,7 @@ class CoreClient:
         jobs = [self._submit_batch_similarity_job(**body) for body in bodies]
 
         # wait for all jobs sequentially to preserve thread safety (e.g., under VCR)
-        results = [job.wait(360) for job in jobs]
+        results = [job.wait(600) for job in jobs]
 
         full_a = set or set_a or []
         full_b = set or set_b or []
