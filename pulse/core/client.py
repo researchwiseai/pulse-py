@@ -107,12 +107,12 @@ class CoreClient:
         oversized = False
         if set is not None:
             body["set"] = set
-            if len(set) > 10000:
+            if len(set) > 316:
                 oversized = True
         else:
             body["set_a"] = set_a
             body["set_b"] = set_b
-            if len(set_a) + len(set_b) > 10000:
+            if len(set_a) * len(set_b) > 100_000:
                 oversized = True
 
         if fast:
