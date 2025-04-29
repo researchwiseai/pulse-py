@@ -1,5 +1,6 @@
 """Tests for our quick starter helpers"""
 
+import os
 import pandas as pd
 import pytest
 
@@ -31,9 +32,18 @@ reviews = [
 
 
 @pytest.fixture(autouse=True)
-def disable_sleep(monkeypatch):
+def disable_sleep(monkeypatch, request):
+    """Disable sleep during playback (cassette exists), skip when recording."""
     import time
+    import os
 
+    # Determine cassette path for this test
+    cassette_dir = os.path.join(os.path.dirname(request.node.fspath), "cassettes")
+    cassette_file = os.path.join(cassette_dir, f"{request.node.name}.yaml")
+    # If cassette not present, assume recording mode and allow real sleep
+    if not os.path.exists(cassette_file):
+        return
+    # In playback mode, disable real sleep to speed up tests
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
@@ -47,6 +57,30 @@ def test_theme_allocation_implicit_generation():
 
     multi = resp.assign_multi()
     assert len(multi) == len(reviews)
+    assert isinstance(multi, pd.DataFrame)
+
+    heatmap = resp.heatmap()
+    assert heatmap is not None
+
+    df = resp.to_dataframe()
+    assert isinstance(df, pd.DataFrame)
+
+
+@pytest.mark.vcr()
+def test_theme_allocation_implicit_generation_big():
+    fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures")
+    file_path = os.path.join(fixtures_dir, "disney-10k.txt")
+    with open(file_path, "r", encoding="utf-8") as f:
+        comments = f.read().splitlines()
+
+    resp = theme_allocation(comments)
+
+    series = resp.assign_single()
+    assert len(series) == len(comments)
+    assert isinstance(series, pd.Series)
+
+    multi = resp.assign_multi()
+    assert len(multi) == len(comments)
     assert isinstance(multi, pd.DataFrame)
 
     heatmap = resp.heatmap()

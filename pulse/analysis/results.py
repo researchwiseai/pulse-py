@@ -100,7 +100,12 @@ class ThemeAllocationResult:
         self._single_label = single_label
         self._threshold = threshold
         # similarity matrix shape (n_texts x n_themes)
-        self._similarity = similarity or []  # type: Sequence[Sequence[float]]
+        # use provided similarity matrix; must not be empty for assignment
+        if similarity is None:
+            raise RuntimeError(
+                "Similarity matrix is required for ThemeAllocationResult"
+            )
+        self._similarity = similarity  # type: Sequence[Sequence[float]]
 
     def assign_single(self, threshold: Optional[float] = None) -> pd.Series:
         """Return a Series mapping each text to its single theme label.
@@ -108,7 +113,8 @@ class ThemeAllocationResult:
         thr = self._threshold if threshold is None else threshold
         labels = []
         for idx, assign in enumerate(self._assignments):
-            if self._similarity:
+            # use similarity matrix when available
+            if self._similarity is not None:
                 sim_row = self._similarity[idx]
                 # find best index
                 best_idx = max(range(len(sim_row)), key=lambda i: sim_row[i])
@@ -157,18 +163,34 @@ class ThemeAllocationResult:
         return ax
 
     def heatmap(self, **kwargs) -> Any:
-        """Plot a heatmap of the similarity matrix using seaborn."""
-        import seaborn as sns
+        """Plot a heatmap of the similarity matrix."""
+        try:
+            import seaborn as sns
+
+            use_sns = True
+        except ImportError:
+            use_sns = False
         import matplotlib.pyplot as plt
 
-        if not self._similarity:
+        # Ensure similarity matrix is present
+        if self._similarity is None or len(self._similarity) == 0:
             raise ValueError("No similarity matrix available for heatmap.")
 
         fig, ax = plt.subplots()
-        sns.heatmap(
-            self._similarity, annot=True, fmt=".2f", cmap="coolwarm", ax=ax, **kwargs
-        )
+        if use_sns:
+            sns.heatmap(
+                self._similarity,
+                annot=True,
+                fmt=".2f",
+                cmap="coolwarm",
+                ax=ax,
+                **kwargs,
+            )
+        else:
+            ax.imshow(self._similarity, aspect="auto", cmap="coolwarm", **kwargs)
+        ax.set_xticks(range(len(self._themes)))
         ax.set_xticklabels(self._themes)
+        ax.set_yticks(range(len(self._texts)))
         ax.set_yticklabels(self._texts)
         return ax
 
@@ -211,12 +233,14 @@ class ClusterResult:
         labels = model.fit_predict(self._matrix)
         return labels
 
-    def dbscan(self, eps: float = 0.5, min_samples: int = 5, **kwargs) -> Any:
+    def dbscan(self, eps: float = 0.4, min_samples: int = 5, **kwargs) -> Any:
         """Perform DBSCAN clustering on the similarity matrix."""
         from sklearn.cluster import DBSCAN
 
+        distance_matrix = 1 - self._matrix
+
         model = DBSCAN(eps=eps, min_samples=min_samples, **kwargs)
-        labels = model.fit_predict(self._matrix)
+        labels = model.fit_predict(distance_matrix)
         return labels
 
     def plot_scatter(self, **kwargs) -> Any:

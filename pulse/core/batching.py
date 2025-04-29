@@ -76,21 +76,64 @@ def _stitch_results(
                 matrix[c0:c1, r0:r1] = block.T
     else:
         # Cross-similarity stitching
-        chunks_a = _make_self_chunks(full_a) if len(full_a) > MAX_ITEMS else [full_a]
-        chunks_b = _make_self_chunks(full_b) if len(full_b) > MAX_ITEMS else [full_b]
-        offsets_a = [0]
-        for c in chunks_a:
-            offsets_a.append(offsets_a[-1] + len(c))
-        offsets_b = [0]
-        for c in chunks_b:
-            offsets_b.append(offsets_b[-1] + len(c))
-        idx = 0
-        for i, a in enumerate(chunks_a):
-            for j, b in enumerate(chunks_b):
+        if bodies:
+            # Stitch based on submitted bodies
+            # Determine unique chunks of set_a and set_b in order
+            chunks_a: List[List[str]] = []
+            chunks_b: List[List[str]] = []
+            for body in bodies:
+                a = body["set_a"]
+                if not any(a is existing or a == existing for existing in chunks_a):
+                    chunks_a.append(a)
+                b = body["set_b"]
+                if not any(b is existing or b == existing for existing in chunks_b):
+                    chunks_b.append(b)
+
+            # Compute offsets for rows and columns
+            offsets_a = [0]
+            for a in chunks_a:
+                offsets_a.append(offsets_a[-1] + len(a))
+            offsets_b = [0]
+            for b in chunks_b:
+                offsets_b.append(offsets_b[-1] + len(b))
+
+            # Stitch each block into the full matrix
+            for idx, body in enumerate(bodies):
+                a = body["set_a"]
+                b = body["set_b"]
+                # find chunk indices
+                i = next(
+                    i for i, chunk in enumerate(chunks_a) if chunk is a or chunk == a
+                )
+                j = next(
+                    j for j, chunk in enumerate(chunks_b) if chunk is b or chunk == b
+                )
                 res = results[idx]
-                block = res.matrix
+                block = res["matrix"]
                 r0, r1 = offsets_a[i], offsets_a[i + 1]
                 c0, c1 = offsets_b[j], offsets_b[j + 1]
                 matrix[r0:r1, c0:c1] = block
-                idx += 1
+        else:
+            # Fallback to original splitting logic when no bodies provided
+            chunks_a = (
+                _make_self_chunks(full_a) if len(full_a) > MAX_ITEMS else [full_a]
+            )
+            chunks_b = (
+                _make_self_chunks(full_b) if len(full_b) > MAX_ITEMS else [full_b]
+            )
+            offsets_a = [0]
+            for c in chunks_a:
+                offsets_a.append(offsets_a[-1] + len(c))
+            offsets_b = [0]
+            for c in chunks_b:
+                offsets_b.append(offsets_b[-1] + len(c))
+            idx = 0
+            for i, a in enumerate(chunks_a):
+                for j, b in enumerate(chunks_b):
+                    res = results[idx]
+                    block = res.matrix
+                    r0, r1 = offsets_a[i], offsets_a[i + 1]
+                    c0, c1 = offsets_b[j], offsets_b[j + 1]
+                    matrix[r0:r1, c0:c1] = block
+                    idx += 1
     return matrix

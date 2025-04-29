@@ -1,6 +1,5 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict, List, Union, Optional
 import httpx
 from pulse.core.gzip_client import GzipClient
@@ -156,9 +155,27 @@ class CoreClient:
         return SimilarityResponse.model_validate(data)
 
     def _submit_batch_similarity_job(self, **kwargs) -> Any:
-        # wrapper around compare_similarity to return Job-like
-        # stub here for real implementation
-        return self.compare_similarity(fast=False, **kwargs)
+        body: Dict[str, Any] = {}
+        body["flatten"] = kwargs["flatten"]
+        if "set" in kwargs:
+            body["set"] = kwargs["set"]
+        elif "set_a" in kwargs and "set_b" in kwargs:
+            body["set_a"] = kwargs["set_a"]
+            body["set_b"] = kwargs["set_b"]
+        else:
+            raise ValueError("Must provide either `set` or both `set_a` and `set_b`.")
+
+        response = self.client.post("/similarity", json=body)
+
+        if response.status_code != 202:
+            raise PulseAPIError(response)
+        data = response.json()
+        # Async/job path: initial submission returned only jobId
+        submission = JobSubmissionResponse.model_validate(data)
+        job = Job(id=submission.jobId, status="pending")
+        job._client = self.client
+
+        return job
 
     def batch_similarity(
         self,
@@ -189,10 +206,8 @@ class CoreClient:
         # submit all jobs
         jobs = [self._submit_batch_similarity_job(**body) for body in bodies]
 
-        # wait for all
-        with ThreadPoolExecutor() as executor:
-            futures = {executor.submit(job.wait, 360): job for job in jobs}
-            results = [f.result() for f in as_completed(futures)]
+        # wait for all jobs sequentially to preserve thread safety (e.g., under VCR)
+        results = [job.wait(360) for job in jobs]
 
         full_a = set or set_a or []
         full_b = set or set_b or []

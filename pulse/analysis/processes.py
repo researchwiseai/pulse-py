@@ -118,8 +118,8 @@ class ThemeAllocation:
         resp = ctx.client.compare_similarity(
             set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
         )
-        # extract similarity matrix if available
-        similarity = getattr(resp, "similarity", None)
+        # normalize similarity matrix from response or raw matrix
+        similarity = getattr(resp, "similarity", resp)
 
         # If single_label=True, then assign each input to its most similar theme
         # as long as it is over the threshold. If single_label=False, then we
@@ -134,6 +134,8 @@ class ThemeAllocation:
                 # find index of maximum similarity
                 best_idx = max(range(len(sim_row)), key=lambda i: sim_row[i])
                 assignments.append(best_idx)
+        else:
+            raise RuntimeError("No similarity matrix available for allocation")
         return {
             "themes": labels,
             "assignments": assignments,
