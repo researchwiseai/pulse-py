@@ -1,3 +1,3 @@
 """Pulse Client package."""
 
-__version__ = "0.2.0a28"
+__version__ = "0.2.0a29"
