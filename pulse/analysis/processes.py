@@ -115,7 +115,7 @@ class ThemeAllocation:
             sim_texts = list(raw_themes)
         fast_flag = ctx.fast
 
-        resp = ctx.client.batch_similarity(
+        resp = ctx.client.compare_similarity(
             set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
         )
         # extract similarity matrix if available
@@ -196,6 +196,6 @@ class Cluster:
         texts = list(ctx.dataset)
         fast = self.fast if self.fast is not None else ctx.fast
         # request full matrix (flatten=False for NxN)
-        resp = ctx.client.batch_similarity(set=texts, fast=fast, flatten=False)
+        resp = ctx.client.compare_similarity(set=texts, fast=fast, flatten=False)
         # resp.similarity is List[List[float]]
         return resp.similarity

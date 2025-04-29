@@ -105,14 +105,29 @@ class CoreClient:
             raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
 
         body: Dict[str, Any] = {}
+        oversized = False
         if set is not None:
             body["set"] = set
+            if len(set) > 10000:
+                oversized = True
         else:
             body["set_a"] = set_a
             body["set_b"] = set_b
+            if len(set_a) + len(set_b) > 10000:
+                oversized = True
 
         if fast:
             body["fast"] = True
+
+        if oversized and not fast:
+            # If not fast and total size exceeds 10k, use batch similarity
+            return self.batch_similarity(
+                set=set,
+                set_a=set_a,
+                set_b=set_b,
+                flatten=flatten,
+            )
+
         # API expects JSON boolean for flatten
         body["flatten"] = flatten
 
