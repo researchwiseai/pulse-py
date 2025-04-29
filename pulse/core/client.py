@@ -1,6 +1,5 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-import os
 from typing import Any, Dict, Union, Optional
 import httpx
 import gzip
@@ -18,17 +17,23 @@ from pulse.core.models import (
 from pulse.core.exceptions import PulseAPIError
 
 
-def _gzip_request_hook(request: httpx.Request) -> None:
-    if os.getenv("DISABLE_GZIP"):
-        return
-    # Only gzip if there is a body
-    if request.content:
-        # compress the existing body
-        compressed = gzip.compress(request.content)
-        request.headers["Content-Encoding"] = "gzip"
-        request.headers["Content-Length"] = str(len(compressed))
-        # assign compressed bytes to the private _content attribute
-        request._content = compressed
+class GzipClient(httpx.Client):
+    def build_request(self, method: str, url: str, **kwargs) -> httpx.Request:
+        # Only compress when the user explicitly passed `content=…`
+        if "content" in kwargs and kwargs["content"]:
+            original = kwargs["content"]
+            # ensure bytes
+            if isinstance(original, str):
+                original = original.encode("utf-8")
+            compressed = gzip.compress(original)
+
+            # update the kwargs used to build the Request
+            kwargs["content"] = compressed
+            headers = kwargs.setdefault("headers", {})
+            headers["Content-Encoding"] = "gzip"
+            headers["Content-Length"] = str(len(compressed))
+
+        return super().build_request(method, url, **kwargs)
 
 
 class CoreClient:
@@ -46,10 +51,9 @@ class CoreClient:
         self.client = (
             client
             if client is not None
-            else httpx.Client(
+            else GzipClient(
                 base_url=self.base_url,
                 timeout=self.timeout,
-                event_hooks={"request": [_gzip_request_hook]},
             )
         )
 

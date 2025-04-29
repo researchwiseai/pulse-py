@@ -20,10 +20,10 @@ interactions:
     uri: https://dev.core.researchwiseai.com/pulse/v1/sentiment
   response:
     body:
-      string: '{"results":[{"sentiment":"positive","confidence":0.9892745614051819},{"sentiment":"negative","confidence":0.9963441491127014}],"requestId":"0f6bde16-9249-4f09-96e2-87e59393a06e"}'
+      string: '{"results":[{"sentiment":"positive","confidence":0.9892745614051819},{"sentiment":"negative","confidence":0.9963441491127014}],"requestId":"7b6211c1-ad96-4b26-b2bb-c5c9d3630f27"}'
     headers:
       Apigw-Requestid:
-      - JwCAmjoIDoEEJBA=
+      - JxRq6glSjoEEJuw=
       Connection:
       - keep-alive
       Content-Length:
@@ -31,7 +31,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Mon, 28 Apr 2025 20:22:53 GMT
+      - Tue, 29 Apr 2025 05:26:42 GMT
     status:
       code: 200
       message: OK
