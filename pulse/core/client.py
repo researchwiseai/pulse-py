@@ -6,7 +6,7 @@ from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
 from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth
 
-from pulse.config import DEV_BASE_URL, PROD_BASE_URL, DEFAULT_TIMEOUT
+from pulse.config import PROD_BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
 from pulse.core.models import (
     EmbeddingsResponse,
@@ -24,7 +24,7 @@ class CoreClient:
 
     def __init__(
         self,
-        base_url: str = DEV_BASE_URL,
+        base_url: str = PROD_BASE_URL,
         timeout: float = DEFAULT_TIMEOUT,
         client: Optional[httpx.Client] = None,
         auth: Optional[httpx.Auth] = None,
@@ -47,66 +47,175 @@ class CoreClient:
     @classmethod
     def with_client_credentials(
         cls,
-        environment: str,
-        client_id: str,
-        client_secret: str,
-        scope: str | None = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        audience: Optional[str] = None,
+        token_url: Optional[str] = None,
+        base_url: Optional[str] = None,
+        scope: Optional[str] = None,
     ) -> "CoreClient":
         """
         Construct a CoreClient using OAuth2 Client Credentials flow.
-        `environment` should be 'dev' or 'prod'.
+
+        Credentials and configurations are resolved in the following
+        order of preference:
+        1. Direct function arguments.
+        2. Environment variables:
+           - PULSE_CLIENT_ID
+           - PULSE_CLIENT_SECRET
+           - PULSE_AUDIENCE
+           - PULSE_TOKEN_URL
+           - PULSE_BASE_URL
+        3. Default values:
+           - token_url defaults to "https://core.researchwiseai.com/oauth2/token"
+           - base_url defaults to PROD_BASE_URL (from pulse.config)
+           - audience defaults to None if not otherwise specified.
+
+        Args:
+            client_id: OAuth2 client ID.
+            client_secret: OAuth2 client secret.
+            audience: The audience for the token request. Defaults to None.
+            token_url: The token endpoint URL.
+            base_url: The base URL for the Pulse API.
+            scope: OAuth2 scope(s), space-separated.
+
+        Returns:
+            An instance of CoreClient configured with Client Credentials authentication.
+
+        Raises:
+            ValueError: If client_id or client_secret is not provided via arguments
+                        or environment variables.
         """
-        # Determine base URL and token endpoint domain
-        if environment == "dev":
-            base_url = DEV_BASE_URL
-            token_domain = "dev.core.researchwiseai.com"
-        elif environment == "prod":
-            # production environment
-            base_url = PROD_BASE_URL
-            token_domain = "core.researchwiseai.com"
-        else:
-            raise ValueError("environment must be 'dev' or 'prod'")
-        token_url = f"https://{token_domain}/oauth2/token"
+        # Ensure 'import os' is at the top of the file for os.getenv()
+        import os  # This import is placed here for snippet completeness,
+
+        # ideally it's at the module level.
+
+        # Resolve client_id: argument > environment variable
+        final_client_id = client_id or os.getenv("PULSE_CLIENT_ID")
+        if not final_client_id:
+            raise ValueError(
+                "Client ID must be provided either as an argument "
+                "or via the PULSE_CLIENT_ID environment variable."
+            )
+
+        # Resolve client_secret: argument > environment variable
+        final_client_secret = client_secret or os.getenv("PULSE_CLIENT_SECRET")
+        if not final_client_secret:
+            raise ValueError(
+                "Client secret must be provided either as an argument "
+                "or via the PULSE_CLIENT_SECRET environment variable."
+            )
+
+        # Resolve token_url: argument > environment variable > default
+        default_token_url = "https://core.researchwiseai.com/oauth2/token"
+        final_token_url = token_url or os.getenv("PULSE_TOKEN_URL") or default_token_url
+
+        # Resolve audience: argument > environment variable (default is None if not set)
+        final_audience = audience or os.getenv("PULSE_AUDIENCE")
+
+        # Resolve base_url: argument > environment variable > default (PROD_BASE_URL)
+        # PROD_BASE_URL should be imported from pulse.config at the module level.
+        final_base_url = base_url or os.getenv("PULSE_BASE_URL") or PROD_BASE_URL
+
         auth = ClientCredentialsAuth(
-            token_url=token_url,
-            client_id=client_id,
-            client_secret=client_secret,
+            token_url=final_token_url,
+            client_id=final_client_id,
+            client_secret=final_client_secret,
             scope=scope,
+            audience=final_audience,  # Assumes ClientCredentialsAuth accepts 'audience'
         )
-        return cls(base_url=base_url, auth=auth)
+
+        return cls(base_url=final_base_url, auth=auth)
 
     @classmethod
     def with_pkce(
         cls,
-        environment: str,
-        client_id: str,
         code: str,
-        redirect_uri: str,
         code_verifier: str,
-        scope: str | None = None,
+        client_id: Optional[str] = None,
+        redirect_uri: Optional[str] = None,
+        base_url: Optional[str] = None,
+        token_url: Optional[str] = None,
+        scope: Optional[str] = None,
     ) -> "CoreClient":
         """
         Construct a CoreClient using OAuth2 Authorization Code flow with PKCE.
-        `environment` should be 'dev' or 'prod'.
+
+        Parameters like client_id, redirect_uri, base_url, and token_url are resolved
+        in the following order of preference:
+        1. Direct function arguments.
+        2. Environment variables:
+           - PULSE_CLIENT_ID
+           - PULSE_REDIRECT_URI
+           - PULSE_BASE_URL
+           - PULSE_TOKEN_URL
+           - PULSE_SCOPE
+        3. Default values:
+           - base_url defaults to PROD_BASE_URL (from pulse.config).
+           - token_url defaults to "https://core.researchwiseai.com/oauth2/token".
+           - scope defaults to None if not otherwise specified.
+
+        `code` and `code_verifier` must always be provided as direct arguments.
+
+        Args:
+            code: The authorization code received from the authorization server.
+            code_verifier: The PKCE code verifier.
+            client_id: OAuth2 client ID.
+            redirect_uri: The redirect URI used in the authorization request.
+            base_url: The base URL for the Pulse API.
+            token_url: The token endpoint URL.
+            scope: OAuth2 scope(s), space-separated.
+
+        Returns:
+            An instance of CoreClient configured with PKCE authentication.
+
+        Raises:
+            ValueError: If `client_id` or `redirect_uri` is not provided via
+                        arguments or environment variables.
         """
-        if environment == "dev":
-            base_url = DEV_BASE_URL
-            token_domain = "dev.core.researchwiseai.com"
-        elif environment == "prod":
-            base_url = PROD_BASE_URL
-            token_domain = "core.researchwiseai.com"
-        else:
-            raise ValueError("environment must be 'dev' or 'prod'")
-        token_url = f"https://{token_domain}/oauth2/token"
+        # Ensure 'import os' is at the top of the file for os.getenv()
+        import os  # This import is placed here for snippet completeness,
+
+        # ideally it's at the module level.
+
+        # Resolve client_id: argument > environment variable
+        final_client_id = client_id or os.getenv("PULSE_CLIENT_ID")
+        if not final_client_id:
+            raise ValueError(
+                "Client ID must be provided either as an argument "
+                "or via the PULSE_CLIENT_ID environment variable."
+            )
+
+        # Resolve redirect_uri: argument > environment variable
+        final_redirect_uri = redirect_uri or os.getenv("PULSE_REDIRECT_URI")
+        if not final_redirect_uri:
+            raise ValueError(
+                "Redirect URI must be provided either as an argument "
+                "or via the PULSE_REDIRECT_URI environment variable."
+            )
+
+        # Resolve base_url: argument > environment variable > default (PROD_BASE_URL)
+        # PROD_BASE_URL should be imported from pulse.config at the module level.
+        final_base_url = base_url or os.getenv("PULSE_BASE_URL") or PROD_BASE_URL
+
+        # Resolve token_url: argument > environment variable > default
+        default_token_url = "https://core.researchwiseai.com/oauth2/token"
+        final_token_url = token_url or os.getenv("PULSE_TOKEN_URL") or default_token_url
+
+        # Resolve scope: argument > environment variable (default is None if not set)
+        final_scope = scope or os.getenv("PULSE_SCOPE")
+
         auth = AuthorizationCodePKCEAuth(
-            token_url=token_url,
-            client_id=client_id,
-            code=code,
-            redirect_uri=redirect_uri,
-            code_verifier=code_verifier,
-            scope=scope,
+            token_url=final_token_url,
+            client_id=final_client_id,
+            code=code,  # Direct argument
+            redirect_uri=final_redirect_uri,
+            code_verifier=code_verifier,  # Direct argument
+            scope=final_scope,
         )
-        return cls(base_url=base_url, auth=auth)
+
+        return cls(base_url=final_base_url, auth=auth)
 
     def create_embeddings(
         self, texts: list[str], fast: bool = True
