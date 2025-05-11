@@ -4,8 +4,9 @@ from typing import Any, Dict, List, Union, Optional
 import httpx
 from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
+from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth
 
-from pulse.config import DEV_BASE_URL, DEFAULT_TIMEOUT
+from pulse.config import DEV_BASE_URL, PROD_BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
 from pulse.core.models import (
     EmbeddingsResponse,
@@ -26,25 +27,86 @@ class CoreClient:
         base_url: str = DEV_BASE_URL,
         timeout: float = DEFAULT_TIMEOUT,
         client: Optional[httpx.Client] = None,
+        auth: Optional[httpx.Auth] = None,
     ) -> None:
-        """Initialize CoreClient with optional HTTPX client (for testing)."""
+        """Initialize CoreClient with optional HTTPX client
+        (for testing) and optional auth."""
         self.base_url = base_url
         self.timeout = timeout
-        self.client = (
-            client
-            if client is not None
-            else GzipClient(
+        if client is not None:
+            # Use provided HTTP client (user is responsible for auth)
+            self.client = client
+        else:
+            # Create a GzipClient, apply auth for core API calls if provided
+            self.client = GzipClient(
                 base_url=self.base_url,
                 timeout=self.timeout,
+                auth=auth,
             )
-        )
 
     @classmethod
     def with_client_credentials(
-        cls, domain: str, client_id: str, client_secret: str
+        cls,
+        environment: str,
+        client_id: str,
+        client_secret: str,
+        scope: str | None = None,
     ) -> "CoreClient":
-        # TODO: implement OAuth2 credentials
-        return cls()
+        """
+        Construct a CoreClient using OAuth2 Client Credentials flow.
+        `environment` should be 'dev' or 'prod'.
+        """
+        # Determine base URL and token endpoint domain
+        if environment == "dev":
+            base_url = DEV_BASE_URL
+            token_domain = "dev.core.researchwiseai.com"
+        elif environment == "prod":
+            # production environment
+            base_url = PROD_BASE_URL
+            token_domain = "core.researchwiseai.com"
+        else:
+            raise ValueError("environment must be 'dev' or 'prod'")
+        token_url = f"https://{token_domain}/oauth2/token"
+        auth = ClientCredentialsAuth(
+            token_url=token_url,
+            client_id=client_id,
+            client_secret=client_secret,
+            scope=scope,
+        )
+        return cls(base_url=base_url, auth=auth)
+
+    @classmethod
+    def with_pkce(
+        cls,
+        environment: str,
+        client_id: str,
+        code: str,
+        redirect_uri: str,
+        code_verifier: str,
+        scope: str | None = None,
+    ) -> "CoreClient":
+        """
+        Construct a CoreClient using OAuth2 Authorization Code flow with PKCE.
+        `environment` should be 'dev' or 'prod'.
+        """
+        if environment == "dev":
+            base_url = DEV_BASE_URL
+            token_domain = "dev.core.researchwiseai.com"
+        elif environment == "prod":
+            base_url = PROD_BASE_URL
+            token_domain = "core.researchwiseai.com"
+        else:
+            raise ValueError("environment must be 'dev' or 'prod'")
+        token_url = f"https://{token_domain}/oauth2/token"
+        auth = AuthorizationCodePKCEAuth(
+            token_url=token_url,
+            client_id=client_id,
+            code=code,
+            redirect_uri=redirect_uri,
+            code_verifier=code_verifier,
+            scope=scope,
+        )
+        return cls(base_url=base_url, auth=auth)
 
     def create_embeddings(
         self, texts: list[str], fast: bool = True

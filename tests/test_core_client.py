@@ -3,11 +3,29 @@
 All HTTP interactions are recorded and replayed; no manual mocks.
 """
 import pytest
+import os
 
+from pulse.auth import ClientCredentialsAuth
 from pulse.core.client import CoreClient
 from pulse.core.exceptions import PulseAPIError
 
 pytestmark = pytest.mark.vcr(record_mode="new_episodes")
+
+base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+
+# Load credentials from environment variables
+client_id = os.getenv("PULSE_CLIENT_ID")
+client_secret = os.getenv("PULSE_CLIENT_SECRET")
+if not client_id or not client_secret:
+    pytest.skip("Pulse client credentials not set", allow_module_level=True)
+token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", base_url)
+auth = ClientCredentialsAuth(
+    client_id=client_id,
+    client_secret=client_secret,
+    token_url=token_url,
+    audience=audience,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +36,7 @@ def disable_sleep(monkeypatch):
 
 
 def test_create_embeddings_fast():
-    client = CoreClient()
+    client = CoreClient(base_url=base_url, auth=auth)
     response = client.create_embeddings(["a", "b"], fast=True)
 
     # Check that the response is a valid EmbeddingResponse object
@@ -34,7 +52,7 @@ def test_create_embeddings_fast():
 
 
 def test_compare_similarity_fast():
-    client = CoreClient()
+    client = CoreClient(base_url=base_url, auth=auth)
 
     response = client.compare_similarity(set=["x", "y"], fast=True, flatten=False)
     # Check that the response is a valid SimilarityResponse object
@@ -62,7 +80,7 @@ def test_compare_similarity_fast():
 
 
 def test_generate_themes_fast():
-    client = CoreClient()
+    client = CoreClient(base_url=base_url, auth=auth)
     response = client.generate_themes(
         ["apple", "orange", "banana", "melon", "goat", "horse", "cow", "pig"],
         min_themes=1,
@@ -85,7 +103,7 @@ def test_generate_themes_fast():
 
 
 def test_analyze_sentiment_fast():
-    client = CoreClient()
+    client = CoreClient(base_url=base_url, auth=auth)
     response = client.analyze_sentiment(["happy", "sad"], fast=True)
     # Check that the response is a valid SentimentResponse object
     assert hasattr(response, "results")
@@ -104,6 +122,6 @@ def test_analyze_sentiment_fast():
 
 
 def test_error_raises():
-    client = CoreClient()
+    client = CoreClient(base_url=base_url, auth=auth)
     with pytest.raises(PulseAPIError):
         client.create_embeddings([False], fast=True)

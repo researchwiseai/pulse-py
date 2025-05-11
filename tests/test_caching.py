@@ -5,8 +5,10 @@
 # import shutil  # Unused
 
 import pytest
+import os
 
 from pulse.analysis.analyzer import Analyzer
+from pulse.auth import ClientCredentialsAuth
 
 # from pulse.analysis.processes import Process  # Unused
 
@@ -35,11 +37,28 @@ def cache_dir(tmp_path):
     return str(tmp_path / "cache")
 
 
+base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+
+# Load credentials from environment variables or use dummy defaults for caching tests
+client_id = os.getenv("PULSE_CLIENT_ID", "DUMMY_CLIENT_ID")
+client_secret = os.getenv("PULSE_CLIENT_SECRET", "DUMMY_CLIENT_SECRET")
+token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", base_url)
+auth = ClientCredentialsAuth(
+    client_id=client_id,
+    client_secret=client_secret,
+    token_url=token_url,
+    audience=audience,
+)
+
+
 def test_persistent_caching(tmp_path, cache_dir):
     # First run: process.run called once
     texts = ["x", "y"]
     proc = DummyProcess()
-    az1 = Analyzer(dataset=texts, processes=[proc], cache_dir=cache_dir, use_cache=True)
+    az1 = Analyzer(
+        dataset=texts, processes=[proc], cache_dir=cache_dir, use_cache=True, auth=auth
+    )
     res1 = az1.run()
     assert proc.call_count == 1
     assert res1.dummy == "result_1"
@@ -61,7 +80,9 @@ def test_disable_caching(tmp_path, cache_dir):
     # When use_cache=False, run() is always called
     texts = ["a"]
     proc = DummyProcess()
-    az = Analyzer(dataset=texts, processes=[proc], cache_dir=cache_dir, use_cache=False)
+    az = Analyzer(
+        dataset=texts, processes=[proc], cache_dir=cache_dir, use_cache=False, auth=auth
+    )
     az.run()
     az.run()
     # call_count should increment twice

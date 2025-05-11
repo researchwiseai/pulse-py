@@ -36,9 +36,41 @@ Once installed, you can quickly try out the core and DSL APIs.
 ```python
 from pulse.core.client import CoreClient
 
+# Unauthenticated (dev) environment
 client = CoreClient()  # default to dev environment
 emb = client.create_embeddings(["Hello world", "Goodbye"])  # sync "fast" call
 print(emb.embeddings)
+```
+
+### CoreClient with Authentication
+
+Secure your requests by providing an OAuth2 auth object to CoreClient:
+
+```python
+from pulse.core.client import CoreClient
+from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth
+
+# Client Credentials flow
+auth = ClientCredentialsAuth(
+    token_url="https://dev.core.researchwiseai.com/oauth2/token",
+    client_id="YOUR_CLIENT_ID",
+    client_secret="YOUR_CLIENT_SECRET",
+    scope="YOUR_SCOPE",  # optional
+)
+client = CoreClient(auth=auth)
+resp = client.create_embeddings(["Hello world", "Goodbye"])  # will include Authorization header
+
+# Authorization Code flow with PKCE
+auth = AuthorizationCodePKCEAuth(
+    token_url="https://dev.core.researchwiseai.com/oauth2/token",
+    client_id="YOUR_CLIENT_ID",
+    code="AUTHORIZATION_CODE",
+    redirect_uri="https://yourapp/callback",
+    code_verifier="YOUR_CODE_VERIFIER",
+    scope="YOUR_SCOPE",  # optional
+)
+client = CoreClient(auth=auth)
+resp = client.create_embeddings(["Hello world", "Goodbye"])
 ```
 
 ### Analyzer
@@ -60,6 +92,27 @@ You can find Jupyter notebooks demonstrating both the high-level and DSL APIs un
 ```bash
 jupyter notebook examples/high_level_api.ipynb
 jupyter notebook examples/dsl_api.ipynb
+```
+
+## Environment Variables
+For authenticated access and test recording/playback, configure the following environment variables:
+
+- `PULSE_CLIENT_ID`: your OAuth2 client ID (e.g., Auth0 client ID).
+- `PULSE_CLIENT_SECRET`: your OAuth2 client secret.
+- `PULSE_TOKEN_URL` (optional): token endpoint URL. Defaults to `https://wise-dev.eu.auth0.com/oauth/token`.
+- `PULSE_AUDIENCE` (optional): API audience URL. Defaults to `https://dev.core.researchwiseai.com/pulse/v1`.
+
+In local development, you can export these variables:
+```bash
+export PULSE_CLIENT_ID="your_client_id"
+export PULSE_CLIENT_SECRET="your_client_secret"
+```
+
+In CI (e.g., GitHub Actions), add these values as repository secrets and reference them in your workflow:
+```yaml
+env:
+  PULSE_CLIENT_ID: ${{ secrets.PULSE_CLIENT_ID }}
+  PULSE_CLIENT_SECRET: ${{ secrets.PULSE_CLIENT_SECRET }}
 ```
 
 ## Development & Contributing

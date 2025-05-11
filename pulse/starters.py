@@ -5,6 +5,7 @@ from typing import Optional
 from pulse.analysis.analyzer import Analyzer
 from pulse.analysis.processes import Cluster, SentimentProcess, ThemeAllocation
 from pulse.analysis.results import ClusterResult, SentimentResult, ThemeAllocationResult
+from pulse.auth import _BaseOAuth2Auth
 
 
 def _load_text(path: str) -> List[str]:
@@ -42,7 +43,9 @@ def get_strings(source: Union[List[str], str]) -> List[str]:
     raise ValueError(f"Unsupported file type: {ext}")
 
 
-def sentiment_analysis(input_data: Union[List[str], str]) -> List[SentimentResult]:
+def sentiment_analysis(
+    input_data: Union[List[str], str], auth: _BaseOAuth2Auth
+) -> List[SentimentResult]:
     """
     Perform sentiment analysis on input data.
     Returns a list of SentimentResult objects.
@@ -51,7 +54,9 @@ def sentiment_analysis(input_data: Union[List[str], str]) -> List[SentimentResul
     fast = len(texts) <= 200
 
     # Initialize Analyzer with a SentimentProcess instance (not the class)
-    analyzer = Analyzer(processes=[SentimentProcess()], dataset=texts, fast=fast)
+    analyzer = Analyzer(
+        processes=[SentimentProcess()], dataset=texts, fast=fast, auth=auth
+    )
 
     resp = analyzer.run()
 
@@ -59,7 +64,9 @@ def sentiment_analysis(input_data: Union[List[str], str]) -> List[SentimentResul
 
 
 def theme_allocation(
-    input_data: Union[List[str], str], themes: Optional[List[str]] = None
+    input_data: Union[List[str], str],
+    auth: _BaseOAuth2Auth,
+    themes: Optional[List[str]] = None,
 ) -> ThemeAllocationResult:
     """
     Allocate each text to one or more themes.
@@ -72,7 +79,7 @@ def theme_allocation(
 
     # 1) Generate or seed themes
     analyzer = Analyzer(
-        processes=[ThemeAllocation(themes=themes)], dataset=texts, fast=fast
+        processes=[ThemeAllocation(themes=themes)], dataset=texts, fast=fast, auth=auth
     )
 
     resp = analyzer.run()
@@ -80,7 +87,9 @@ def theme_allocation(
     return resp.theme_allocation
 
 
-def cluster_analysis(input_data: Union[List[str], str]) -> ClusterResult:
+def cluster_analysis(
+    input_data: Union[List[str], str], auth: _BaseOAuth2Auth
+) -> ClusterResult:
     """
     Perform clustering analysis on input data.
     Returns a ClusterResult object.
@@ -90,7 +99,7 @@ def cluster_analysis(input_data: Union[List[str], str]) -> ClusterResult:
     fast = len(texts) <= 200
 
     # Initialize Analyzer with a ClusterProcess instance (not the class)
-    analyzer = Analyzer(processes=[Cluster()], dataset=texts, fast=fast)
+    analyzer = Analyzer(processes=[Cluster()], dataset=texts, fast=fast, auth=auth)
 
     resp = analyzer.run()
 

@@ -1,11 +1,97 @@
 interactions:
 - request:
+    body: grant_type=client_credentials&client_id=aiIu81CUdkVTeD0aS4GPzTX8n2Q5EDHS&client_secret=FAebFSuWVnHUtV21WKseoKrGrqAaGic8TtoHgEWTHYqOG9aRrEqnnfUL2Z4IbCjD&audience=https%3A%2F%2Fdev.core.researchwiseai.com%2Fpulse%2Fv1
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '215'
+      content-type:
+      - application/x-www-form-urlencoded
+      host:
+      - wise-dev.eu.auth0.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://wise-dev.eu.auth0.com/oauth/token
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAwAAAP//LJPJzqNKFIPfhXXTAhIy/DsIIUAYC6qg2ERMYYYKhDC0+t2v0rpLSz72
+        pyP5DxUlSTaOj3dfZx31Q2WrVsS3pLRKzYWbypqlOqod4JOLelBrEqCLOqrtm4Rf3c4L8Ip3dgU7
+        r9N6h2v23hY+MSwccNHOv7NVI8nO+Ib1qQLmZOs/+i4lCQff4Q1xeotYvZXZ9JbPemt+YvdU6hdt
+        S331e1NEsGEtSZaQDwbUgAZIYgE3oECFQF8qJqO5sgACFTJiFd+aJu7AppZziQNUq1VfRgpgEsU4
+        6Ou5DgM8Ye68hi6/hoHZ4ECrIuXLgorI5auYYz6JgsaEg5+0un45CA6c0qquO1PCvOWpnCUlo9qi
+        /fcZhpcw5ibsLE/Ym+tchjvAfzsxt5DQ5xndN9fQB18mgv3lfy4y//P4jZZ6+eKwqI7YEIbQmTEy
+        GMCKByTn+7jSgAnR1ZWN8un8VnSZr8yBm6FIhM8F4IS0VtpoH8F6OTStOpfVFZvqgu3g1OGwWus2
+        l71CemFhnNBD3OyS1nVUngTzHHTm7Tlo/aORrrX/tPPWWRBaLVrExsTH4zQIlgAfQX3S6kKsrh3r
+        RqJZe6DVlzIEFXk3wqcaO8JPNGp2fU6PQGTJubba1XugE5l2QAbsqZZ6Jx3xsXWn/LEdq3MaNC/W
+        fU1QdM/RJXBs/97j2PGWeOLsUB/okj7er8aTWfPjK6I/zSm513EXqo89a9/C+gYvroFjKz/G19q8
+        e2OoLPNhDvXdrTdoMttWzUk2QDqWQdcJne1LZkToO9zcI60Mpee8eI+/y3u+1ozVqHLqF5UtpByy
+        8VF21M/psGeYX9S/HTzeK8moH0rMoiEbqL//AQAA//8DAJrAzSAmAwAA
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-Ray:
+      - 93e42c49bf93ba87-LHR
+      Cache-Control:
+      - no-store
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 11 May 2025 19:44:47 GMT
+      Pragma:
+      - no-cache
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - did=s%3Av0%3Aa4471ea1-819e-4402-b325-1cfdb0eab167.1uWityuZEt%2BQ2XbU8ngYwNyXpls4TTXcW4QGbNFoEhg;
+        Path=/; Expires=Tue, 12 May 2026 01:44:47 GMT; HttpOnly; Secure; SameSite=None
+      - did_compat=s%3Av0%3Aa4471ea1-819e-4402-b325-1cfdb0eab167.1uWityuZEt%2BQ2XbU8ngYwNyXpls4TTXcW4QGbNFoEhg;
+        Path=/; Expires=Tue, 12 May 2026 01:44:47 GMT; HttpOnly; Secure
+      - __cf_bm=bBnl4zuV_vX9fZwu0c5uj8JAxpqTA27E70k43eofqik-1746992687-1.0.1.1-uJRP4xLVeko1_KwHHS9TaKFj4C0yJnAeTBdUyei4OdarVHWQRYLeP20aTd_zs4KF;
+        path=/; expires=Sun, 11-May-25 20:14:47 GMT; domain=.eu.auth0.com; HttpOnly;
+        Secure; SameSite=None
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding, Origin
+      X-Auth0-L:
+      - '0.034'
+      X-Auth0-RequestId:
+      - 5b010a6368c1211cfe81
+      X-Content-Type-Options:
+      - nosniff
+      X-RateLimit-Limit:
+      - '300'
+      X-RateLimit-Remaining:
+      - '294'
+      X-RateLimit-Reset:
+      - '1746992730'
+      alt-svc:
+      - h3=":443"; ma=86400
+    status:
+      code: 200
+      message: OK
+- request:
     body: '{"inputs":["a","b"],"fast":true}'
     headers:
       accept:
       - '*/*'
       accept-encoding:
       - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NDY5OTI2ODcsImV4cCI6MTc0NzA3OTA4NywiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.HLF5jNr2wUBpAvCRYcpmOdlJvAOqQ--IQCySBljCYPX8nYZjykmgFThDqYAsuV_BzPi-LLVi8AN9XnNGfrJo_lDEkWfPgmQxVVyO-BYMu5bsurAOAU_Xk8JkhBjEn1SaBNkTRmLxiZRjptlAvjsnp5u-Vl3og-sRB1p9kOmyT_V8pu3RFR18kDoQdsY7mSug_z7j9dXlq1SquUBS9aCXQPWKoYbQTxbu2PZLr-i-7KEMf0yg7qa-vl8cKkbnZI_41PGZkGUCSMYbOg7bEkNKTsZHxw6wZL3GoM-pwPOk2DPRVLYFRnnAnPWDNap-KUzS7-HriTQq5T5KF45kJMyMjg
       connection:
       - keep-alive
       content-length:
@@ -471,35 +557,35 @@ interactions:
         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
-        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
+        Jr1yrCzDb6IgW+B18nMz84aeG38fL8pqEhnGurYl/v++ziXJbRgGonfx2q7iT5SYG+QQs5jEzj6/
+        5dw99RoAp0qmc4B8NCOBBND9Wjosb5RJDKH1GnBZY9dOgd7SgQ5J9voon4v1JdESGID5anKKVJz1
+        spQeHhv20GKtxOe5kniuNBhVCBLetsJYIaAx1cy/mGa24kqrDX2hhtqaL/s3iOCb8R0HPltkq8xI
+        2BiLQpeb1j4+AxHXwRGFu4j+A7kZWgNcmv77Pr8bmrfj8+lkSLNhGcFWaurgVderU28QR5P/s5t3
+        MRpIIiGRPSc4+ZFyR1cA8xwOncdcgeFjCU7l5ZWN6rzy21v+zoHTvTuQn0sJI2RCBpu8wFbGt6rS
+        wvNOBUaiztMdAe7bPcYT3lsxQSym0f/he0XzIlmRwTjrQftJyfXK+oljIPAePACBHpi1U+DpFixq
+        NSBseeXQ2IOFjq/GmDrc6h06ghoj4WsTwWeOVU/0YLtmYKyksu8aMFlhPxqvFcmFwxfVy/hcpP+A
+        fol83bx1TrRIBy1Rx5g3DaSckkpwMKzudSUN91EgQ90khWuLJh0qPc5tiJsjmiQFxR60iuzDg527
+        YzZhRdDFB/PbID1mUY4AjxmsOhQRiET4KHwgZ2EDvHfszGJstLDzSwhXBIsCNR073XIobE+vdYR0
+        wb7bFY3TaTejnCicAv2Wgu/88Vfg57WJ9QVwJKORQg2Epz56hK2ZQV5WpOhyGYVsliMqT4WXegy+
+        GwqjpguL/1uGkkJSrOmCH98FXXlVcFfIPDFHHRKD0cJHRT+p9F5tr2CESM4q+2PEFNEJafbAJcjv
+        eRYxBoaI6b8bWzh1NF1sbfPFAXsYtlP0OD2C623Aw36Ih/WDv4sH2XV+76HPozXW1g8n3PQJn5mU
+        KplYB3IXlLXNg5djSbd1Flz8matxwHNi69j0rnsbugoLffq8rTozyGZUXhQ6GEYFEjq6si2lIA/Y
+        0QnGYH/DMhzvafPlx2kS3xngwIiUaCQKDD5499L0Ojx5EPxGiPGSmTen7dTzBpKZMeEuVJYfcwt8
+        MVf5oV2IyBwhSmx2nycQMdXP4Tvog6YUJ60dQ2qIrEyInPoZPAm3XCpECvkk/qzScxC0Mrqjm2+R
+        gQLMGpW1rMjN70XVdDlwCbIs0f685FMYfLwT61ijD+iKtSO9s4YPnsCNg/8d/Z6/Ncyyh0WzkTY2
+        ZsER+54S2OiUXQTlmSsd9GSOcGRAo0nUT8n9y/prSC90IZWpE4QfPorextvH2/Xy6/Hz7+P3n6/3
+        y5cLjNO99W+3nMv3W8vp/Tb2dL/d8/sPFe9Hv18+/gEdmSKlxf8AAA==
     headers:
       Apigw-Requestid:
-      - JxRmvhUHjoEEJXQ=
+      - KayniiULDoEEJ6g=
       Connection:
       - keep-alive
       Content-Length:
-      - '26660'
+      - '26659'
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Apr 2025 05:26:16 GMT
+      - Sun, 11 May 2025 19:44:48 GMT
       content-encoding:
       - gzip
       vary:

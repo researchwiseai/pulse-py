@@ -4,7 +4,7 @@ from typing import Sequence, Optional, Union, Any
 import pandas as pd
 
 from pulse.core.client import CoreClient
-from pulse.auth import OAuth2Credentials
+from pulse.auth import _BaseOAuth2Auth
 from pulse.analysis.processes import Process
 from pulse.analysis.results import (
     ThemeGenerationResult,
@@ -27,8 +27,12 @@ class Analyzer:
         cache_dir: Optional[str] = None,
         use_cache: bool = True,
         client: Optional[CoreClient] = None,
-        auth: Optional[OAuth2Credentials] = None,
+        auth: Optional[_BaseOAuth2Auth] = None,
     ) -> None:
+        if (client is None and auth is None) or (
+            client is not None and auth is not None
+        ):
+            raise ValueError("Exactly one of 'client' or 'auth' must be provided.")
         # Dataset as pandas Series
         if isinstance(dataset, pd.Series):
             self.dataset = dataset
@@ -50,8 +54,7 @@ class Analyzer:
         else:
             self._cache = None
         # Core client and auth
-        self.client = client or CoreClient()
-        self.auth = auth
+        self.client = client or CoreClient(auth=auth)
         # In-memory results
         self.results: dict[str, Any] = {}
 

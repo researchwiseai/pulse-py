@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from pulse.analysis.results import ClusterResult
+from pulse.auth import ClientCredentialsAuth
 from pulse.starters import theme_allocation
 
 reviews = [
@@ -47,9 +48,26 @@ def disable_sleep(monkeypatch, request):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
+base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+
+# Load credentials from environment variables
+client_id = os.getenv("PULSE_CLIENT_ID")
+client_secret = os.getenv("PULSE_CLIENT_SECRET")
+if not client_id or not client_secret:
+    pytest.skip("Pulse client credentials not set", allow_module_level=True)
+token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", base_url)
+auth = ClientCredentialsAuth(
+    client_id=client_id,
+    client_secret=client_secret,
+    token_url=token_url,
+    audience=audience,
+)
+
+
 @pytest.mark.vcr()
 def test_theme_allocation_implicit_generation():
-    resp = theme_allocation(reviews)
+    resp = theme_allocation(reviews, auth=auth)
 
     series = resp.assign_single()
     assert len(series) == len(reviews)
@@ -73,7 +91,7 @@ def test_theme_allocation_implicit_generation_big():
     with open(file_path, "r", encoding="utf-8") as f:
         comments = f.read().splitlines()
 
-    resp = theme_allocation(comments)
+    resp = theme_allocation(comments, auth=auth)
 
     series = resp.assign_single()
     assert len(series) == len(comments)
@@ -92,7 +110,9 @@ def test_theme_allocation_implicit_generation_big():
 
 @pytest.mark.vcr()
 def test_theme_allocation_with_themes():
-    resp = theme_allocation(reviews, themes=["Food & Drink", "Rides", "Staff"])
+    resp = theme_allocation(
+        reviews, themes=["Food & Drink", "Rides", "Staff"], auth=auth
+    )
 
     series = resp.assign_single()
     assert len(series) == len(reviews)
@@ -113,6 +133,6 @@ def test_theme_allocation_with_themes():
 def test_cluster_analysis():
     from pulse.starters import cluster_analysis
 
-    resp = cluster_analysis(reviews)
+    resp = cluster_analysis(reviews, auth=auth)
 
     assert isinstance(resp, ClusterResult)

@@ -2,6 +2,7 @@
 
 import pandas as pd
 import pytest
+import os
 
 # from pydantic import BaseModel  # Unused import removed
 
@@ -11,6 +12,7 @@ from pulse.analysis.processes import (
     SentimentProcess,
     ThemeAllocation,
 )
+from pulse.auth import ClientCredentialsAuth
 from pulse.core.client import CoreClient
 from pulse.core.models import SentimentResult, Theme
 
@@ -45,9 +47,28 @@ def disable_sleep(monkeypatch):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
+base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+
+# Load credentials from environment variables
+client_id = os.getenv("PULSE_CLIENT_ID")
+client_secret = os.getenv("PULSE_CLIENT_SECRET")
+if not client_id or not client_secret:
+    pytest.skip("Pulse client credentials not set", allow_module_level=True)
+token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", base_url)
+auth = ClientCredentialsAuth(
+    client_id=client_id,
+    client_secret=client_secret,
+    token_url=token_url,
+    audience=audience,
+)
+
+
 @pytest.mark.vcr()
 def test_analyzer_no_processes():
-    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    client = CoreClient(
+        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
+    )
     az = Analyzer(dataset=reviews, processes=[], client=client)
     res = az.run()
     assert isinstance(res, AnalysisResult)
@@ -57,7 +78,9 @@ def test_analyzer_no_processes():
 
 @pytest.mark.vcr()
 def test_theme_generation_process():
-    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    client = CoreClient(
+        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
+    )
     proc = ThemeGeneration(min_themes=2, max_themes=3)
     az = Analyzer(dataset=reviews, processes=[proc], fast=True, client=client)
     res = az.run()
@@ -76,7 +99,9 @@ def test_theme_generation_process():
 
 @pytest.mark.vcr()
 def test_sentiment_process():
-    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    client = CoreClient(
+        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
+    )
     proc = SentimentProcess(fast=True)
     az = Analyzer(dataset=reviews, processes=[proc], client=client)
     res = az.run()
@@ -102,7 +127,9 @@ def test_sentiment_process():
 
 @pytest.mark.vcr()
 def test_theme_allocation_with_static_themes():
-    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    client = CoreClient(
+        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
+    )
     static_themes = ["Service", "Atmosphere", "Amenities"]
     proc = ThemeAllocation(themes=static_themes, single_label=True, threshold=0.3)
     az = Analyzer(dataset=reviews, processes=[proc], fast=True, client=client)
@@ -124,7 +151,9 @@ def test_theme_allocation_with_static_themes():
 
 @pytest.mark.vcr()
 def test_theme_allocation_with_generator():
-    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    client = CoreClient(
+        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
+    )
     gen = ThemeGeneration(min_themes=2, max_themes=3)
     alloc = ThemeAllocation(single_label=False, threshold=0.5)
     az = Analyzer(dataset=reviews, processes=[gen, alloc], fast=True, client=client)
@@ -148,7 +177,9 @@ def test_theme_allocation_with_generator():
 
 @pytest.mark.vcr()
 def test_theme_allocation_implicit_generation():
-    client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+    client = CoreClient(
+        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
+    )
     alloc = ThemeAllocation()
     az = Analyzer(dataset=reviews, processes=[alloc], fast=True, client=client)
     res = az.run()
