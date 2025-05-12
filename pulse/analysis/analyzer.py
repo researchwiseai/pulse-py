@@ -29,10 +29,6 @@ class Analyzer:
         client: Optional[CoreClient] = None,
         auth: Optional[_BaseOAuth2Auth] = None,
     ) -> None:
-        if (client is None and auth is None) or (
-            client is not None and auth is not None
-        ):
-            raise ValueError("Exactly one of 'client' or 'auth' must be provided.")
         # Dataset as pandas Series
         if isinstance(dataset, pd.Series):
             self.dataset = dataset

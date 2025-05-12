@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Union, Optional
 import httpx
 from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
-from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth
+from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth, auto_auth
 
 from pulse.config import PROD_BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
@@ -41,7 +41,7 @@ class CoreClient:
             self.client = GzipClient(
                 base_url=self.base_url,
                 timeout=self.timeout,
-                auth=auth,
+                auth=auth or auto_auth(),
             )
 
     @classmethod

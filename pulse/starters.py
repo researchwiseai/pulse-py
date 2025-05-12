@@ -8,11 +8,6 @@ from pulse.analysis.results import ClusterResult, SentimentResult, ThemeAllocati
 from pulse.auth import _BaseOAuth2Auth
 
 
-def _load_text(path: str) -> List[str]:
-    with open(path, encoding="utf-8") as f:
-        return [line.strip() for line in f if line.strip()]
-
-
 def _load_csv_tsv(path: str) -> List[str]:
     sep = "," if path.lower().endswith(".csv") else "\t"
     df = pd.read_csv(path, sep=sep, header=None)
@@ -22,6 +17,12 @@ def _load_csv_tsv(path: str) -> List[str]:
 def _load_excel(path: str) -> List[str]:
     df = pd.read_excel(path, sheet_name=0, header=None)
     return df.iloc[:, 0].dropna().astype(str).tolist()
+
+
+def _load_text(path: str) -> List[str]:
+    with open(path, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+    return [line.strip() for line in lines if line.strip()]
 
 
 def get_strings(source: Union[List[str], str]) -> List[str]:
@@ -44,7 +45,8 @@ def get_strings(source: Union[List[str], str]) -> List[str]:
 
 
 def sentiment_analysis(
-    input_data: Union[List[str], str], auth: _BaseOAuth2Auth
+    input_data: Union[List[str], str],
+    auth: _BaseOAuth2Auth | None = None,
 ) -> List[SentimentResult]:
     """
     Perform sentiment analysis on input data.
@@ -53,7 +55,6 @@ def sentiment_analysis(
     texts = get_strings(input_data)
     fast = len(texts) <= 200
 
-    # Initialize Analyzer with a SentimentProcess instance (not the class)
     analyzer = Analyzer(
         processes=[SentimentProcess()], dataset=texts, fast=fast, auth=auth
     )
@@ -65,7 +66,7 @@ def sentiment_analysis(
 
 def theme_allocation(
     input_data: Union[List[str], str],
-    auth: _BaseOAuth2Auth,
+    auth: _BaseOAuth2Auth | None = None,
     themes: Optional[List[str]] = None,
 ) -> ThemeAllocationResult:
     """
@@ -77,7 +78,6 @@ def theme_allocation(
     texts = get_strings(input_data)
     fast = len(texts) <= 200
 
-    # 1) Generate or seed themes
     analyzer = Analyzer(
         processes=[ThemeAllocation(themes=themes)], dataset=texts, fast=fast, auth=auth
     )
@@ -88,7 +88,8 @@ def theme_allocation(
 
 
 def cluster_analysis(
-    input_data: Union[List[str], str], auth: _BaseOAuth2Auth
+    input_data: Union[List[str], str],
+    auth: _BaseOAuth2Auth | None = None,
 ) -> ClusterResult:
     """
     Perform clustering analysis on input data.
@@ -98,7 +99,6 @@ def cluster_analysis(
 
     fast = len(texts) <= 200
 
-    # Initialize Analyzer with a ClusterProcess instance (not the class)
     analyzer = Analyzer(processes=[Cluster()], dataset=texts, fast=fast, auth=auth)
 
     resp = analyzer.run()
