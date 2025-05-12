@@ -223,7 +223,6 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
             "client_id": self.client_id or PROD_CLIENT_ID,
             "code": self.code,
             "code_verifier": self.code_verifier,
-            # "redirect_uri": self.redirect_uri or "http://localhost:8080/callback"
         }
         # Include audience if provided via init or environment
         if self._provided_audience or self._provided_env_audience:
