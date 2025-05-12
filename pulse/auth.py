@@ -1,6 +1,7 @@
 """Authentication module for future OAuth2 credentials."""
 
 
+import os
 import time
 import httpx
 
@@ -10,20 +11,64 @@ __all__ = [
 ]
 
 
+def _throw_client_id_error() -> str:
+    """Raise an error if client_id is not provided."""
+    raise ValueError(
+        "Client ID is required for OAuth2 authentication. "
+        "Please set the PULSE_CLIENT_ID environment variable."
+    )
+
+
+def _throw_client_secret_error() -> str:
+    """Raise an error if client_secret is not provided."""
+    raise ValueError(
+        "Client Secret is required for OAuth2 authentication. "
+        "Please set the PULSE_CLIENT_SECRET environment variable."
+    )
+
+
+def _throw_organization_error() -> str:
+    """Raise an error if organization is not provided."""
+    raise ValueError(
+        "Organization ID is required for OAuth2 authentication. "
+        "Please set the PULSE_ORG_ID environment variable."
+    )
+
+
+def _throw_redirect_uri_error() -> str:
+    """Raise an error if redirect_uri is not provided."""
+    raise ValueError(
+        "Redirect URI is required for OAuth2 authentication. "
+        "Please set the PULSE_REDIRECT_URI environment variable."
+    )
+
+
 class _BaseOAuth2Auth(httpx.Auth):
     """Base HTTPX Auth class for OAuth2 bearer token authentication."""
 
     def __init__(
         self,
-        token_url: str,
-        client_id: str,
-        scope: str | None = None,
-        audience: str | None = None,
+        token_url: str | None,
+        client_id: str | None,
+        audience: str | None,
+        organization: str | None,
     ) -> None:
-        self.token_url = token_url
-        self.client_id = client_id
-        self.scope = scope
-        self.audience = audience
+        self.token_url = (
+            token_url
+            or os.getenv("PULSE_TOKEN_URL")
+            or "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
+        )
+        self.client_id = (
+            client_id or os.getenv("PULSE_CLIENT_ID") or _throw_client_id_error()
+        )
+        self.audience = (
+            audience
+            or os.getenv("PULSE_API_URL")
+            or "https://core.researchwiseai.com/pulse/v1"
+        )
+        self.organization = (
+            organization or os.getenv("PULSE_ORG_ID") or _throw_organization_error()
+        )
         self._access_token: str | None = None
         self._expires_at: float = 0.0
 
@@ -52,29 +97,27 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
 
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
-        token_url: str = "https://research-wise-ai-eu.eu.auth0.com/oauth/token",
-        audience: str | None = None,
-        scope: str | None = None,
-        organization: str | None = None,
+        client_id: str | None,
+        client_secret: str | None,
+        organization: str | None,
+        token_url: str | None,
+        audience: str | None,
     ) -> None:
-        super().__init__(token_url, client_id, scope, audience)
-        self.client_secret = client_secret
-        self.organization = organization
+        super().__init__(token_url, client_id, audience, organization)
+        self.client_secret = (
+            client_secret
+            or os.getenv("PULSE_CLIENT_SECRET")
+            or _throw_client_secret_error()
+        )
 
     def _refresh_token(self) -> None:
         data: dict[str, str] = {
             "grant_type": "client_credentials",
             "client_id": self.client_id,
             "client_secret": self.client_secret,
+            "audience": self.audience,
+            "organization": self.organization,
         }
-        if self.scope:
-            data["scope"] = self.scope
-        if self.audience:
-            data["audience"] = self.audience
-        if self.organization:
-            data["organization"] = self.organization
         resp = httpx.post(self.token_url, data=data)
         resp.raise_for_status()
         payload = resp.json()
@@ -90,17 +133,21 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
 
     def __init__(
         self,
-        token_url: str,
-        client_id: str,
+        client_id: str | None,
         code: str,
-        redirect_uri: str,
+        redirect_uri: str | None,
         code_verifier: str,
-        scope: str | None = None,
+        organization: str | None = None,
+        token_url: str | None = None,
         audience: str | None = None,
     ) -> None:
-        super().__init__(token_url, client_id, scope, audience)
+        super().__init__(token_url, client_id, audience, organization)
         self.code = code
-        self.redirect_uri = redirect_uri
+        self.redirect_uri = (
+            redirect_uri
+            or os.getenv("PULSE_REDIRECT_URI")
+            or _throw_redirect_uri_error()
+        )
         self.code_verifier = code_verifier
         self._refresh_token_value: str | None = None
 
@@ -112,8 +159,6 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
             "redirect_uri": self.redirect_uri,
             "code_verifier": self.code_verifier,
         }
-        if self.scope:
-            data["scope"] = self.scope
         if self.audience:
             data["audience"] = self.audience
         resp = httpx.post(self.token_url, data=data)

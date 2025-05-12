@@ -52,7 +52,7 @@ class CoreClient:
         audience: Optional[str] = None,
         token_url: Optional[str] = None,
         base_url: Optional[str] = None,
-        scope: Optional[str] = None,
+        organization: Optional[str] = None,
     ) -> "CoreClient":
         """
         Construct a CoreClient using OAuth2 Client Credentials flow.
@@ -66,8 +66,10 @@ class CoreClient:
            - PULSE_AUDIENCE
            - PULSE_TOKEN_URL
            - PULSE_BASE_URL
+           - PULSE_ORGANIZATION_ID
         3. Default values:
-           - token_url defaults to "https://core.researchwiseai.com/oauth2/token"
+           - token_url defaults to
+             "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
            - base_url defaults to PROD_BASE_URL (from pulse.config)
            - audience defaults to None if not otherwise specified.
 
@@ -78,6 +80,7 @@ class CoreClient:
             token_url: The token endpoint URL.
             base_url: The base URL for the Pulse API.
             scope: OAuth2 scope(s), space-separated.
+            organization: The organization ID for the client.
 
         Returns:
             An instance of CoreClient configured with Client Credentials authentication.
@@ -108,7 +111,7 @@ class CoreClient:
             )
 
         # Resolve token_url: argument > environment variable > default
-        default_token_url = "https://core.researchwiseai.com/oauth2/token"
+        default_token_url = "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
         final_token_url = token_url or os.getenv("PULSE_TOKEN_URL") or default_token_url
 
         # Resolve audience: argument > environment variable (default is None if not set)
@@ -121,9 +124,9 @@ class CoreClient:
         auth = ClientCredentialsAuth(
             token_url=final_token_url,
             client_id=final_client_id,
+            organization=organization,
             client_secret=final_client_secret,
-            scope=scope,
-            audience=final_audience,  # Assumes ClientCredentialsAuth accepts 'audience'
+            audience=final_audience,
         )
 
         return cls(base_url=final_base_url, auth=auth)
@@ -153,7 +156,8 @@ class CoreClient:
            - PULSE_SCOPE
         3. Default values:
            - base_url defaults to PROD_BASE_URL (from pulse.config).
-           - token_url defaults to "https://core.researchwiseai.com/oauth2/token".
+           - token_url defaults to
+             "https://research-wise-ai-eu.eu.auth0.com/oauth/token".
            - scope defaults to None if not otherwise specified.
 
         `code` and `code_verifier` must always be provided as direct arguments.
@@ -200,7 +204,7 @@ class CoreClient:
         final_base_url = base_url or os.getenv("PULSE_BASE_URL") or PROD_BASE_URL
 
         # Resolve token_url: argument > environment variable > default
-        default_token_url = "https://core.researchwiseai.com/oauth2/token"
+        default_token_url = "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
         final_token_url = token_url or os.getenv("PULSE_TOKEN_URL") or default_token_url
 
         # Resolve scope: argument > environment variable (default is None if not set)
@@ -428,10 +432,6 @@ class CoreClient:
         self, texts: list[str], fast: bool = True
     ) -> Union[SentimentResponse, Job]:
         """Classify sentiment."""
-        # For single-text input, return empty sentiments without API call
-        if len(texts) < 2:
-            # No-op placeholder for single input
-            return SentimentResponse(results=[], requestId=None)
         # Build request body according to OpenAPI spec: input array
         body: Dict[str, Any] = {"inputs": texts}
         if fast:
