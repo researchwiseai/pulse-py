@@ -37,8 +37,8 @@ def demonstrate_pulse_sdk_client_credentials():
     print("---------------------------------------------\n")
 
     # Retrieve credentials and optional base URL from environment variables
-    client_id = ""
-    client_secret = ""
+    client_id = "9LJJxxJjm90HjKW5cWTyFNZ2o0mF0pZs"
+    client_secret = "N2FntQlRW2LQjlQ6cqfwVcfBjl_6Q7bTy5t7aXe0HxmCcrNfPQFHoOqoC3lvwQ0M"
     # Example: PULSE_API_BASE_URL="https://api.your-pulse-instance.com"
     os.getenv("PULSE_API_BASE_URL")
 
@@ -56,12 +56,16 @@ def demonstrate_pulse_sdk_client_credentials():
     print(f"Using Client ID: {client_id[:4]}****")  # Print partial ID for confirmation
 
     auth = ClientCredentialsAuth(
-        client_id=client_id, client_secret=client_secret, organization=""
+        client_id=client_id,
+        client_secret=client_secret,
+        organization="org_sipGP3xqbMoVvn1s",
     )
 
     print("PulseClient initialized successfully.\n")
 
-    sentiment = sentiment_analysis(texts=["AI is making my life easier."], auth=auth)
+    sentiment = sentiment_analysis(
+        input_data=["AI is making my life easier."], auth=auth
+    )
 
     print("Sentiment analysis result:")
     print(sentiment)

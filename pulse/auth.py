@@ -51,7 +51,6 @@ class _BaseOAuth2Auth(httpx.Auth):
         token_url: str | None,
         client_id: str | None,
         audience: str | None,
-        organization: str | None,
     ) -> None:
         self.token_url = (
             token_url
@@ -65,9 +64,6 @@ class _BaseOAuth2Auth(httpx.Auth):
             audience
             or os.getenv("PULSE_API_URL")
             or "https://core.researchwiseai.com/pulse/v1"
-        )
-        self.organization = (
-            organization or os.getenv("PULSE_ORG_ID") or _throw_organization_error()
         )
         self._access_token: str | None = None
         self._expires_at: float = 0.0
@@ -99,11 +95,10 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
         self,
         client_id: str | None = None,
         client_secret: str | None = None,
-        organization: str | None = None,
         token_url: str | None = None,
         audience: str | None = None,
     ) -> None:
-        super().__init__(token_url, client_id, audience, organization)
+        super().__init__(token_url, client_id, audience)
         self.client_secret = (
             client_secret
             or os.getenv("PULSE_CLIENT_SECRET")
@@ -116,7 +111,6 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
             "client_id": self.client_id,
             "client_secret": self.client_secret,
             "audience": self.audience,
-            "organization": self.organization,
         }
         resp = httpx.post(self.token_url, data=data)
         resp.raise_for_status()
@@ -141,7 +135,7 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         token_url: str | None = None,
         audience: str | None = None,
     ) -> None:
-        super().__init__(token_url, client_id, audience, organization)
+        super().__init__(token_url, client_id, audience)
         self.code = code
         self.redirect_uri = (
             redirect_uri
@@ -150,6 +144,9 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         )
         self.code_verifier = code_verifier
         self._refresh_token_value: str | None = None
+        self.organization = (
+            organization or os.getenv("PULSE_ORG_ID") or _throw_organization_error()
+        )
 
     def _refresh_token(self) -> None:
         data: dict[str, str] = {
@@ -158,6 +155,7 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
             "code": self.code,
             "redirect_uri": self.redirect_uri,
             "code_verifier": self.code_verifier,
+            "organization": self.organization,
         }
         if self.audience:
             data["audience"] = self.audience
