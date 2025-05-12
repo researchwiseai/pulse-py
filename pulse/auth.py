@@ -97,11 +97,11 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
 
     def __init__(
         self,
-        client_id: str | None,
-        client_secret: str | None,
-        organization: str | None,
-        token_url: str | None,
-        audience: str | None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        organization: str | None = None,
+        token_url: str | None = None,
+        audience: str | None = None,
     ) -> None:
         super().__init__(token_url, client_id, audience, organization)
         self.client_secret = (
@@ -133,10 +133,10 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
 
     def __init__(
         self,
-        client_id: str | None,
         code: str,
-        redirect_uri: str | None,
         code_verifier: str,
+        client_id: str | None = None,
+        redirect_uri: str | None = None,
         organization: str | None = None,
         token_url: str | None = None,
         audience: str | None = None,
