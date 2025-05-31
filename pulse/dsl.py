@@ -3,7 +3,7 @@
 from collections import defaultdict
 import os
 import json
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List
 
 import pandas as pd
 from pulse.analysis.processes import (
@@ -135,6 +135,7 @@ class Workflow:
         self,
         *,
         themes: list[str] | None = None,
+        fast: bool | None = None,
         single_label: bool = True,
         threshold: float = 0.5,
         inputs: str | None = None,
@@ -164,6 +165,7 @@ class Workflow:
             themes=themes,
             single_label=single_label,
             threshold=threshold,
+            fast=fast,
         )
         self._add_process(process, name=name)
         # wire text inputs
@@ -293,6 +295,28 @@ class Workflow:
         setattr(process, "_inputs", [alias])
         return self
 
+    def monitor(
+        self,
+        on_run_start: Callable[[], None] | None = None,
+        on_process_start: Callable[[str], None] | None = None,
+        on_process_end: Callable[[str, Any], None] | None = None,
+        on_run_end: Callable[[], None] | None = None,
+    ) -> "Workflow":
+        """
+        Register lifecycle callbacks for observability:
+          • on_run_start(): called once before any processes run
+          • on_process_start(process_id): called before each process
+          • on_process_end(process_id, result): called after each process
+          • on_run_end(): called once after all processes have run
+        """
+        self._monitors = {
+            "on_run_start": on_run_start,
+            "on_process_start": on_process_start,
+            "on_process_end": on_process_end,
+            "on_run_end": on_run_end,
+        }
+        return self
+
     @classmethod
     def from_file(cls, file_path: str) -> "Workflow":
         """
@@ -367,8 +391,16 @@ class Workflow:
         sources: Dict[str, Any] = dict(self._sources)
         # Results mapping for wrapper objects
         results: Dict[str, Any] = {}
+        # Lifecycle: on_run_start callback
+        on_run_start = getattr(self, "_monitors", {}).get("on_run_start")
+        if on_run_start:
+            on_run_start()
         # Execute processes in declaration order
         for process in self._processes:
+            # Lifecycle: on_process_start callback
+            on_process_start = getattr(self, "_monitors", {}).get("on_process_start")
+            if on_process_start:
+                on_process_start(process.id)
             # Validate and get dataset input
             inputs = getattr(process, "_inputs", ["dataset"])
             if not inputs:
@@ -390,7 +422,7 @@ class Workflow:
             ctx.fast = (
                 process.fast
                 if getattr(process, "fast", None) is not None
-                else (fast if fast is not None else True)
+                else (fast if fast is not None else False)
             )
             # Dataset as pandas Series
             if isinstance(ds_data, pd.Series):
@@ -446,6 +478,14 @@ class Workflow:
                 wrapped = raw
             # Store for downstream
             results[process.id] = wrapped
+            # Lifecycle: on_process_end callback
+            on_process_end = getattr(self, "_monitors", {}).get("on_process_end")
+            if on_process_end:
+                on_process_end(process.id, wrapped)
+        # Lifecycle: on_run_end callback
+        on_run_end = getattr(self, "_monitors", {}).get("on_run_end")
+        if on_run_end:
+            on_run_end()
         # Return a results container
         return type("DSLResult", (), results)()
 

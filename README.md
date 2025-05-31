@@ -87,6 +87,47 @@ print(results.theme_generation.to_dataframe())
 print(results.sentiment.summary())
 ```
 
+### DSL Builder with Monitoring
+
+```python
+from pulse.dsl import Workflow
+
+# Example dataset
+texts = ["I love pizza", "I hate rain"]
+
+# Define lifecycle callbacks
+def on_run_start():
+    print("Workflow starting")
+
+def on_process_start(process_id):
+    print(f"Starting process: {process_id}")
+
+def on_process_end(process_id, result):
+    print(f"Finished process: {process_id}, result: {result}")
+
+def on_run_end():
+    print("Workflow finished")
+
+# Build and run workflow
+wf = (
+    Workflow()
+    .source("docs", texts)
+    .theme_generation(source="docs", min_themes=2)
+    .sentiment(source="docs")
+    .monitor(
+        on_run_start=on_run_start,
+        on_process_start=on_process_start,
+        on_process_end=on_process_end,
+        on_run_end=on_run_end,
+    )
+)
+results = wf.run()
+
+# Access results
+print(results.theme_generation.themes)
+print(results.sentiment.sentiments)
+```
+
 ## Examples
 You can find Jupyter notebooks demonstrating both the high-level and DSL APIs under the `examples/` directory:
 ```bash

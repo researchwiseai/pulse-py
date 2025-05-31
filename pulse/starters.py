@@ -6,6 +6,7 @@ from pulse.analysis.analyzer import Analyzer
 from pulse.analysis.processes import Cluster, SentimentProcess, ThemeAllocation
 from pulse.analysis.results import ClusterResult, SentimentResult, ThemeAllocationResult
 from pulse.auth import _BaseOAuth2Auth
+from pulse.core.client import CoreClient
 
 
 def _load_csv_tsv(path: str) -> List[str]:
@@ -47,6 +48,7 @@ def get_strings(source: Union[List[str], str]) -> List[str]:
 def sentiment_analysis(
     input_data: Union[List[str], str],
     auth: _BaseOAuth2Auth | None = None,
+    client: Optional[CoreClient] = None,
 ) -> List[SentimentResult]:
     """
     Perform sentiment analysis on input data.
@@ -56,7 +58,11 @@ def sentiment_analysis(
     fast = len(texts) <= 200
 
     analyzer = Analyzer(
-        processes=[SentimentProcess()], dataset=texts, fast=fast, auth=auth
+        processes=[SentimentProcess()],
+        dataset=texts,
+        client=client,
+        fast=fast,
+        auth=auth,
     )
 
     resp = analyzer.run()
@@ -68,6 +74,7 @@ def theme_allocation(
     input_data: Union[List[str], str],
     auth: _BaseOAuth2Auth | None = None,
     themes: Optional[List[str]] = None,
+    client: Optional[CoreClient] = None,
 ) -> ThemeAllocationResult:
     """
     Allocate each text to one or more themes.
@@ -79,7 +86,11 @@ def theme_allocation(
     fast = len(texts) <= 200
 
     analyzer = Analyzer(
-        processes=[ThemeAllocation(themes=themes)], dataset=texts, fast=fast, auth=auth
+        processes=[ThemeAllocation(themes=themes)],
+        dataset=texts,
+        client=client,
+        fast=fast,
+        auth=auth,
     )
 
     resp = analyzer.run()
@@ -90,6 +101,7 @@ def theme_allocation(
 def cluster_analysis(
     input_data: Union[List[str], str],
     auth: _BaseOAuth2Auth | None = None,
+    client: Optional[CoreClient] = None,
 ) -> ClusterResult:
     """
     Perform clustering analysis on input data.
@@ -99,7 +111,9 @@ def cluster_analysis(
 
     fast = len(texts) <= 200
 
-    analyzer = Analyzer(processes=[Cluster()], dataset=texts, fast=fast, auth=auth)
+    analyzer = Analyzer(
+        processes=[Cluster()], dataset=texts, client=client, fast=fast, auth=auth
+    )
 
     resp = analyzer.run()
 

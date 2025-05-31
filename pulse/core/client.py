@@ -11,6 +11,7 @@ from pulse.core.jobs import Job
 from pulse.core.models import (
     EmbeddingsResponse,
     SimilarityResponse,
+    Theme,
     ThemesResponse,
     SentimentResponse,
     ExtractionsResponse,
@@ -222,12 +223,12 @@ class CoreClient:
         return cls(base_url=final_base_url, auth=auth)
 
     def create_embeddings(
-        self, texts: list[str], fast: bool = True
+        self, inputs: list[str], fast: bool = True
     ) -> Union[EmbeddingsResponse, Job]:
         """Generate dense vector embeddings."""
 
         # Request body according to OpenAPI spec: inputs
-        body: Dict[str, Any] = {"inputs": texts}
+        body: Dict[str, Any] = {"inputs": inputs}
         if fast:
             # API expects a JSON boolean for fast
             body["fast"] = True
@@ -260,7 +261,7 @@ class CoreClient:
         set: list[str] | None = None,
         set_a: list[str] | None = None,
         set_b: list[str] | None = None,
-        fast: bool = True,
+        fast: Optional[bool] = None,
         flatten: bool = True,
     ) -> Union[SimilarityResponse, Job]:
         """
@@ -290,9 +291,6 @@ class CoreClient:
             if len(set_a) * len(set_b) > 10_000:
                 oversized = True
 
-        if fast:
-            body["fast"] = True
-
         if oversized and not fast:
             # If not fast and total size exceeds 10k, use batch similarity
             return self.batch_similarity(
@@ -304,6 +302,13 @@ class CoreClient:
 
         # API expects JSON boolean for flatten
         body["flatten"] = flatten
+
+        if fast:
+            # API expects a JSON boolean for fast
+            body["fast"] = True
+        else:
+            # If not fast, set to False
+            body["fast"] = False
 
         response = self.client.post("/similarity", json=body)
 
@@ -401,7 +406,7 @@ class CoreClient:
         if len(texts) < 2:
             # No-op placeholder for single input
             return ThemesResponse(themes=[], requestId=None)
-        body: Dict[str, Any] = {"inputs": texts}
+        body: Dict[str, Any] = {}
         # Optionally include theme count bounds
         if min_themes is not None:
             body["minThemes"] = min_themes
@@ -411,6 +416,19 @@ class CoreClient:
         if fast:
             # API expects a JSON boolean for fast
             body["fast"] = True
+
+        max_inputs = 200 if fast is True else 500
+        # Shuffle copy using Fisher-Yates algorithm
+        # to avoid bias in theme generation
+        if len(texts) > max_inputs:
+            import random
+
+            shuffled_texts = texts[:]
+            random.shuffle(shuffled_texts)
+            texts = shuffled_texts[:max_inputs]
+
+        body["inputs"] = texts
+
         response = self.client.post("/themes", json=body)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -464,37 +482,47 @@ class CoreClient:
     def extract_elements(
         self,
         inputs: list[str],
-        themes: list[str],
+        themes: list[Union[str, Theme]],
         version: Optional[str] = None,
         fast: bool = True,
     ) -> Union[ExtractionsResponse, Job]:
         """Extract elements matching themes from input strings."""
-        # Skip extraction when no themes provided (e.g., single-text low-level example)
+        # Skip extraction when no themes provided
         if not themes:
-            # No-op placeholder when no themes provided
-            return ExtractionsResponse(extractions=[], requestId=None)
-        # Build request body according to OpenAPI spec: inputs, themes, optional version
-        body: Dict[str, Any] = {"inputs": inputs, "themes": themes}
+            raise ValueError("Must provide at least one theme for extraction.")
+
+        # Normalize themes: accept either Theme objects or raw strings
+        serialized_themes = [
+            t if isinstance(t, str) else t.label  # or t.id if that's the identifier
+            for t in themes
+        ]
+
+        # Build request body
+        body: Dict[str, Any] = {
+            "inputs": inputs,
+            "themes": serialized_themes,
+        }
         if version is not None:
             body["version"] = version
         if fast:
-            # API expects a JSON boolean for fast
             body["fast"] = True
+
         response = self.client.post("/extractions", json=body)
-        # Raise on any error response
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Async job enqueued during fast sync: error
+
+        # Fast-sync cannot enqueue an async job
         if response.status_code == 202 and fast:
             raise PulseAPIError(response)
-        # Async job path: wait and parse
+
+        # Async job path
         if response.status_code == 202:
-            # Async/job path: initial submission returned only jobId
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
             result = job.wait()
             return ExtractionsResponse.model_validate(result)
+
         # Sync path
         return ExtractionsResponse.model_validate(data)

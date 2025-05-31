@@ -51,7 +51,7 @@ class ThemeGeneration:
             texts,
             min_themes=self.min_themes,
             max_themes=self.max_themes,
-            fast=fast_flag,
+            fast=self.fast or ctx.fast,
         )
 
 
@@ -66,8 +66,7 @@ class SentimentProcess:
 
     def run(self, ctx: Any) -> Any:
         texts = ctx.dataset.tolist()
-        fast = self.fast if self.fast is not None else ctx.fast
-        return ctx.client.analyze_sentiment(texts, fast=fast)
+        return ctx.client.analyze_sentiment(texts, fast=self.fast or ctx.fast)
 
 
 class ThemeAllocation:
@@ -80,11 +79,13 @@ class ThemeAllocation:
         self,
         themes: list[str] | None = None,
         single_label: bool = True,
+        fast: bool | None = None,
         threshold: float = 0.5,
     ):
         self.themes = themes
         self.single_label = single_label
         self.threshold = threshold
+        self.fast = fast
 
     def run(self, ctx: Any) -> dict[str, Any]:
         """
@@ -113,7 +114,7 @@ class ThemeAllocation:
         else:
             labels = list(raw_themes)
             sim_texts = list(raw_themes)
-        fast_flag = ctx.fast
+        fast_flag = self.fast if self.fast is not None else ctx.fast
 
         resp = ctx.client.compare_similarity(
             set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
@@ -178,9 +179,11 @@ class ThemeExtraction:
                     raise RuntimeError(f"{alias} result not available for extraction")
         self.themes = used_themes
         self.themes = used_themes
-        fast_flag = self.fast if self.fast is not None else ctx.fast
         return ctx.client.extract_elements(
-            inputs=texts, themes=used_themes, version=self.version, fast=fast_flag
+            inputs=texts,
+            themes=used_themes,
+            version=self.version,
+            fast=self.fast or ctx.fast,
         )
 
 
@@ -196,8 +199,9 @@ class Cluster:
     def run(self, ctx: Any) -> Any:
         """Compute similarity matrix for clustering (cached for later use)."""
         texts = list(ctx.dataset)
-        fast = self.fast if self.fast is not None else ctx.fast
         # request full matrix (flatten=False for NxN)
-        resp = ctx.client.compare_similarity(set=texts, fast=fast, flatten=False)
+        resp = ctx.client.compare_similarity(
+            set=texts, fast=self.fast or ctx.fast, flatten=False
+        )
         # resp.similarity is List[List[float]]
         return resp.similarity

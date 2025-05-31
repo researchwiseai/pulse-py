@@ -6,6 +6,8 @@ import pytest
 
 from pulse.analysis.results import ClusterResult
 from pulse.auth import ClientCredentialsAuth
+from pulse.config import DEV_BASE_URL
+from pulse.core.client import CoreClient
 from pulse.starters import theme_allocation
 
 reviews = [
@@ -48,7 +50,7 @@ def disable_sleep(monkeypatch, request):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
-base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+base_url = DEV_BASE_URL
 
 # Load credentials from environment variables
 client_id = os.getenv("PULSE_CLIENT_ID")
@@ -63,11 +65,12 @@ auth = ClientCredentialsAuth(
     token_url=token_url,
     audience=audience,
 )
+client = CoreClient(auth=auth, base_url=base_url)
 
 
 @pytest.mark.vcr()
 def test_theme_allocation_implicit_generation():
-    resp = theme_allocation(reviews, auth=auth)
+    resp = theme_allocation(reviews, client=client)
 
     series = resp.assign_single()
     assert len(series) == len(reviews)
@@ -91,7 +94,7 @@ def test_theme_allocation_implicit_generation_big():
     with open(file_path, "r", encoding="utf-8") as f:
         comments = f.read().splitlines()
 
-    resp = theme_allocation(comments, auth=auth)
+    resp = theme_allocation(comments, client=client)
 
     series = resp.assign_single()
     assert len(series) == len(comments)
@@ -111,7 +114,7 @@ def test_theme_allocation_implicit_generation_big():
 @pytest.mark.vcr()
 def test_theme_allocation_with_themes():
     resp = theme_allocation(
-        reviews, themes=["Food & Drink", "Rides", "Staff"], auth=auth
+        reviews, themes=["Food & Drink", "Rides", "Staff"], client=client
     )
 
     series = resp.assign_single()
@@ -133,6 +136,6 @@ def test_theme_allocation_with_themes():
 def test_cluster_analysis():
     from pulse.starters import cluster_analysis
 
-    resp = cluster_analysis(reviews, auth=auth)
+    resp = cluster_analysis(reviews, client=client)
 
     assert isinstance(resp, ClusterResult)

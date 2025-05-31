@@ -123,7 +123,11 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         # Scope, audience, and token_url are optional
 
         self.organization = organization
-        self.redirect_uri = redirect_uri or os.getenv("PULSE_REDIRECT_URI")
+        self.redirect_uri = (
+            redirect_uri
+            or os.getenv("PULSE_REDIRECT_URI")
+            or "http://localhost:8888/callback"
+        )
         self.code_verifier = code_verifier
         self.scope = scope
         # Track whether audience or scope were explicitly provided
@@ -147,14 +151,14 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         )
         # Retrieve configuration from environment
 
-        # redirect_uri = "http://localhost:8080/callback"
+        # redirect_uri = "http://localhost:8888/callback"
         authorize_url = f"https://{PROD_AUTH_DOMAIN}/authorize"
 
         params: dict[str, str] = {
             "response_type": "code",
             "client_id": self.client_id or PROD_CLIENT_ID,
             "audience": self.audience or PROD_BASE_URL,
-            "redirect_uri": self.redirect_uri or "http://localhost:8080/callback",
+            "redirect_uri": self.redirect_uri,
             "code_challenge": code_challenge,
             "code_challenge_method": "S256",
             "scope": self.scope or DEFAULT_SCOPES,
@@ -177,7 +181,7 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         try:
             parsed_uri = urlparse(self.redirect_uri)
             host = parsed_uri.hostname or "localhost"
-            port = parsed_uri.port or 8080
+            port = parsed_uri.port or 8888
             path = parsed_uri.path or "/callback"
             from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -222,6 +226,7 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
             "grant_type": "authorization_code",
             "client_id": self.client_id or PROD_CLIENT_ID,
             "code": self.code,
+            "redirect_uri": self.redirect_uri,
             "code_verifier": self.code_verifier,
         }
         # Include audience if provided via init or environment
@@ -245,6 +250,21 @@ def _get_default_auth() -> AuthorizationCodePKCEAuth:
     return AuthorizationCodePKCEAuth()
 
 
+def _in_jupyter_notebook() -> bool:
+    """Return True if running in a Jupyter notebook (ZMQInteractiveShell)."""
+    try:
+        from IPython import get_ipython
+    except ImportError:
+        return False
+    try:
+        ip = get_ipython()
+        if ip is None:
+            return False
+        return ip.__class__.__name__ == "ZMQInteractiveShell"
+    except Exception:
+        return False
+
+
 def auto_auth():
     """
     Automatically retrieves and returns the default authentication credentials.
@@ -255,4 +275,9 @@ def auto_auth():
     Returns:
         The default authentication credentials or handler.
     """
+    if (
+        len(os.environ.get("PULSE_CLIENT_SECRET", "")) > 0
+        and len(os.environ.get("PULSE_CLIENT_ID", "")) > 0
+    ):
+        return ClientCredentialsAuth()
     return _get_default_auth()
