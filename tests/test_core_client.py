@@ -196,4 +196,4 @@ def test_extract_elements_job():
     )
     assert hasattr(job, "id")
     result = job.wait()
-    assert "extractions" in result
+    assert "matrix" in result

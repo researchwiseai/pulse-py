@@ -935,37 +935,48 @@ components:
                     items:
                         type: string
                 dictionary:
+                    type: object
+                    additionalProperties:
+                        type: array
+                        items:
+                            type: string
+                    description: Optional mapping of category to search terms.
+                expand_dictionary:
                     type: boolean
-                    description: 'Enable dictionary-based extraction'
-                version:
-                    type: string
-                fast:
+                    default: true
+                use_ner:
                     type: boolean
-                    description:
-                        Flag indicating synchronous (true) or asynchronous (false) processing.
-                        Default false.
+                    default: true
+                use_llm:
+                    type: boolean
+                    default: true
+                threshold:
+                    type: number
+                    default: 0.5
             required: [texts, categories]
             additionalProperties: false
 
         ExtractionsResponse:
             type: object
             properties:
-                extractions:
+                columns:
                     type: array
-                    description:
-                        3D array of extracted elements, shape [texts.length][categories.length][K]
-                    maxItems: 1000
+                    minItems: 1
+                    items:
+                        type: object
+                        properties:
+                            category:
+                                type: string
+                            term:
+                                type: string
+                        required: [category, term]
+                matrix:
+                    type: array
                     items:
                         type: array
-                        maxItems: 1000
                         items:
-                            type: array
-                            maxItems: 1000
-                            items:
-                                type: string
-                requestId:
-                    type: string
-            required: [extractions, requestId]
+                            type: string
+            required: [columns, matrix]
             additionalProperties: false
 
         SummariesRequest:

@@ -40,7 +40,7 @@ interactions:
     uri: https://dev.core.researchwiseai.com/pulse/v1/results/job123
   response:
     body:
-      string: '{"extractions":[[["bar"]]],"requestId":"req9"}'
+      string: '{"columns":[{"category":"food","term":"food"}],"matrix":[["bar"]],"requestId":"req9"}'
     headers:
       Content-Type:
       - application/json

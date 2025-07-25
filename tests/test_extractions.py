@@ -11,7 +11,11 @@ def make_sync_client():
         assert request.url.path == "/extractions"
         return httpx.Response(
             200,
-            json={"extractions": [[["foo"]]], "requestId": "r1"},
+            json={
+                "columns": [{"category": "b", "term": "b"}],
+                "matrix": [["foo"]],
+                "requestId": "r1",
+            },
         )
 
     transport = httpx.MockTransport(handler)
@@ -35,7 +39,11 @@ def make_async_client():
         if request.method == "GET" and request.url.path == "/results/job123":
             return httpx.Response(
                 200,
-                json={"extractions": [[["bar"]]], "requestId": "r2"},
+                json={
+                    "columns": [{"category": "b", "term": "b"}],
+                    "matrix": [["bar"]],
+                    "requestId": "r2",
+                },
             )
         raise AssertionError(f"Unexpected request: {request.method} {request.url}")
 
@@ -48,7 +56,7 @@ def test_extract_elements_sync():
     client = make_sync_client()
     resp = client.extract_elements(texts=["a"], categories=["b"], fast=True)
     assert isinstance(resp, ExtractionsResponse)
-    assert resp.extractions[0][0] == ["foo"]
+    assert resp.matrix[0][0] == "foo"
 
 
 def test_extract_elements_async_job(monkeypatch):
@@ -58,7 +66,7 @@ def test_extract_elements_async_job(monkeypatch):
     assert isinstance(job, Job)
     monkeypatch.setattr(time, "sleep", lambda x: None)
     result = job.wait()
-    assert result["extractions"][0][0] == ["bar"]
+    assert result["matrix"][0][0] == "bar"
 
 
 def test_extract_elements_async_wait(monkeypatch):
@@ -66,7 +74,7 @@ def test_extract_elements_async_wait(monkeypatch):
     monkeypatch.setattr(time, "sleep", lambda x: None)
     resp = client.extract_elements(texts=["a"], categories=["b"], await_job_result=True)
     assert isinstance(resp, ExtractionsResponse)
-    assert resp.extractions[0][0] == ["bar"]
+    assert resp.matrix[0][0] == "bar"
 
 
 def test_extract_elements_themes_deprecation():
