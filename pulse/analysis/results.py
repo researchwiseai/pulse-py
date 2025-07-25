@@ -296,18 +296,43 @@ class ThemeExtractionResult:
     @property
     def extractions(self) -> list[list[list[str]]]:
         """Nested list of extracted elements per text per theme."""
-        return self._response.extractions
+        cols = self._response.columns
+        matrix = self._response.matrix
+
+        # map category -> indices of columns belonging to that category
+        cat_to_indices: dict[str, list[int]] = {}
+        for idx, col in enumerate(cols):
+            cat_to_indices.setdefault(col.category, []).append(idx)
+
+        # initialise empty structure
+        result: list[list[list[str]]] = [
+            [[] for _ in self._themes] for _ in range(len(self._texts))
+        ]
+
+        theme_index = {t: i for i, t in enumerate(self._themes)}
+        for i, row in enumerate(matrix):
+            for j, cell in enumerate(row):
+                category = cols[j].category
+                if category not in theme_index:
+                    continue
+                if cell is None or cell == "":
+                    continue
+                items = cell if isinstance(cell, list) else [cell]
+                result[i][theme_index[category]].extend(items)
+
+        return result
 
     def to_dataframe(self) -> pd.DataFrame:
         """Convert extraction results to a DataFrame.
         Columns: text, theme, extraction."""
         rows: list[dict[str, str]] = []
+        nested = self.extractions
         for i, text in enumerate(self._texts):
             for j, theme in enumerate(self._themes):
                 try:
-                    items = self._response.extractions[i][j]
+                    items = nested[i][j]
                 except (IndexError, TypeError):
                     continue
                 for item in items:
-                    rows.append({"text": text, "theme": theme, "extraction": item})
+                    rows.append({"text": text, "category": theme, "extraction": item})
         return pd.DataFrame(rows)

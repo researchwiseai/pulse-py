@@ -56,6 +56,8 @@ def test_extract_elements_sync():
     client = make_sync_client()
     resp = client.extract_elements(texts=["a"], categories=["b"], fast=True)
     assert isinstance(resp, ExtractionsResponse)
+    assert resp.columns[0].category == "b"
+    assert resp.columns[0].term == "b"
     assert resp.matrix[0][0] == "foo"
 
 
@@ -66,6 +68,7 @@ def test_extract_elements_async_job(monkeypatch):
     assert isinstance(job, Job)
     monkeypatch.setattr(time, "sleep", lambda x: None)
     result = job.wait()
+    assert result["columns"][0]["category"] == "b"
     assert result["matrix"][0][0] == "bar"
 
 
@@ -74,6 +77,7 @@ def test_extract_elements_async_wait(monkeypatch):
     monkeypatch.setattr(time, "sleep", lambda x: None)
     resp = client.extract_elements(texts=["a"], categories=["b"], await_job_result=True)
     assert isinstance(resp, ExtractionsResponse)
+    assert resp.columns[0].category == "b"
     assert resp.matrix[0][0] == "bar"
 
 

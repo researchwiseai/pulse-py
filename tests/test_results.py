@@ -177,3 +177,28 @@ def test_cluster_result_methods():
     # Remove empty labels
     xticks = [lbl for lbl in xticks if lbl]
     assert set(xticks) == set(texts)
+
+
+def test_theme_extraction_result_methods():
+    from pulse.analysis.results import ThemeExtractionResult
+    from pulse.core.models import ExtractionsResponse
+
+    resp = ExtractionsResponse(
+        columns=[
+            ExtractionsResponse.ExtractionColumn(category="Food", term="pizza"),
+            ExtractionsResponse.ExtractionColumn(category="Service", term="svc"),
+        ],
+        matrix=[["pizza", ""], ["", "good"]],
+        requestId=None,
+    )
+    texts = ["I like pizza", "Service was good"]
+    themes = ["Food", "Service"]
+
+    result = ThemeExtractionResult(resp, texts, themes)
+
+    expected = [[["pizza"], []], [[], ["good"]]]
+    assert result.extractions == expected
+
+    df = result.to_dataframe()
+    assert list(df["category"]) == ["Food", "Service"]
+    assert list(df["extraction"]) == ["pizza", "good"]
