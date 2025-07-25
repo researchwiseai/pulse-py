@@ -40,8 +40,8 @@ def cache_dir(tmp_path):
 base_url = "https://dev.core.researchwiseai.com/pulse/v1"
 
 # Load credentials from environment variables or use dummy defaults for caching tests
-client_id = os.getenv("PULSE_CLIENT_ID", "DUMMY_CLIENT_ID")
-client_secret = os.getenv("PULSE_CLIENT_SECRET", "DUMMY_CLIENT_SECRET")
+client_id = os.getenv("PULSE_CLIENT_ID") or "DUMMY_CLIENT_ID"
+client_secret = os.getenv("PULSE_CLIENT_SECRET") or "DUMMY_CLIENT_SECRET"
 token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
 audience = os.getenv("PULSE_AUDIENCE", base_url)
 auth = ClientCredentialsAuth(
