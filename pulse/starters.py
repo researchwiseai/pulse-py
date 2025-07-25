@@ -3,10 +3,12 @@ from typing import List, Union
 import pandas as pd
 from typing import Optional
 from pulse.analysis.analyzer import Analyzer
-from pulse.analysis.processes import Cluster, SentimentProcess, ThemeAllocation
-from pulse.analysis.results import ClusterResult, SentimentResult, ThemeAllocationResult
+from pulse.analysis.processes import SentimentProcess, ThemeAllocation
+from pulse.analysis.results import SentimentResult, ThemeAllocationResult
 from pulse.auth import _BaseOAuth2Auth
 from pulse.core.client import CoreClient
+from pulse.core.jobs import Job
+from pulse.core.models import ClusteringResponse
 
 
 def _load_csv_tsv(path: str) -> List[str]:
@@ -100,21 +102,24 @@ def theme_allocation(
 
 def cluster_analysis(
     input_data: Union[List[str], str],
+    *,
+    k: int,
+    algorithm: str | None = None,
+    await_job_result: bool = True,
     auth: _BaseOAuth2Auth | None = None,
     client: Optional[CoreClient] = None,
-) -> ClusterResult:
-    """
-    Perform clustering analysis on input data.
-    Returns a ClusterResult object.
-    """
-    texts = get_strings(input_data)
+) -> Union[ClusteringResponse, Job]:
+    """Cluster input texts using the core API."""
 
+    texts = get_strings(input_data)
     fast = len(texts) <= 200
 
-    analyzer = Analyzer(
-        processes=[Cluster()], dataset=texts, client=client, fast=fast, auth=auth
+    client = client or CoreClient(auth=auth)
+
+    return client.cluster_texts(
+        texts,
+        k=k,
+        algorithm=algorithm,
+        fast=fast,
+        await_job_result=await_job_result,
     )
-
-    resp = analyzer.run()
-
-    return resp.cluster

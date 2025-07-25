@@ -16,6 +16,7 @@ from pulse.core.models import (
     SentimentResponse,
     ExtractionsResponse,
     JobSubmissionResponse,
+    ClusteringResponse,
 )
 from pulse.core.exceptions import PulseAPIError
 
@@ -526,3 +527,40 @@ class CoreClient:
 
         # Sync path
         return ExtractionsResponse.model_validate(data)
+
+    def cluster_texts(
+        self,
+        inputs: list[str],
+        *,
+        k: int,
+        algorithm: str | None = None,
+        fast: bool | None = None,
+        await_job_result: bool = True,
+    ) -> Union[ClusteringResponse, Job]:
+        """Cluster texts into groups using embeddings."""
+
+        body: Dict[str, Any] = {"inputs": inputs, "k": k}
+        if algorithm is not None:
+            body["algorithm"] = algorithm
+        if fast is not None:
+            body["fast"] = fast
+
+        response = self.client.post("/clustering", json=body)
+
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+
+        data = response.json()
+
+        if response.status_code == 202:
+            if fast:
+                raise PulseAPIError(response)
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
+            job._client = self.client
+            if not await_job_result:
+                return job
+            result = job.wait()
+            return ClusteringResponse.model_validate(result)
+
+        return ClusteringResponse.model_validate(data)

@@ -182,3 +182,31 @@ class JobStatusResponse(BaseModel):
     message: Optional[str] = Field(
         None, description="Error message if jobStatus is error or failed"
     )
+
+
+class ClusteringRequest(BaseModel):
+    """Request model for text clustering."""
+
+    inputs: List[str] = Field(..., min_length=2, description="Input texts")
+    k: int = Field(..., ge=1, le=50, description="Number of clusters")
+    algorithm: Optional[
+        Literal["kmeans", "skmeans", "agglomerative", "hdbscan"]
+    ] = Field(None, description="Clustering algorithm")
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
+
+
+class Cluster(BaseModel):
+    """Single cluster grouping."""
+
+    clusterId: int = Field(..., description="Cluster identifier")
+    items: List[str] = Field(..., description="Items assigned to this cluster")
+
+
+class ClusteringResponse(BaseModel):
+    """Response model for clustering request."""
+
+    algorithm: str = Field(..., description="Algorithm used for clustering")
+    clusters: List[Cluster] = Field(..., description="List of cluster groups")
+    requestId: Optional[str] = Field(None, description="Unique request identifier")
