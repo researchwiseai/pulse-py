@@ -10,7 +10,7 @@ info:
           - Flexible cosine-similarity computations across strings.
           - Thematic clustering of open-ended text into concise, human-readable themes.
           - Sentiment classification of each input string.
-          - Extraction of text elements matching specified themes from input strings.
+          - Extraction of text elements matching specified categories from input strings.
           - Clustering of text into groups using vector embeddings.
 
         ### Similarity
@@ -88,8 +88,8 @@ tags:
           - In asynchronous mode, accepts up to 10,000 input strings and returns a job_id (HTTP 202).
     - name: extractions
       description: |
-          Extractions endpoint. Extracts elements matching themes with sync (fast=true) and async (fast=false or omitted) modes.
-          - Both modes support up to 200 input strings and up to 50 themes.
+          Extractions endpoint. Extracts elements matching categories with sync (fast=true) and async (fast=false or omitted) modes.
+          - Both modes support up to 200 input strings and up to 50 categories.
           - Synchronous returns immediate results (HTTP 200); asynchronous returns a job_id (HTTP 202).
     - name: jobs
       description: |
@@ -412,9 +412,9 @@ paths:
     /extractions:
         post:
             operationId: extractElements
-            summary: Extract elements matching themes from input strings.
+            summary: Extract elements matching categories from input strings.
             description: |
-                Extracts substrings from inputs that match the provided themes.
+                Extracts substrings from inputs that match the provided categories.
                 Supports synchronous (fast=true) and asynchronous (fast=false or omitted) modes.
 
                  - Both modes support up to 200 text strings and up to 50 categories.
