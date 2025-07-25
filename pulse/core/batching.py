@@ -19,23 +19,40 @@ def _make_self_chunks(items: List[str]) -> List[List[str]]:
 
 
 def _make_cross_bodies(
-    set_a: List[str], set_b: List[str], flatten: bool
+    set_a: List[str],
+    set_b: List[str],
+    flatten: bool,
+    version: str | None = None,
+    split: Any | None = None,
 ) -> List[Dict[str, Any]]:
-    """Determine request bodies for cross-similarity with batching."""
+    """Determine request bodies for cross-similarity with batching.
+
+    Additional ``version`` and ``split`` parameters are propagated into each
+    request body when provided.
+    """
     A, B = len(set_a), len(set_b)
+
     # If combined size fits
+    def _base_body(a: List[str], b: List[str]) -> Dict[str, Any]:
+        body = {"set_a": a, "set_b": b, "flatten": flatten}
+        if version is not None:
+            body["version"] = version
+        if split is not None:
+            body["split"] = split
+        return body
+
     if A + B <= MAX_ITEMS:
-        return [{"set_a": set_a, "set_b": set_b, "flatten": flatten}]
+        return [_base_body(set_a, set_b)]
 
     # Keep the smaller set intact if possible
     if A <= B < MAX_ITEMS:
         chunk_size = MAX_ITEMS - A
         chunks_b = [set_b[i : i + chunk_size] for i in range(0, B, chunk_size)]
-        return [{"set_a": set_a, "set_b": b, "flatten": flatten} for b in chunks_b]
+        return [_base_body(set_a, b) for b in chunks_b]
     if B <= A < MAX_ITEMS:
         chunk_size = MAX_ITEMS - B
         chunks_a = [set_a[i : i + chunk_size] for i in range(0, A, chunk_size)]
-        return [{"set_a": a, "set_b": set_b, "flatten": flatten} for a in chunks_a]
+        return [_base_body(a, set_b) for a in chunks_a]
 
     # Otherwise, chunk both sets into halves
     chunks_a = [set_a[i : i + HALF_CHUNK] for i in range(0, A, HALF_CHUNK)]
@@ -43,7 +60,7 @@ def _make_cross_bodies(
     bodies: List[Dict[str, Any]] = []
     for a in chunks_a:
         for b in chunks_b:
-            bodies.append({"set_a": a, "set_b": b, "flatten": flatten})
+            bodies.append(_base_body(a, b))
     return bodies
 
 
