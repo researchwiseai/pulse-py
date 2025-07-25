@@ -3,12 +3,16 @@ from typing import List, Union
 import pandas as pd
 from typing import Optional
 from pulse.analysis.analyzer import Analyzer
-from pulse.analysis.processes import SentimentProcess, ThemeAllocation
-from pulse.analysis.results import SentimentResult, ThemeAllocationResult
+from pulse.analysis.processes import ThemeAllocation
+from pulse.analysis.results import ThemeAllocationResult
 from pulse.auth import _BaseOAuth2Auth
 from pulse.core.client import CoreClient
 from pulse.core.jobs import Job
-from pulse.core.models import ClusteringResponse, SummariesResponse
+from pulse.core.models import (
+    ClusteringResponse,
+    SentimentResponse,
+    SummariesResponse,
+)
 
 
 def _load_csv_tsv(path: str) -> List[str]:
@@ -49,27 +53,25 @@ def get_strings(source: Union[List[str], str]) -> List[str]:
 
 def sentiment_analysis(
     input_data: Union[List[str], str],
+    *,
+    version: str | None = None,
+    await_job_result: bool = True,
     auth: _BaseOAuth2Auth | None = None,
     client: Optional[CoreClient] = None,
-) -> List[SentimentResult]:
-    """
-    Perform sentiment analysis on input data.
-    Returns a list of SentimentResult objects.
-    """
+) -> Union[SentimentResponse, Job]:
+    """Perform sentiment analysis on input data using the core client."""
+
     texts = get_strings(input_data)
     fast = len(texts) <= 200
 
-    analyzer = Analyzer(
-        processes=[SentimentProcess()],
-        dataset=texts,
-        client=client,
+    client = client or CoreClient(auth=auth)
+
+    return client.analyze_sentiment(
+        texts,
+        version=version,
         fast=fast,
-        auth=auth,
+        await_job_result=await_job_result,
     )
-
-    resp = analyzer.run()
-
-    return resp.sentiment
 
 
 def theme_allocation(

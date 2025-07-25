@@ -450,14 +450,29 @@ class CoreClient:
         return ThemesResponse.model_validate(data)
 
     def analyze_sentiment(
-        self, texts: list[str], fast: bool = True
+        self,
+        texts: list[str],
+        *,
+        version: str | None = None,
+        fast: bool = True,
+        await_job_result: bool = True,
     ) -> Union[SentimentResponse, Job]:
-        """Classify sentiment."""
-        # Build request body according to OpenAPI spec: input array
+        """Classify sentiment for the given texts.
+
+        Args:
+            texts: List of input strings.
+            version: Optional model version to use.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            await_job_result: When False, return a :class:`Job` handle instead of
+                waiting for the result.
+        """
+
         body: Dict[str, Any] = {"inputs": texts}
+        if version is not None:
+            body["version"] = version
         if fast:
-            # API expects a JSON boolean for fast
             body["fast"] = True
+
         response = self.client.post("/sentiment", json=body)
         # Raise on any error response
         if response.status_code not in (200, 202):
@@ -467,12 +482,12 @@ class CoreClient:
         # Async job enqueued during fast sync: error
         if response.status_code == 202 and fast:
             raise PulseAPIError(response)
-        # Async job path: wait and parse
         if response.status_code == 202:
-            # Async/job path: initial submission returned only jobId
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
+            if not await_job_result:
+                return job
             result = job.wait()
             return SentimentResponse.model_validate(result)
         # Sync path
