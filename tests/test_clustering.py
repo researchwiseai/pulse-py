@@ -43,9 +43,7 @@ def make_async_client():
                 200,
                 json={
                     "algorithm": "kmeans",
-                    "clusters": [
-                        {"clusterId": 0, "items": ["a", "b"]}
-                    ],
+                    "clusters": [{"clusterId": 0, "items": ["a", "b"]}],
                     "requestId": "r2",
                 },
             )
@@ -80,5 +78,3 @@ def test_cluster_texts_async_wait(monkeypatch):
     resp = client.cluster_texts(["a", "b"], k=1, await_job_result=True)
     assert isinstance(resp, ClusteringResponse)
     assert resp.algorithm == "kmeans"
-
-

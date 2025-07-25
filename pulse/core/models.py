@@ -209,6 +209,4 @@ class ClusteringResponse(BaseModel):
 
     algorithm: str = Field(..., description="Algorithm used for clustering")
     clusters: List[Cluster] = Field(..., description="List of cluster groups")
-    requestId: Optional[str] = Field(
-        None, description="Unique request identifier"
-    )
+    requestId: Optional[str] = Field(None, description="Unique request identifier")

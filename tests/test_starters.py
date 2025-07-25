@@ -148,7 +148,9 @@ def test_cluster_analysis():
         )
 
     transport = httpx.MockTransport(handler)
-    fake_client = CoreClient(client=httpx.Client(transport=transport, base_url="https://api.example.com"))
+    fake_client = CoreClient(
+        client=httpx.Client(transport=transport, base_url="https://api.example.com")
+    )
 
     resp = cluster_analysis(reviews, k=1, client=fake_client)
 
