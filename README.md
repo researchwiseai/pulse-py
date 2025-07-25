@@ -73,6 +73,16 @@ client = CoreClient(auth=auth)
 resp = client.create_embeddings(["Hello world", "Goodbye"])
 ```
 
+### Summarize text
+
+```python
+from pulse.starters import summarize
+
+texts = ["Great service and friendly staff!", "The app crashed repeatedly."]
+summary = summarize(texts, question="What do people think?")
+print(summary.summary)
+```
+
 ### Analyzer
 ```python
 from pulse.analysis.analyzer import Analyzer

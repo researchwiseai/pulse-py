@@ -8,7 +8,7 @@ from pulse.analysis.results import SentimentResult, ThemeAllocationResult
 from pulse.auth import _BaseOAuth2Auth
 from pulse.core.client import CoreClient
 from pulse.core.jobs import Job
-from pulse.core.models import ClusteringResponse
+from pulse.core.models import ClusteringResponse, SummariesResponse
 
 
 def _load_csv_tsv(path: str) -> List[str]:
@@ -120,6 +120,33 @@ def cluster_analysis(
         texts,
         k=k,
         algorithm=algorithm,
+        fast=fast,
+        await_job_result=await_job_result,
+    )
+
+
+def summarize(
+    input_data: Union[List[str], str],
+    question: str,
+    *,
+    length: str | None = None,
+    preset: str | None = None,
+    await_job_result: bool = True,
+    auth: _BaseOAuth2Auth | None = None,
+    client: Optional[CoreClient] = None,
+) -> Union[SummariesResponse, Job]:
+    """Generate a summary of the provided texts."""
+
+    texts = get_strings(input_data)
+    fast = len(texts) <= 200
+
+    client = client or CoreClient(auth=auth)
+
+    return client.generate_summary(
+        texts,
+        question,
+        length=length,
+        preset=preset,
         fast=fast,
         await_job_result=await_job_result,
     )
