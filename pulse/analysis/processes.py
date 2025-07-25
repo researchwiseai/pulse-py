@@ -30,12 +30,18 @@ class ThemeGeneration:
         min_themes: int = 2,
         max_themes: int = 50,
         context: Any = None,
+        version: str | None = None,
+        prune: int | None = None,
         fast: bool | None = None,
+        await_job_result: bool = True,
     ):
         self.min_themes = min_themes
         self.max_themes = max_themes
         self.context = context
+        self.version = version
+        self.prune = prune
         self.fast = fast
+        self.await_job_result = await_job_result
 
     def run(self, ctx: Any) -> Any:
         texts = ctx.dataset.tolist()
@@ -51,6 +57,10 @@ class ThemeGeneration:
             min_themes=self.min_themes,
             max_themes=self.max_themes,
             fast=self.fast or ctx.fast,
+            context=self.context,
+            version=self.version,
+            prune=self.prune,
+            await_job_result=self.await_job_result,
         )
 
 

@@ -402,6 +402,11 @@ class CoreClient:
         min_themes: int = 2,
         max_themes: int = 50,
         fast: bool = True,
+        *,
+        context: Any | None = None,
+        version: str | None = None,
+        prune: int | None = None,
+        await_job_result: bool = True,
     ) -> Union[ThemesResponse, Job]:
         """Cluster texts into latent themes."""
         # Build request body according to OpenAPI spec: inputs and theme options
@@ -415,6 +420,12 @@ class CoreClient:
             body["minThemes"] = min_themes
         if max_themes is not None:
             body["maxThemes"] = max_themes
+        if context is not None:
+            body["context"] = context
+        if version is not None:
+            body["version"] = version
+        if prune is not None:
+            body["prune"] = prune
         # Fast flag for sync vs async
         if fast:
             # API expects a JSON boolean for fast
@@ -444,6 +455,8 @@ class CoreClient:
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
+            if not await_job_result:
+                return job
             result = job.wait()
             return ThemesResponse.model_validate(result)
         # Synchronous response
