@@ -107,6 +107,8 @@ class Workflow:
         min_themes: int = 2,
         max_themes: int = 10,
         context: Any = None,
+        version: str | None = None,
+        prune: int | None = None,
         fast: bool | None = None,
         source: str | None = None,
         name: str | None = None,
@@ -116,6 +118,8 @@ class Workflow:
             min_themes=min_themes,
             max_themes=max_themes,
             context=context,
+            version=version,
+            prune=prune,
             fast=fast,
         )
         self._add_process(process, name=name)
