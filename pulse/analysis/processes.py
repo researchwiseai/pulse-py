@@ -164,10 +164,20 @@ class ThemeExtraction:
         themes: list[str] | None = None,
         version: str | None = None,
         fast: bool | None = None,
+        dictionary: dict[str, list[str]] | None = None,
+        expand_dictionary: bool | None = None,
+        use_ner: bool | None = None,
+        use_llm: bool | None = None,
+        threshold: float | None = None,
     ):
         self.themes = themes
         self.version = version
         self.fast = fast
+        self.dictionary = dictionary
+        self.expand_dictionary = expand_dictionary
+        self.use_ner = use_ner
+        self.use_llm = use_llm
+        self.threshold = threshold
 
     def run(self, ctx: Any) -> Any:
         texts = list(ctx.dataset)
@@ -192,6 +202,11 @@ class ThemeExtraction:
             inputs=texts,
             themes=used_themes,
             version=self.version,
+            dictionary=self.dictionary,
+            expand_dictionary=self.expand_dictionary,
+            use_ner=self.use_ner,
+            use_llm=self.use_llm,
+            threshold=self.threshold,
             fast=self.fast or ctx.fast,
         )
 
