@@ -65,7 +65,7 @@ dev = [
     "pytest>=6.0",
     "pytest-mock",
     "pytest-vcr",
-    "black",
+    "black==25.1.0",
     "nbqa",
     "ruff",
     "pre-commit>=2.9.2",

@@ -1,4 +1,5 @@
 """Unit tests for pulse.core.batching batching utilities."""
+
 import numpy as np
 
 from pulse.core import batching

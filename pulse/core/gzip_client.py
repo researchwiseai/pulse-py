@@ -1,4 +1,5 @@
 """HTTPX client that transparently gzip-compresses request content."""
+
 import httpx
 import gzip
 

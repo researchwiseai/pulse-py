@@ -26,6 +26,8 @@ jobs:
         pip install -e .[dev]
     - name: Run tests
       run: pytest -q --disable-warnings --maxfail=1 --vcr-record=none
+    - name: Black version
+      run: black --version
     - name: Check Python formatting
       run: black --check .
     - name: Check Notebook formatting

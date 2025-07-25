@@ -1,6 +1,5 @@
 """Authentication module for future OAuth2 credentials."""
 
-
 import base64
 import hashlib
 import os
