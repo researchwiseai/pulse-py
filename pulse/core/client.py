@@ -1,6 +1,7 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
 from typing import Any, Dict, List, Union, Optional
+import warnings
 import httpx
 from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
@@ -483,50 +484,64 @@ class CoreClient:
 
     def extract_elements(
         self,
-        inputs: list[str],
-        themes: list[Union[str, Theme]],
-        version: Optional[str] = None,
-        fast: bool = True,
+        texts: list[str] | None = None,
+        categories: list[Union[str, Theme]] | None = None,
+        *,
+        version: str | None = None,
+        dictionary: bool | None = None,
+        fast: bool | None = None,
+        await_job_result: bool = True,
+        **legacy_kwargs: Any,
     ) -> Union[ExtractionsResponse, Job]:
-        """Extract elements matching themes from input strings."""
-        # Skip extraction when no themes provided
-        if not themes:
-            raise ValueError("Must provide at least one theme for extraction.")
+        """Extract elements matching categories from input texts."""
 
-        # Normalize themes: accept either Theme objects or raw strings
-        serialized_themes = [
-            t if isinstance(t, str) else t.label  # or t.id if that's the identifier
-            for t in themes
+        if "inputs" in legacy_kwargs and texts is None:
+            texts = legacy_kwargs.pop("inputs")
+        if "themes" in legacy_kwargs and categories is None:
+            warnings.warn(
+                "'themes' argument is deprecated; use 'categories' instead",
+                DeprecationWarning,
+            )
+            categories = legacy_kwargs.pop("themes")
+
+        if legacy_kwargs:
+            raise TypeError(f"Unexpected keyword arguments: {', '.join(legacy_kwargs)}")
+
+        if texts is None:
+            raise TypeError("'texts' parameter is required")
+        if categories is None:
+            raise TypeError("'categories' parameter is required")
+
+        serialized_categories = [
+            c if isinstance(c, str) else c.label for c in categories
         ]
 
-        # Build request body
-        body: Dict[str, Any] = {
-            "inputs": inputs,
-            "themes": serialized_themes,
-        }
+        body: Dict[str, Any] = {"texts": texts, "categories": serialized_categories}
         if version is not None:
             body["version"] = version
-        if fast:
-            body["fast"] = True
+        if dictionary is not None:
+            body["dictionary"] = dictionary
+        if fast is not None:
+            body["fast"] = fast
 
         response = self.client.post("/extractions", json=body)
+
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
+
         data = response.json()
 
-        # Fast-sync cannot enqueue an async job
-        if response.status_code == 202 and fast:
-            raise PulseAPIError(response)
-
-        # Async job path
         if response.status_code == 202:
+            if fast:
+                raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
+            if not await_job_result:
+                return job
             result = job.wait()
             return ExtractionsResponse.model_validate(result)
 
-        # Sync path
         return ExtractionsResponse.model_validate(data)
 
     def cluster_texts(

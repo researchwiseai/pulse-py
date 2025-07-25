@@ -83,6 +83,18 @@ summary = summarize(texts, question="What do people think?")
 print(summary.summary)
 ```
 
+### Extract elements
+
+```python
+client = CoreClient()
+resp = client.extract_elements(
+    texts=["The food was great and the service was slow."],
+    categories=["food", "service"],
+    fast=True,
+)
+print(resp.extractions)
+```
+
 ### Analyzer
 ```python
 from pulse.analysis.analyzer import Analyzer

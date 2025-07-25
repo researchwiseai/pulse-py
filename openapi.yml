@@ -2,7 +2,7 @@
 openapi: 3.1.0
 info:
     title: Pulse API
-    version: 0.6.0
+    version: 0.7.0
     description: |
         A stateless RESTful service that provides **six** core capabilities:
 
@@ -417,11 +417,11 @@ paths:
                 Extracts substrings from inputs that match the provided themes.
                 Supports synchronous (fast=true) and asynchronous (fast=false or omitted) modes.
 
-                 - Both modes support up to 200 input strings and up to 50 themes.
+                 - Both modes support up to 200 text strings and up to 50 categories.
                  - Synchronous mode returns extraction results immediately (HTTP 200).
                  - Asynchronous mode returns a job_id (HTTP 202) to poll via the /jobs endpoint.
 
-                Returns a 3-dimensional array where `extractions[i][j]` contains matching elements for input `i` and theme `j`.
+                Returns a 3-dimensional array where `extractions[i][j]` contains matching elements for text `i` and category `j`.
             tags: [extractions]
             requestBody:
                 required: true
@@ -433,8 +433,9 @@ paths:
                             Default:
                                 summary: Basic extractions request
                                 value:
-                                    inputs: ['The food was great and the service was slow.']
-                                    themes: ['food', 'service']
+                                    texts: ['The food was great and the service was slow.']
+                                    categories: ['food', 'service']
+                                    dictionary: true
             responses:
                 '200':
                     description: Extraction results returned successfully.
@@ -461,8 +462,8 @@ paths:
                                     summary: Sample validation error response
                                     value:
                                         message:
-                                            'Validation error: inputs must be an array of 1 to 200
-                                            strings and themes must be an array of 1 to 50 strings.'
+                                            'Validation error: texts must be an array of 1 to 200
+                                            strings and categories must be an array of 1 to 50 strings.'
 
     /summaries:
         post:
@@ -921,18 +922,21 @@ components:
         ExtractionsRequest:
             type: object
             properties:
-                inputs:
+                texts:
                     type: array
                     minItems: 1
                     maxItems: 200
                     items:
                         type: string
-                themes:
+                categories:
                     type: array
                     minItems: 1
                     maxItems: 50
                     items:
                         type: string
+                dictionary:
+                    type: boolean
+                    description: 'Enable dictionary-based extraction'
                 version:
                     type: string
                 fast:
@@ -940,7 +944,7 @@ components:
                     description:
                         Flag indicating synchronous (true) or asynchronous (false) processing.
                         Default false.
-            required: [inputs, themes]
+            required: [texts, categories]
             additionalProperties: false
 
         ExtractionsResponse:
@@ -949,7 +953,7 @@ components:
                 extractions:
                     type: array
                     description:
-                        3D array of extracted elements, shape [inputs.length][themes.length][K]
+                        3D array of extracted elements, shape [texts.length][categories.length][K]
                     maxItems: 1000
                     items:
                         type: array

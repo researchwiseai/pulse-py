@@ -1,7 +1,7 @@
 """Pydantic models for Pulse API responses."""
 
 from typing import List, Optional, Literal
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, ConfigDict
 
 
 class EmbeddingDocument(BaseModel):
@@ -155,11 +155,38 @@ class SentimentResponse(BaseModel):
         return [r.sentiment for r in self.results]
 
 
+class ExtractionsRequest(BaseModel):
+    """Request model for text element extraction."""
+
+    texts: List[str] = Field(..., min_length=1, description="Input texts")
+    categories: List[str] = Field(
+        ..., min_length=1, description="Categories to extract elements for"
+    )
+    dictionary: Optional[bool] = Field(
+        None, description="Enable dictionary-based extraction"
+    )
+    version: Optional[str] = Field(None, description="Extractor version")
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    @model_validator(mode="before")
+    def _normalize_legacy(cls, values: dict) -> dict:
+        if "inputs" in values and "texts" not in values:
+            values["texts"] = values.pop("inputs")
+        if "themes" in values and "categories" not in values:
+            values["categories"] = values.pop("themes")
+        return values
+
+
 class ExtractionsResponse(BaseModel):
     """Response model for text element extraction."""
 
     extractions: List[List[List[str]]] = Field(
-        ..., description="3D array of extracted elements, shape [inputs][themes][k]"
+        ...,
+        description="3D array of extracted elements, shape [texts][categories][k]",
     )
     requestId: Optional[str] = Field(None, description="Unique request identifier")
 
