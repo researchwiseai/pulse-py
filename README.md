@@ -40,6 +40,10 @@ from pulse.core.client import CoreClient
 client = CoreClient()  # default to dev environment
 emb = client.create_embeddings(["Hello world", "Goodbye"])  # sync "fast" call
 print(emb.embeddings)
+
+# Submit a long-running job asynchronously
+job = client.create_embeddings(["foo"] * 300, fast=False, await_job_result=False)
+result = job.wait()
 ```
 
 ### CoreClient with Authentication
