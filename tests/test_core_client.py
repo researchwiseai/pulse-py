@@ -9,6 +9,11 @@ import os
 from pulse.auth import ClientCredentialsAuth
 from pulse.core.client import CoreClient
 from pulse.core.exceptions import PulseAPIError
+from pulse.core.models import (
+    EmbeddingsRequest,
+    SimilarityRequest,
+    Split,
+)
 
 pytestmark = pytest.mark.vcr(record_mode="new_episodes")
 
@@ -38,7 +43,9 @@ def disable_sleep(monkeypatch):
 
 def test_create_embeddings_fast():
     client = CoreClient(base_url=base_url, auth=auth)
-    response = client.create_embeddings(["a", "b"], fast=True)
+    response = client.create_embeddings(
+        EmbeddingsRequest(inputs=["a", "b"], fast=True)
+    )
 
     # Check that the response is a valid EmbeddingResponse object
     assert response is not None
@@ -55,7 +62,9 @@ def test_create_embeddings_fast():
 def test_compare_similarity_fast():
     client = CoreClient(base_url=base_url, auth=auth)
 
-    response = client.compare_similarity(set=["x", "y"], fast=True, flatten=False)
+    response = client.compare_similarity(
+        SimilarityRequest(set=["x", "y"], fast=True, flatten=False)
+    )
     # Check that the response is a valid SimilarityResponse object
     assert response is not None
     assert hasattr(response, "requestId")
@@ -125,7 +134,7 @@ def test_analyze_sentiment_fast():
 def test_error_raises():
     client = CoreClient(base_url=base_url, auth=auth)
     with pytest.raises(PulseAPIError):
-        client.create_embeddings([False], fast=True)
+        client.create_embeddings(EmbeddingsRequest(inputs=[False], fast=True))
 
 
 def test_cluster_texts_fast():
@@ -159,7 +168,9 @@ def test_generate_summary_job():
 
 def test_create_embeddings_job():
     client = CoreClient(base_url=base_url, auth=auth)
-    job = client.create_embeddings(["a"], fast=False, await_job_result=False)
+    job = client.create_embeddings(
+        EmbeddingsRequest(inputs=["a"], fast=False), await_job_result=False
+    )
     assert hasattr(job, "id")
     result = job.wait()
     assert "embeddings" in result
@@ -167,7 +178,9 @@ def test_create_embeddings_job():
 
 def test_compare_similarity_job():
     client = CoreClient(base_url=base_url, auth=auth)
-    job = client.compare_similarity(set=["a", "b"], fast=False, await_job_result=False)
+    job = client.compare_similarity(
+        SimilarityRequest(set=["a", "b"], fast=False), await_job_result=False
+    )
     assert hasattr(job, "id")
     result = job.wait()
     assert "flattened" in result or "matrix" in result
