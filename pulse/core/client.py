@@ -1,6 +1,6 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-from typing import Any, Dict, List, Union, Optional
+from typing import Any, Dict, List, Union, Optional, Mapping
 import warnings
 import httpx
 from pulse.core.gzip_client import GzipClient
@@ -585,7 +585,11 @@ class CoreClient:
         categories: list[Union[str, Theme]] | None = None,
         *,
         version: str | None = None,
-        dictionary: bool | None = None,
+        dictionary: Mapping[str, list[str]] | None = None,
+        expand_dictionary: bool | None = None,
+        use_ner: bool | None = None,
+        use_llm: bool | None = None,
+        threshold: float | None = None,
         fast: bool | None = None,
         await_job_result: bool = True,
         **legacy_kwargs: Any,
@@ -596,7 +600,11 @@ class CoreClient:
             texts: Input strings to analyze.
             categories: List of categories or Theme objects.
             version: Optional model version for reproducible output.
-            dictionary: When True, also include dictionary matches.
+            dictionary: Optional mapping of categories to search terms.
+            expand_dictionary: Expand dictionary entries with synonyms when ``True``.
+            use_ner: Enable named-entity recognition based extraction.
+            use_llm: Enable LLM-powered extraction.
+            threshold: Score threshold for extraction.
             fast: Use synchronous (True) or asynchronous (False) mode.
             await_job_result: When False, return a :class:`Job` handle
                 instead of waiting.
@@ -628,6 +636,14 @@ class CoreClient:
             body["version"] = version
         if dictionary is not None:
             body["dictionary"] = dictionary
+        if expand_dictionary is not None:
+            body["expand_dictionary"] = expand_dictionary
+        if use_ner is not None:
+            body["use_ner"] = use_ner
+        if use_llm is not None:
+            body["use_llm"] = use_llm
+        if threshold is not None:
+            body["threshold"] = threshold
         if fast is not None:
             body["fast"] = fast
 
