@@ -99,6 +99,23 @@ resp = client.extract_elements(
 print(resp.extractions)
 ```
 
+### Polling asynchronous jobs
+
+```python
+import time
+client = CoreClient()
+job = client.analyze_sentiment(["hello"], fast=False, await_job_result=False)
+while True:
+    status = client.get_job_status(job.id)
+    if status.status == "completed":
+        result = client.client.get(status.result_url).json()
+        break
+    time.sleep(1)
+print(result)
+```
+
+`Job.result()` is an alias for `wait()` if you prefer a blocking call.
+
 ### Analyzer
 ```python
 from pulse.analysis.analyzer import Analyzer

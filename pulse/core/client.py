@@ -551,6 +551,21 @@ class CoreClient:
         """Close underlying HTTP connection."""
         self.client.close()
 
+    def get_job_status(self, job_id: str) -> Job:
+        """Retrieve the status of a previously submitted job."""
+
+        response = self.client.get("/jobs", params={"jobId": job_id})
+        if response.status_code != 200:
+            raise PulseAPIError(response)
+
+        data = response.json()
+        if "jobId" not in data:
+            data["jobId"] = job_id
+
+        job = Job.model_validate(data)
+        job._client = self.client
+        return job
+
     def extract_elements(
         self,
         texts: list[str] | None = None,

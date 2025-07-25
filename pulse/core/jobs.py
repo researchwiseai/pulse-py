@@ -73,3 +73,7 @@ class Job(BaseModel):
             if time.time() - start > timeout:
                 raise TimeoutError(f"Job {self.id} did not finish in {timeout} seconds")
             time.sleep(2.0)
+
+    def result(self, timeout: float = 180.0) -> Any:
+        """Alias for :meth:`wait` for API parity with ``concurrent.futures``."""
+        return self.wait(timeout)
