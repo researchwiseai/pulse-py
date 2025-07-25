@@ -598,7 +598,7 @@ class CoreClient:
 
         Args:
             texts: Input strings to analyze.
-            categories: List of categories or Theme objects.
+            categories: List of categories or :class:`Theme` objects.
             version: Optional model version for reproducible output.
             dictionary: Optional mapping of categories to search terms.
             expand_dictionary: Expand dictionary entries with synonyms when ``True``.
@@ -606,8 +606,16 @@ class CoreClient:
             use_llm: Enable LLM-powered extraction.
             threshold: Score threshold for extraction.
             fast: Use synchronous (True) or asynchronous (False) mode.
-            await_job_result: When False, return a :class:`Job` handle
-                instead of waiting.
+            await_job_result: When ``False``, return a :class:`Job` handle
+                instead of waiting for results.
+
+        Returns:
+            If ``await_job_result`` is ``True`` (default) this method returns an
+            :class:`ExtractionsResponse` where ``resp.columns`` contains
+            metadata for each category and ``resp.matrix`` is a 2-D list of
+            extractions for each input and category. When ``await_job_result``
+            is ``False`` and ``fast`` is also ``False``, a :class:`Job` object is
+            returned instead.
         """
 
         if "inputs" in legacy_kwargs and texts is None:
