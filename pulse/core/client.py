@@ -226,9 +226,16 @@ class CoreClient:
         return cls(base_url=final_base_url, auth=auth)
 
     def create_embeddings(
-        self, inputs: list[str], fast: bool = True
+        self, inputs: list[str], fast: bool = True, *, await_job_result: bool = True
     ) -> Union[EmbeddingsResponse, Job]:
-        """Generate dense vector embeddings."""
+        """Generate dense vector embeddings.
+
+        Args:
+            inputs: Texts to embed.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            await_job_result: When False, return a :class:`Job` handle instead of
+                waiting for the result when the server responds with HTTP 202.
+        """
 
         # Request body according to OpenAPI spec: inputs
         body: Dict[str, Any] = {"inputs": inputs}
@@ -253,6 +260,8 @@ class CoreClient:
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
+            if not await_job_result:
+                return job
             result = job.wait()
             return EmbeddingsResponse.model_validate(result)
         # Synchronous response
