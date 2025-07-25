@@ -76,3 +76,9 @@ def test_extract_elements_themes_deprecation():
         resp = client.extract_elements(texts=["a"], themes=["b"], fast=True)
     assert isinstance(resp, ExtractionsResponse)
     assert any(issubclass(item.category, DeprecationWarning) for item in w)
+
+
+def test_extract_elements_inputs_compat():
+    client = make_sync_client()
+    resp = client.extract_elements(inputs=["a"], categories=["b"], fast=True)
+    assert isinstance(resp, ExtractionsResponse)

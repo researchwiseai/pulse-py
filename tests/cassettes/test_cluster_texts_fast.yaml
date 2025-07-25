@@ -1,0 +1,18 @@
+interactions:
+- request:
+    body: '{"inputs":["foo","bar"],"k":2,"fast":true}'
+    headers:
+      authorization:
+      - Bearer testtoken
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/clustering
+  response:
+    body:
+      string: '{"algorithm":"kmeans","clusters":[{"clusterId":0,"items":["foo"]},{"clusterId":1,"items":["bar"]}],"requestId":"req1"}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1
