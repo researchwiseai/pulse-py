@@ -449,7 +449,20 @@ class CoreClient:
         prune: int | None = None,
         await_job_result: bool = True,
     ) -> Union[ThemesResponse, Job]:
-        """Cluster texts into latent themes."""
+        """Cluster texts into latent themes.
+
+        Args:
+            texts: Input strings to cluster.
+            min_themes: Minimum number of themes.
+            max_themes: Maximum number of themes.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            context: Optional context string guiding theme generation.
+            version: Optional model version for reproducible output.
+            prune: Optionally prune the specified number of
+                lowest-frequency themes.
+            await_job_result: When False, return a :class:`Job` handle
+                instead of waiting.
+        """
         # Build request body according to OpenAPI spec: inputs and theme options
         # For single-text input, return empty themes and assignments without API call
         if len(texts) < 2:
@@ -515,7 +528,7 @@ class CoreClient:
 
         Args:
             texts: List of input strings.
-            version: Optional model version to use.
+            version: Optional model version to use for reproducible output.
             fast: Use synchronous (True) or asynchronous (False) mode.
             await_job_result: When False, return a :class:`Job` handle instead of
                 waiting for the result.
@@ -577,7 +590,17 @@ class CoreClient:
         await_job_result: bool = True,
         **legacy_kwargs: Any,
     ) -> Union[ExtractionsResponse, Job]:
-        """Extract elements matching categories from input texts."""
+        """Extract elements matching categories from input texts.
+
+        Args:
+            texts: Input strings to analyze.
+            categories: List of categories or Theme objects.
+            version: Optional model version for reproducible output.
+            dictionary: When True, also include dictionary matches.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            await_job_result: When False, return a :class:`Job` handle
+                instead of waiting.
+        """
 
         if "inputs" in legacy_kwargs and texts is None:
             texts = legacy_kwargs.pop("inputs")
@@ -637,7 +660,17 @@ class CoreClient:
         fast: bool | None = None,
         await_job_result: bool = True,
     ) -> Union[ClusteringResponse, Job]:
-        """Cluster texts into groups using embeddings."""
+        """Cluster texts into groups using embeddings.
+
+        Args:
+            inputs: Input strings to cluster.
+            k: Desired number of clusters.
+            algorithm: Optional clustering algorithm (``kmeans``, ``skmeans``,
+                ``agglomerative``, ``hdbscan``).
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            await_job_result: When False, return a :class:`Job` handle
+                instead of waiting.
+        """
 
         body: Dict[str, Any] = {"inputs": inputs, "k": k}
         if algorithm is not None:
@@ -675,7 +708,18 @@ class CoreClient:
         fast: bool | None = None,
         await_job_result: bool = True,
     ) -> Union[SummariesResponse, Job]:
-        """Summarize text according to a question."""
+        """Summarize text according to a question.
+
+        Args:
+            inputs: Input strings to summarize.
+            question: Prompt describing the desired summary focus.
+            length: Optional length specifier
+                (``bullet-points``, ``short``, ``medium``, ``long``).
+            preset: Optional preset controlling style.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            await_job_result: When False, return a :class:`Job` handle
+                instead of waiting.
+        """
 
         body: Dict[str, Any] = {"inputs": inputs, "question": question}
         if length is not None:
