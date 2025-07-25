@@ -135,9 +135,13 @@ client = CoreClient()
 resp = client.extract_elements(
     texts=["The food was great and the service was slow."],
     categories=["food", "service"],
+    dictionary={"food": ["food"], "service": ["service"]},  # optional
+    use_ner=True,  # optional
+    use_llm=False,  # optional
     fast=True,
 )
-print(resp.extractions)
+print(resp.columns)
+print(resp.matrix)
 ```
 
 ### Polling asynchronous jobs
