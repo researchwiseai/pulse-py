@@ -111,7 +111,16 @@ def cluster_analysis(
     auth: _BaseOAuth2Auth | None = None,
     client: Optional[CoreClient] = None,
 ) -> Union[ClusteringResponse, Job]:
-    """Cluster input texts using the `/clustering` endpoint."""
+    """Cluster input texts using the `/clustering` endpoint.
+
+    Args:
+        input_data: List of strings or a path to load strings from.
+        k: Desired number of clusters.
+        algorithm: Optional clustering algorithm to use.
+        await_job_result: When False, return a :class:`Job` handle instead of waiting.
+        auth: Optional authentication object.
+        client: Existing :class:`CoreClient` instance.
+    """
 
     texts = get_strings(input_data)
     fast = len(texts) <= 200
@@ -137,7 +146,17 @@ def summarize(
     auth: _BaseOAuth2Auth | None = None,
     client: Optional[CoreClient] = None,
 ) -> Union[SummariesResponse, Job]:
-    """Generate a summary of the provided texts."""
+    """Generate a summary of the provided texts.
+
+    Args:
+        input_data: List of strings or a file path to load from.
+        question: Prompt describing what to summarize.
+        length: Optional summary length.
+        preset: Optional output preset.
+        await_job_result: When False, return a :class:`Job` handle instead of waiting.
+        auth: Optional authentication object.
+        client: Existing :class:`CoreClient` instance.
+    """
 
     texts = get_strings(input_data)
     fast = len(texts) <= 200

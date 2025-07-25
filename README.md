@@ -87,6 +87,22 @@ summary = summarize("reviews.txt", question="What do people think?")
 print(summary.summary)
 ```
 
+### Generate summary
+
+```python
+from pulse.core.client import CoreClient
+
+client = CoreClient()
+resp = client.generate_summary(
+    ["Great food, slow service"],
+    "What do diners mention?",
+    length="short",  # optional
+    preset="five-point",  # optional
+    fast=True,
+)
+print(resp.summary)
+```
+
 ### Cluster texts
 
 ```python
@@ -95,6 +111,21 @@ from pulse.starters import cluster_analysis
 # Cluster comments from a CSV file into two groups
 clusters = cluster_analysis("reviews.csv", k=2)
 print(clusters.clusters)
+```
+
+### Cluster texts with CoreClient
+
+```python
+from pulse.core.client import CoreClient
+
+client = CoreClient()
+resp = client.cluster_texts(
+    ["Good", "Bad", "Okay"],
+    k=2,
+    algorithm="skmeans",  # optional
+    fast=True,
+)
+print(resp.clusters)
 ```
 
 ### Extract elements
@@ -180,6 +211,13 @@ results = wf.run()
 print(results.theme_generation.themes)
 print(results.sentiment.sentiments)
 ```
+
+### Optional parameters
+
+- **context** – provide additional context or focus for `generate_themes`.
+- **version** – lock API calls (e.g., `analyze_sentiment`, `generate_themes`) to a specific model version.
+- **algorithm** – choose the clustering algorithm in `cluster_texts`/`cluster_analysis`.
+- **length** and **preset** – control output style in `generate_summary`.
 
 ## Examples
 You can find Jupyter notebooks demonstrating both the high-level and DSL APIs under the `examples/` directory:
