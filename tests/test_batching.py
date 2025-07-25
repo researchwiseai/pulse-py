@@ -31,9 +31,17 @@ def test_make_self_chunks_split(monkeypatch):
 def test_make_cross_bodies_combined():
     set_a = list(range(3))
     set_b = list(range(4))
-    bodies = batching._make_cross_bodies(set_a, set_b, flatten=True)
+    bodies = batching._make_cross_bodies(
+        set_a, set_b, flatten=True, version="v1", split="newline"
+    )
     assert len(bodies) == 1
-    assert bodies[0] == {"set_a": set_a, "set_b": set_b, "flatten": True}
+    assert bodies[0] == {
+        "set_a": set_a,
+        "set_b": set_b,
+        "flatten": True,
+        "version": "v1",
+        "split": "newline",
+    }
 
 
 def test_make_cross_bodies_small_a(monkeypatch):
@@ -42,12 +50,16 @@ def test_make_cross_bodies_small_a(monkeypatch):
     monkeypatch.setattr(batching, "HALF_CHUNK", 2)
     set_a = list(range(2))
     set_b = list(range(7))
-    bodies = batching._make_cross_bodies(set_a, set_b, flatten=False)
+    bodies = batching._make_cross_bodies(
+        set_a, set_b, flatten=False, version="v1", split="newline"
+    )
     # chunks_a: 1 chunk, chunks_b: ceil(7/2)=4 chunks
     assert len(bodies) == 4
     for body in bodies:
         assert body["set_a"] == set_a
         assert body["flatten"] is False
+        assert body["version"] == "v1"
+        assert body["split"] == "newline"
 
 
 def test_make_cross_bodies_small_b(monkeypatch):
@@ -56,12 +68,16 @@ def test_make_cross_bodies_small_b(monkeypatch):
     monkeypatch.setattr(batching, "HALF_CHUNK", 2)
     set_a = list(range(4))
     set_b = list(range(2))
-    bodies = batching._make_cross_bodies(set_a, set_b, flatten=True)
+    bodies = batching._make_cross_bodies(
+        set_a, set_b, flatten=True, version="v1", split="newline"
+    )
     # chunks_a: ceil((5-2)=3 => [0:3,3:6]) => 2 chunks, set_b intact
     assert len(bodies) == 2
     for body in bodies:
         assert body["set_b"] == set_b
         assert body["flatten"] is True
+        assert body["version"] == "v1"
+        assert body["split"] == "newline"
 
 
 def test_make_cross_bodies_both_large(monkeypatch):
@@ -70,9 +86,14 @@ def test_make_cross_bodies_both_large(monkeypatch):
     monkeypatch.setattr(batching, "HALF_CHUNK", 2)
     set_a = list(range(7))
     set_b = list(range(7))
-    bodies = batching._make_cross_bodies(set_a, set_b, flatten=False)
+    bodies = batching._make_cross_bodies(
+        set_a, set_b, flatten=False, version="v1", split="newline"
+    )
     # chunks_a: ceil(7/2)=4, chunks_b: 4 => 16 combinations
     assert len(bodies) == 16
+    for body in bodies:
+        assert body["version"] == "v1"
+        assert body["split"] == "newline"
 
 
 def test_stitch_results_self(monkeypatch):

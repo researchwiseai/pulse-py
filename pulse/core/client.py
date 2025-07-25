@@ -265,14 +265,18 @@ class CoreClient:
         set_a: list[str] | None = None,
         set_b: list[str] | None = None,
         fast: Optional[bool] = None,
-        flatten: bool = True,
+        flatten: bool = False,
+        version: str | None = None,
+        split: Any | None = None,
+        await_job_result: bool = True,
     ) -> Union[SimilarityResponse, Job]:
-        """
-        Compute cosine similarity.
+        """Compute cosine similarity between strings.
 
-        Must provide exactly one of:
-          - set: list[str]         (self-similarity)
-          - set_a: list[str] and set_b: list[str]   (cross-similarity)
+        Exactly one of ``set`` (self-similarity) or the pair ``set_a``/``set_b``
+        (cross-similarity) must be provided. Optional ``version`` and ``split``
+        values are forwarded to the API. When ``await_job_result`` is ``False``
+        the asynchronous job handle is returned instead of waiting for
+        completion.
         """
         # validate arguments
         if set is None and (set_a is None or set_b is None):
@@ -301,10 +305,16 @@ class CoreClient:
                 set_a=set_a,
                 set_b=set_b,
                 flatten=flatten,
+                version=version,
+                split=split,
             )
 
         # API expects JSON boolean for flatten
         body["flatten"] = flatten
+        if version is not None:
+            body["version"] = version
+        if split is not None:
+            body["split"] = split
 
         if fast:
             # API expects a JSON boolean for fast
@@ -327,10 +337,11 @@ class CoreClient:
 
         # async/job path
         if response.status_code == 202:
-            # Async/job path: initial submission returned only jobId
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(id=submission.jobId, status="pending")
             job._client = self.client
+            if not await_job_result:
+                return job
             result = job.wait(600)
             return SimilarityResponse.model_validate(result)
 
@@ -347,6 +358,11 @@ class CoreClient:
             body["set_b"] = kwargs["set_b"]
         else:
             raise ValueError("Must provide either `set` or both `set_a` and `set_b`.")
+
+        if "version" in kwargs and kwargs["version"] is not None:
+            body["version"] = kwargs["version"]
+        if "split" in kwargs and kwargs["split"] is not None:
+            body["split"] = kwargs["split"]
 
         response = self.client.post("/similarity", json=body)
 
@@ -366,7 +382,9 @@ class CoreClient:
         set: Optional[List[str]] = None,
         set_a: Optional[List[str]] = None,
         set_b: Optional[List[str]] = None,
-        flatten: bool = True,
+        flatten: bool = False,
+        version: str | None = None,
+        split: Any | None = None,
     ) -> Any:
         """
         Batch large similarity requests intelligently under the 10k-item limit.
@@ -378,13 +396,27 @@ class CoreClient:
             for i in range(k):
                 for j in range(i, k):
                     if i == j:
-                        bodies.append({"set": chunks[i], "flatten": flatten})
+                        body = {"set": chunks[i], "flatten": flatten}
+                        if version is not None:
+                            body["version"] = version
+                        if split is not None:
+                            body["split"] = split
+                        bodies.append(body)
                     else:
-                        bodies.append(
-                            {"set_a": chunks[i], "set_b": chunks[j], "flatten": flatten}
-                        )
+                        body = {
+                            "set_a": chunks[i],
+                            "set_b": chunks[j],
+                            "flatten": flatten,
+                        }
+                        if version is not None:
+                            body["version"] = version
+                        if split is not None:
+                            body["split"] = split
+                        bodies.append(body)
         else:
-            bodies = _make_cross_bodies(set_a or [], set_b or [], flatten)
+            bodies = _make_cross_bodies(
+                set_a or [], set_b or [], flatten, version, split
+            )
 
         # submit all jobs
         jobs = [self._submit_batch_similarity_job(**body) for body in bodies]
