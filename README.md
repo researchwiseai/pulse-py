@@ -82,9 +82,19 @@ resp = client.create_embeddings(["Hello world", "Goodbye"])
 ```python
 from pulse.starters import summarize
 
-texts = ["Great service and friendly staff!", "The app crashed repeatedly."]
-summary = summarize(texts, question="What do people think?")
+# Works with a list of strings or a file path
+summary = summarize("reviews.txt", question="What do people think?")
 print(summary.summary)
+```
+
+### Cluster texts
+
+```python
+from pulse.starters import cluster_analysis
+
+# Cluster comments from a CSV file into two groups
+clusters = cluster_analysis("reviews.csv", k=2)
+print(clusters.clusters)
 ```
 
 ### Extract elements

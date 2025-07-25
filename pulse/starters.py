@@ -111,7 +111,7 @@ def cluster_analysis(
     auth: _BaseOAuth2Auth | None = None,
     client: Optional[CoreClient] = None,
 ) -> Union[ClusteringResponse, Job]:
-    """Cluster input texts using the core API."""
+    """Cluster input texts using the `/clustering` endpoint."""
 
     texts = get_strings(input_data)
     fast = len(texts) <= 200

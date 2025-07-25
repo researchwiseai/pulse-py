@@ -155,3 +155,24 @@ def test_cluster_analysis():
     resp = cluster_analysis(reviews, k=1, client=fake_client)
 
     assert isinstance(resp, ClusteringResponse)
+
+
+def test_summarize():
+    from pulse.starters import summarize
+    from pulse.core.models import SummariesResponse
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/summaries"
+        return httpx.Response(
+            200,
+            json={"summary": "ok", "requestId": "r1"},
+        )
+
+    transport = httpx.MockTransport(handler)
+    fake_client = CoreClient(
+        client=httpx.Client(transport=transport, base_url="https://api.example.com")
+    )
+
+    resp = summarize(reviews, question="q", client=fake_client)
+
+    assert isinstance(resp, SummariesResponse)
