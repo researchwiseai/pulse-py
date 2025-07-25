@@ -162,12 +162,16 @@ class ExtractionsRequest(BaseModel):
     categories: List[str] = Field(
         ..., min_length=1, description="Categories to extract elements for"
     )
-    dictionary: Optional[bool] = Field(
-        None, description="Enable dictionary-based extraction"
+    dictionary: Optional[dict[str, List[str]]] = Field(
+        None, description="Optional mapping of category to search terms"
     )
-    version: Optional[str] = Field(None, description="Extractor version")
-    fast: Optional[bool] = Field(
-        None, description="Synchronous (True) or asynchronous (False)"
+    expand_dictionary: Optional[bool] = Field(
+        None, description="Expand dictionary entries with synonyms"
+    )
+    use_ner: Optional[bool] = Field(None, description="Enable named-entity recognition")
+    use_llm: Optional[bool] = Field(None, description="Enable LLM powered extraction")
+    threshold: Optional[float] = Field(
+        None, description="Score threshold for extraction"
     )
 
     model_config = ConfigDict(populate_by_name=True)
@@ -178,16 +182,23 @@ class ExtractionsRequest(BaseModel):
             values["texts"] = values.pop("inputs")
         if "themes" in values and "categories" not in values:
             values["categories"] = values.pop("themes")
+        # drop deprecated fields from older API versions
+        values.pop("version", None)
+        values.pop("fast", None)
+        if isinstance(values.get("dictionary"), bool):
+            values.pop("dictionary")
         return values
 
 
 class ExtractionsResponse(BaseModel):
     """Response model for text element extraction."""
 
-    extractions: List[List[List[str]]] = Field(
-        ...,
-        description="3D array of extracted elements, shape [texts][categories][k]",
-    )
+    class ExtractionColumn(BaseModel):
+        category: str
+        term: str
+
+    columns: List[ExtractionColumn] = Field(..., description="Column metadata")
+    matrix: List[List[str]] = Field(..., description="Extraction results matrix")
     requestId: Optional[str] = Field(None, description="Unique request identifier")
 
 
