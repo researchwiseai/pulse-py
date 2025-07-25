@@ -217,9 +217,9 @@ class ClusteringRequest(BaseModel):
 
     inputs: List[str] = Field(..., min_length=2, description="Input texts")
     k: int = Field(..., ge=1, le=50, description="Number of clusters")
-    algorithm: Optional[Literal["kmeans", "skmeans", "agglomerative", "hdbscan"]] = (
-        Field(None, description="Clustering algorithm")
-    )
+    algorithm: Optional[
+        Literal["kmeans", "skmeans", "agglomerative", "hdbscan"]
+    ] = Field(None, description="Clustering algorithm")
     fast: Optional[bool] = Field(
         None, description="Synchronous (True) or asynchronous (False)"
     )
