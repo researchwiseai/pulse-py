@@ -3,8 +3,8 @@
 import os
 import pandas as pd
 import pytest
+import httpx
 
-from pulse.analysis.results import ClusterResult
 from pulse.auth import ClientCredentialsAuth
 from pulse.config import DEV_BASE_URL
 from pulse.core.client import CoreClient
@@ -132,10 +132,24 @@ def test_theme_allocation_with_themes():
     assert isinstance(df, pd.DataFrame)
 
 
-@pytest.mark.vcr()
 def test_cluster_analysis():
     from pulse.starters import cluster_analysis
+    from pulse.core.models import ClusteringResponse
 
-    resp = cluster_analysis(reviews, client=client)
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/clustering"
+        return httpx.Response(
+            200,
+            json={
+                "algorithm": "kmeans",
+                "clusters": [{"clusterId": 0, "items": reviews[:2]}],
+                "requestId": "r1",
+            },
+        )
 
-    assert isinstance(resp, ClusterResult)
+    transport = httpx.MockTransport(handler)
+    fake_client = CoreClient(client=httpx.Client(transport=transport, base_url="https://api.example.com"))
+
+    resp = cluster_analysis(reviews, k=1, client=fake_client)
+
+    assert isinstance(resp, ClusteringResponse)
