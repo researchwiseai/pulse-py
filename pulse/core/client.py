@@ -17,6 +17,7 @@ from pulse.core.models import (
     ExtractionsResponse,
     JobSubmissionResponse,
     ClusteringResponse,
+    SummariesResponse,
 )
 from pulse.core.exceptions import PulseAPIError
 
@@ -564,3 +565,43 @@ class CoreClient:
             return ClusteringResponse.model_validate(result)
 
         return ClusteringResponse.model_validate(data)
+
+    def generate_summary(
+        self,
+        inputs: list[str],
+        question: str,
+        *,
+        length: str | None = None,
+        preset: str | None = None,
+        fast: bool | None = None,
+        await_job_result: bool = True,
+    ) -> Union[SummariesResponse, Job]:
+        """Summarize text according to a question."""
+
+        body: Dict[str, Any] = {"inputs": inputs, "question": question}
+        if length is not None:
+            body["length"] = length
+        if preset is not None:
+            body["preset"] = preset
+        if fast is not None:
+            body["fast"] = fast
+
+        response = self.client.post("/summaries", json=body)
+
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+
+        data = response.json()
+
+        if response.status_code == 202:
+            if fast:
+                raise PulseAPIError(response)
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(id=submission.jobId, status="pending")
+            job._client = self.client
+            if not await_job_result:
+                return job
+            result = job.wait()
+            return SummariesResponse.model_validate(result)
+
+        return SummariesResponse.model_validate(data)

@@ -1,4 +1,5 @@
 """Pydantic models for Pulse API responses."""
+
 from typing import List, Optional, Literal
 from pydantic import BaseModel, Field, model_validator
 
@@ -189,9 +190,9 @@ class ClusteringRequest(BaseModel):
 
     inputs: List[str] = Field(..., min_length=2, description="Input texts")
     k: int = Field(..., ge=1, le=50, description="Number of clusters")
-    algorithm: Optional[
-        Literal["kmeans", "skmeans", "agglomerative", "hdbscan"]
-    ] = Field(None, description="Clustering algorithm")
+    algorithm: Optional[Literal["kmeans", "skmeans", "agglomerative", "hdbscan"]] = (
+        Field(None, description="Clustering algorithm")
+    )
     fast: Optional[bool] = Field(
         None, description="Synchronous (True) or asynchronous (False)"
     )
@@ -209,4 +210,36 @@ class ClusteringResponse(BaseModel):
 
     algorithm: str = Field(..., description="Algorithm used for clustering")
     clusters: List[Cluster] = Field(..., description="List of cluster groups")
+    requestId: Optional[str] = Field(None, description="Unique request identifier")
+
+
+class SummariesRequest(BaseModel):
+    """Request model for text summarization."""
+
+    inputs: List[str] = Field(..., min_length=1, description="Input texts")
+    question: str = Field(..., description="Question to guide the summary")
+    length: Optional[Literal["bullet-points", "short", "medium", "long"]] = Field(
+        None, description="Desired summary length"
+    )
+    preset: Optional[
+        Literal[
+            "five-point",
+            "ten-point",
+            "one-tweet",
+            "three-tweets",
+            "one-para",
+            "exec",
+            "two-pager",
+            "one-pager",
+        ]
+    ] = Field(None, description="Predefined summary style")
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
+
+
+class SummariesResponse(BaseModel):
+    """Response model for text summarization."""
+
+    summary: str = Field(..., description="Generated summary text")
     requestId: Optional[str] = Field(None, description="Unique request identifier")
