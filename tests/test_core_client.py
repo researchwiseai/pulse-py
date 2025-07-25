@@ -126,3 +126,74 @@ def test_error_raises():
     client = CoreClient(base_url=base_url, auth=auth)
     with pytest.raises(PulseAPIError):
         client.create_embeddings([False], fast=True)
+
+
+def test_cluster_texts_fast():
+    client = CoreClient(base_url=base_url, auth=auth)
+    resp = client.cluster_texts(["foo", "bar"], k=2, fast=True)
+    assert hasattr(resp, "clusters")
+    assert len(resp.clusters) == 2
+
+
+def test_cluster_texts_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.cluster_texts(["foo", "bar"], k=1, await_job_result=False)
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "clusters" in result
+
+
+def test_generate_summary_fast():
+    client = CoreClient(base_url=base_url, auth=auth)
+    resp = client.generate_summary(["foo"], "question", fast=True)
+    assert hasattr(resp, "summary")
+
+
+def test_generate_summary_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.generate_summary(["foo"], "question", await_job_result=False)
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "summary" in result
+
+
+def test_create_embeddings_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.create_embeddings(["a"], fast=False, await_job_result=False)
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "embeddings" in result
+
+
+def test_compare_similarity_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.compare_similarity(set=["a", "b"], fast=False, await_job_result=False)
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "flattened" in result or "matrix" in result
+
+
+def test_generate_themes_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.generate_themes(["a", "b"], await_job_result=False)
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "themes" in result
+
+
+def test_analyze_sentiment_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.analyze_sentiment(["happy"], await_job_result=False)
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "results" in result
+
+
+def test_extract_elements_job():
+    client = CoreClient(base_url=base_url, auth=auth)
+    job = client.extract_elements(
+        texts=["hello"], categories=["food"], await_job_result=False
+    )
+    assert hasattr(job, "id")
+    result = job.wait()
+    assert "extractions" in result

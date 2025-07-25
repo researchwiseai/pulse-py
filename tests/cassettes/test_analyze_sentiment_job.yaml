@@ -1,0 +1,50 @@
+interactions:
+- request:
+    body: '{"inputs":["happy"]}'
+    headers:
+      authorization:
+      - Bearer testtoken
+    method: POST
+    uri: https://dev.core.researchwiseai.com/pulse/v1/sentiment
+  response:
+    body:
+      string: '{"jobId":"job123"}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: ''
+    headers:
+      authorization:
+      - Bearer testtoken
+    method: GET
+    uri: https://dev.core.researchwiseai.com/pulse/v1/jobs?jobId=job123
+  response:
+    body:
+      string: '{"jobId":"job123","jobStatus":"completed","resultUrl":"https://dev.core.researchwiseai.com/pulse/v1/results/job123"}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      authorization:
+      - Bearer testtoken
+    method: GET
+    uri: https://dev.core.researchwiseai.com/pulse/v1/results/job123
+  response:
+    body:
+      string: '{"results":[{"sentiment":"positive","confidence":0.9}],"requestId":"req8"}'
+    headers:
+      Content-Type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1
