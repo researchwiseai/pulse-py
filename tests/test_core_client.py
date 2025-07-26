@@ -133,8 +133,11 @@ def test_analyze_sentiment_fast():
 
 def test_error_raises():
     client = CoreClient(base_url=base_url, auth=auth)
-    with pytest.raises(PulseAPIError):
+    with pytest.raises(PulseAPIError) as exc:
         client.create_embeddings(EmbeddingsRequest(inputs=[False], fast=True))
+    err = exc.value
+    assert err.status == 400
+    assert err.message.startswith("Failed to parse")
 
 
 def test_cluster_texts_fast():
