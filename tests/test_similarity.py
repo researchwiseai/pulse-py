@@ -3,7 +3,7 @@ import time
 import httpx
 from pulse.core.client import CoreClient
 from pulse.core.jobs import Job
-from pulse.core.models import SimilarityResponse
+from pulse.core.models import SimilarityResponse, SimilarityRequest, Split
 
 
 def make_sync_client():
@@ -12,7 +12,7 @@ def make_sync_client():
         body = json.loads(request.content.decode())
         assert body["set"] == ["a", "b"]
         assert body["version"] == "v1"
-        assert body["split"] == "newline"
+        assert body["split"] == {"unit": "newline"}
         assert body["fast"] is True
         assert body["flatten"] is False
         data = {
@@ -63,7 +63,9 @@ def make_async_client():
 def test_compare_similarity_sync():
     client = make_sync_client()
     resp = client.compare_similarity(
-        set=["a", "b"], fast=True, version="v1", split="newline"
+        SimilarityRequest(
+            set=["a", "b"], fast=True, version="v1", split=Split(unit="newline")
+        )
     )
     assert isinstance(resp, SimilarityResponse)
     assert resp.n == 2
@@ -72,7 +74,9 @@ def test_compare_similarity_sync():
 def test_compare_similarity_async_job(monkeypatch):
     client = make_async_client()
     monkeypatch.setattr(time, "sleep", lambda x: None)
-    job = client.compare_similarity(set=["a", "b"], fast=False, await_job_result=False)
+    job = client.compare_similarity(
+        SimilarityRequest(set=["a", "b"], fast=False), await_job_result=False
+    )
     assert isinstance(job, Job)
     monkeypatch.setattr(time, "sleep", lambda x: None)
     result = job.wait()
@@ -82,6 +86,8 @@ def test_compare_similarity_async_job(monkeypatch):
 def test_compare_similarity_async_wait(monkeypatch):
     client = make_async_client()
     monkeypatch.setattr(time, "sleep", lambda x: None)
-    resp = client.compare_similarity(set=["a", "b"], fast=False, await_job_result=True)
+    resp = client.compare_similarity(
+        SimilarityRequest(set=["a", "b"], fast=False), await_job_result=True
+    )
     assert isinstance(resp, SimilarityResponse)
     assert resp.flattened == [0.5]

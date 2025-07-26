@@ -1,6 +1,6 @@
 """Pydantic models for Pulse API responses."""
 
-from typing import List, Optional, Literal
+from typing import Any, List, Optional, Literal
 from pydantic import BaseModel, Field, model_validator, ConfigDict
 
 
@@ -10,6 +10,15 @@ class EmbeddingDocument(BaseModel):
     id: Optional[str] = Field(None, description="Optional document identifier")
     text: str = Field(..., description="Input text for this embedding")
     vector: List[float] = Field(..., description="Dense vector encoding of the text")
+
+
+class EmbeddingsRequest(BaseModel):
+    """Request model for generating embeddings."""
+
+    inputs: List[str] = Field(..., min_length=1, max_length=2000, description="Input texts")
+    fast: Optional[bool] = Field(None, description="Synchronous (True) or asynchronous (False)")
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class EmbeddingsResponse(BaseModel):
@@ -96,6 +105,46 @@ class SimilarityResponse(BaseModel):
         else:
             # unknown scenario
             return []
+
+
+class UnitAgg(BaseModel):
+    """Unit and aggregation options for text splitting."""
+
+    unit: Literal["sentence", "newline"]
+    agg: Literal["mean", "max"] = Field("mean")
+
+
+class Split(BaseModel):
+    """Split configuration for similarity requests."""
+
+    unit: Optional[Literal["sentence", "newline"]] = None
+    agg: Optional[Literal["mean", "max"]] = None
+    set_a: Optional[UnitAgg] = Field(None, alias="set_a")
+    set_b: Optional[UnitAgg] = Field(None, alias="set_b")
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class SimilarityRequest(BaseModel):
+    """Request model for computing similarities."""
+
+    set: Optional[List[str]] = Field(None, min_length=2)
+    set_a: Optional[List[str]] = Field(None, alias="set_a")
+    set_b: Optional[List[str]] = Field(None, alias="set_b")
+    fast: Optional[bool] = None
+    flatten: bool = False
+    version: Optional[str] = None
+    split: Optional[Split] = None
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    @model_validator(mode="after")
+    def _check_sets(cls, data: Any) -> "SimilarityRequest":
+        if data.set is None and (data.set_a is None or data.set_b is None):
+            raise ValueError("Provide `set` or both `set_a` and `set_b`.")
+        if data.set is not None and (data.set_a is not None or data.set_b is not None):
+            raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
+        return data
 
 
 class Theme(BaseModel):

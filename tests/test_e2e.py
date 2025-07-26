@@ -5,7 +5,11 @@ import os
 
 from pulse.auth import ClientCredentialsAuth
 from pulse.core.client import CoreClient
-from pulse.core.models import EmbeddingDocument
+from pulse.core.models import (
+    EmbeddingDocument,
+    EmbeddingsRequest,
+    SimilarityRequest,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -35,7 +39,9 @@ auth = ClientCredentialsAuth(
 @pytest.mark.vcr()
 def test_create_embeddings_e2e():
     client = CoreClient(base_url=base_url, auth=auth)
-    resp = client.create_embeddings(["test e2e", "pulse client"], fast=False)
+    resp = client.create_embeddings(
+        EmbeddingsRequest(inputs=["test e2e", "pulse client"], fast=False)
+    )
     assert hasattr(resp, "embeddings"), "Response has no embeddings field"
     assert isinstance(resp.embeddings, list)
     # embeddings should be parsed as EmbeddingDocument instances
@@ -48,7 +54,7 @@ def test_compare_similarity_e2e():
     try:
         # pass 'set' keyword due to keyword-only parameters
         resp = client.compare_similarity(
-            set=["alpha", "beta"], fast=False, flatten=False
+            SimilarityRequest(set=["alpha", "beta"], fast=False, flatten=False)
         )
     except Exception as exc:
         pytest.skip(f"Skipping E2E compare_similarity: {exc}")

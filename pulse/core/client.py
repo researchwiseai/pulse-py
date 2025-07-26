@@ -1,6 +1,6 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-from typing import Any, Dict, List, Union, Optional, Mapping
+from typing import Any, Dict, List, Union, Optional, Mapping, cast
 import warnings
 import httpx
 from pulse.core.gzip_client import GzipClient
@@ -10,7 +10,9 @@ from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth, auto_au
 from pulse.config import PROD_BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
 from pulse.core.models import (
+    EmbeddingsRequest,
     EmbeddingsResponse,
+    SimilarityRequest,
     SimilarityResponse,
     Theme,
     ThemesResponse,
@@ -128,7 +130,6 @@ class CoreClient:
         auth = ClientCredentialsAuth(
             token_url=final_token_url,
             client_id=final_client_id,
-            organization=organization,
             client_secret=final_client_secret,
             audience=final_audience,
         )
@@ -226,22 +227,19 @@ class CoreClient:
         return cls(base_url=final_base_url, auth=auth)
 
     def create_embeddings(
-        self, inputs: list[str], fast: bool = True, *, await_job_result: bool = True
+        self, request: EmbeddingsRequest, *, await_job_result: bool = True
     ) -> Union[EmbeddingsResponse, Job]:
         """Generate dense vector embeddings.
 
         Args:
-            inputs: Texts to embed.
-            fast: Use synchronous (True) or asynchronous (False) mode.
+            request: EmbeddingsRequest payload.
             await_job_result: When False, return a :class:`Job` handle instead of
                 waiting for the result when the server responds with HTTP 202.
         """
 
         # Request body according to OpenAPI spec: inputs
-        body: Dict[str, Any] = {"inputs": inputs}
-        if fast:
-            # API expects a JSON boolean for fast
-            body["fast"] = True
+        body = request.model_dump(exclude_none=True)
+        fast = bool(request.fast)
 
         response = self.client.post("/embeddings", json=body)
 
@@ -258,7 +256,7 @@ class CoreClient:
         if response.status_code == 202:
             # Async/job path: initial submission returned only jobId
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job
@@ -269,25 +267,27 @@ class CoreClient:
 
     def compare_similarity(
         self,
+        request: SimilarityRequest,
         *,
-        set: list[str] | None = None,
-        set_a: list[str] | None = None,
-        set_b: list[str] | None = None,
-        fast: Optional[bool] = None,
-        flatten: bool = False,
-        version: str | None = None,
-        split: Any | None = None,
         await_job_result: bool = True,
     ) -> Union[SimilarityResponse, Job]:
         """Compute cosine similarity between strings.
 
         Exactly one of ``set`` (self-similarity) or the pair ``set_a``/``set_b``
-        (cross-similarity) must be provided. Optional ``version`` and ``split``
+        (cross-similarity) must be provided in the ``request``. Optional ``version`` and ``split``
         values are forwarded to the API. When ``await_job_result`` is ``False``
         the asynchronous job handle is returned instead of waiting for
         completion.
         """
         # validate arguments
+        set = request.set
+        set_a = request.set_a
+        set_b = request.set_b
+        fast = request.fast
+        flatten = request.flatten
+        version = request.version
+        split = request.split
+
         if set is None and (set_a is None or set_b is None):
             raise ValueError(
                 "You must provide either `set` or both `set_a` and `set_b`."
@@ -302,9 +302,10 @@ class CoreClient:
             if len(set) > 200:
                 oversized = True
         else:
+            assert set_a is not None and set_b is not None
             body["set_a"] = set_a
             body["set_b"] = set_b
-            if len(set_a) * len(set_b) > 10_000:
+            if len(cast(List[str], set_a)) * len(cast(List[str], set_b)) > 10_000:
                 oversized = True
 
         if oversized and not fast:
@@ -323,7 +324,11 @@ class CoreClient:
         if version is not None:
             body["version"] = version
         if split is not None:
-            body["split"] = split
+            body["split"] = (
+                split.model_dump(exclude_none=True)
+                if hasattr(split, "model_dump")
+                else split
+            )
 
         if fast:
             # API expects a JSON boolean for fast
@@ -347,7 +352,7 @@ class CoreClient:
         # async/job path
         if response.status_code == 202:
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job
@@ -380,7 +385,7 @@ class CoreClient:
         data = response.json()
         # Async/job path: initial submission returned only jobId
         submission = JobSubmissionResponse.model_validate(data)
-        job = Job(id=submission.jobId, status="pending")
+        job = Job(jobId=submission.jobId, jobStatus="pending")
         job._client = self.client
 
         return job
@@ -507,7 +512,7 @@ class CoreClient:
         if response.status_code == 202:
             # Async/job path: initial submission returned only jobId
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job
@@ -551,7 +556,7 @@ class CoreClient:
             raise PulseAPIError(response)
         if response.status_code == 202:
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job
@@ -666,7 +671,7 @@ class CoreClient:
             if fast:
                 raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job
@@ -713,7 +718,7 @@ class CoreClient:
             if fast:
                 raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job
@@ -764,7 +769,7 @@ class CoreClient:
             if fast:
                 raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
-            job = Job(id=submission.jobId, status="pending")
+            job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
             if not await_job_result:
                 return job

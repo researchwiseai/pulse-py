@@ -4,7 +4,7 @@ import httpx
 
 from pulse.core.client import CoreClient
 from pulse.core.jobs import Job
-from pulse.core.models import EmbeddingsResponse
+from pulse.core.models import EmbeddingsResponse, EmbeddingsRequest
 
 
 def make_sync_client():
@@ -53,7 +53,7 @@ def make_async_client():
 
 def test_create_embeddings_sync():
     client = make_sync_client()
-    resp = client.create_embeddings(["a"], fast=True)
+    resp = client.create_embeddings(EmbeddingsRequest(inputs=["a"], fast=True))
     assert isinstance(resp, EmbeddingsResponse)
     assert resp.embeddings[0].text == "a"
 
@@ -61,7 +61,9 @@ def test_create_embeddings_sync():
 def test_create_embeddings_async_job(monkeypatch):
     client = make_async_client()
     monkeypatch.setattr(time, "sleep", lambda x: None)
-    job = client.create_embeddings(["a"], fast=False, await_job_result=False)
+    job = client.create_embeddings(
+        EmbeddingsRequest(inputs=["a"], fast=False), await_job_result=False
+    )
     assert isinstance(job, Job)
     monkeypatch.setattr(time, "sleep", lambda x: None)
     result = job.wait()
@@ -71,6 +73,8 @@ def test_create_embeddings_async_job(monkeypatch):
 def test_create_embeddings_async_wait(monkeypatch):
     client = make_async_client()
     monkeypatch.setattr(time, "sleep", lambda x: None)
-    resp = client.create_embeddings(["a"], fast=False, await_job_result=True)
+    resp = client.create_embeddings(
+        EmbeddingsRequest(inputs=["a"], fast=False), await_job_result=True
+    )
     assert isinstance(resp, EmbeddingsResponse)
     assert resp.embeddings[0].text == "a"
