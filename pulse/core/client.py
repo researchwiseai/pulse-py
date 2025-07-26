@@ -3,6 +3,8 @@
 from typing import Any, Dict, List, Union, Optional, Mapping
 import warnings
 import httpx
+from pulse.core.retry import retry_request
+from pulse.core.utils import chunk_texts
 from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
 from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth, auto_auth
@@ -15,12 +17,20 @@ from pulse.core.models import (
     Theme,
     ThemesResponse,
     SentimentResponse,
+    SentimentResult,
     ExtractionsResponse,
     JobSubmissionResponse,
     ClusteringResponse,
     SummariesResponse,
 )
 from pulse.core.exceptions import PulseAPIError
+
+MAX_EMBEDDINGS = 2000
+MAX_SENTIMENT = 10000
+MAX_THEMES = 500
+MAX_EXTRACTION_TEXTS = 200
+MAX_CLUSTERING = 500
+MAX_SUMMARIES = 5000
 
 
 class CoreClient:
@@ -47,6 +57,9 @@ class CoreClient:
                 timeout=self.timeout,
                 auth=auth or auto_auth(),
             )
+
+    def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
+        return retry_request(lambda: self.client.request(method, url, **kwargs))
 
     @classmethod
     def with_client_credentials(
@@ -243,7 +256,7 @@ class CoreClient:
             # API expects a JSON boolean for fast
             body["fast"] = True
 
-        response = self.client.post("/embeddings", json=body)
+        response = self._request("post", "/embeddings", json=body)
 
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -332,7 +345,7 @@ class CoreClient:
             # If not fast, set to False
             body["fast"] = False
 
-        response = self.client.post("/similarity", json=body)
+        response = self._request("post", "/similarity", json=body)
 
         # handle error / single-item self-similarity fallback
         if response.status_code not in (200, 202):
@@ -373,7 +386,7 @@ class CoreClient:
         if "split" in kwargs and kwargs["split"] is not None:
             body["split"] = kwargs["split"]
 
-        response = self.client.post("/similarity", json=body)
+        response = self._request("post", "/similarity", json=body)
 
         if response.status_code != 202:
             raise PulseAPIError(response)
@@ -497,7 +510,7 @@ class CoreClient:
 
         body["inputs"] = texts
 
-        response = self.client.post("/themes", json=body)
+        response = self._request("post", "/themes", json=body)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
@@ -534,19 +547,42 @@ class CoreClient:
                 waiting for the result.
         """
 
+        limit = 200 if fast else MAX_SENTIMENT
+        if len(texts) > limit:
+            all_results: List[SentimentResult] = []
+            for chunk in chunk_texts(texts, limit):
+                sub_body: Dict[str, Any] = {"inputs": chunk}
+                if version is not None:
+                    sub_body["version"] = version
+                if fast:
+                    sub_body["fast"] = True
+                resp = self._request("post", "/sentiment", json=sub_body)
+                if resp.status_code not in (200, 202):
+                    raise PulseAPIError(resp)
+                payload = resp.json()
+                if resp.status_code == 202:
+                    if fast:
+                        raise PulseAPIError(resp)
+                    submission = JobSubmissionResponse.model_validate(payload)
+                    job = Job(id=submission.jobId, status="pending")
+                    job._client = self.client
+                    result = job.wait() if await_job_result else job.wait()
+                    chunk_resp = SentimentResponse.model_validate(result)
+                else:
+                    chunk_resp = SentimentResponse.model_validate(payload)
+                all_results.extend(chunk_resp.results)
+            return SentimentResponse(results=all_results, requestId=None)
+
         body: Dict[str, Any] = {"inputs": texts}
         if version is not None:
             body["version"] = version
         if fast:
             body["fast"] = True
 
-        response = self.client.post("/sentiment", json=body)
-        # Raise on any error response
+        response = self._request("post", "/sentiment", json=body)
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
-        # Parse payload
         data = response.json()
-        # Async job enqueued during fast sync: error
         if response.status_code == 202 and fast:
             raise PulseAPIError(response)
         if response.status_code == 202:
@@ -557,7 +593,6 @@ class CoreClient:
                 return job
             result = job.wait()
             return SentimentResponse.model_validate(result)
-        # Sync path
         return SentimentResponse.model_validate(data)
 
     def close(self) -> None:
@@ -567,7 +602,7 @@ class CoreClient:
     def get_job_status(self, job_id: str) -> Job:
         """Retrieve the status of a previously submitted job."""
 
-        response = self.client.get("/jobs", params={"jobId": job_id})
+        response = self._request("get", "/jobs", params={"jobId": job_id})
         if response.status_code != 200:
             raise PulseAPIError(response)
 
@@ -655,7 +690,7 @@ class CoreClient:
         if fast is not None:
             body["fast"] = fast
 
-        response = self.client.post("/extractions", json=body)
+        response = self._request("post", "/extractions", json=body)
 
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -702,7 +737,7 @@ class CoreClient:
         if fast is not None:
             body["fast"] = fast
 
-        response = self.client.post("/clustering", json=body)
+        response = self._request("post", "/clustering", json=body)
 
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
@@ -753,7 +788,7 @@ class CoreClient:
         if fast is not None:
             body["fast"] = fast
 
-        response = self.client.post("/summaries", json=body)
+        response = self._request("post", "/summaries", json=body)
 
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
