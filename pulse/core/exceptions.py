@@ -14,6 +14,23 @@ class PulseAPIError(Exception):
         self.status: int = response.status_code
         self.code: Optional[str] = None
         self.message: Optional[str] = None
+        # Capture relevant headers for diagnostics (esp. AWS API Gateway)
+        # Note: httpx.Headers is case-insensitive
+        self.headers = dict(response.headers)
+        # Common AWS API Gateway headers that help diagnose 401s
+        self.aws_www_authenticate: Optional[str] = (
+            response.headers.get("www-authenticate")
+            or response.headers.get("x-amzn-remapped-www-authenticate")
+        )
+        self.aws_request_id: Optional[str] = (
+            response.headers.get("apigw-requestid")
+            or response.headers.get("x-amzn-requestid")
+            or response.headers.get("x-amz-apigw-id")
+        )
+        self.aws_error_type: Optional[str] = (
+            response.headers.get("x-amzn-errortype")
+            or response.headers.get("x-amzn-ErrorType")
+        )
         try:
             body: Any = response.json()
         except ValueError:
@@ -29,6 +46,22 @@ class PulseAPIError(Exception):
                 self.message = body
             else:
                 self.message = response.reason_phrase
+
+        # Enrich 401 Unauthorized errors with AWS API Gateway hints, when present.
+        if self.status == 401:
+            hints: list[str] = []
+            if self.aws_www_authenticate:
+                hints.append(f"auth={self.aws_www_authenticate}")
+            if self.aws_error_type:
+                hints.append(f"errorType={self.aws_error_type}")
+            if self.aws_request_id:
+                hints.append(f"requestId={self.aws_request_id}")
+            if hints:
+                # Preserve original message and append concise guidance.
+                base_msg = self.message or "Unauthorized"
+                self.message = (
+                    f"{base_msg} | AWS API Gateway hint: " + ", ".join(hints)
+                )
 
         super().__init__(str(self))
 
