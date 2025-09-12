@@ -21,6 +21,47 @@ Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
   - Serve locally: `mkdocs serve` (http://127.0.0.1:8000)
   - Build static site: `mkdocs build`
  
+## First-Time Setup (Developers)
+
+Use Python 3.8+ and a virtual environment.
+
+1) Create and activate a virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate   # Windows: venv\\Scripts\\activate
+```
+
+2) Install dependencies (SDK + dev tools)
+```bash
+pip install -e ".[dev]"
+```
+
+3) Install pre-commit hooks
+```bash
+pre-commit install
+# optional: run once on all files
+pre-commit run --all-files
+```
+
+4) Run tests
+```bash
+make test
+# or
+pytest
+```
+
+5) Re-record HTTP cassettes when needed
+```bash
+make vcr-record
+```
+
+6) Formatting and linting
+```bash
+black .
+nbqa black .
+ruff check pulse tests
+```
+ 
 ## Installation
 
 ### From PyPI
@@ -34,9 +75,10 @@ Get the repository and install editable with developer dependencies:
 ```bash
 git clone https://github.com/researchwiseai/pulse-py.git
 cd pulse-py
-python -m venv .venv         # create a virtual environment (optional but recommended)
-source .venv/bin/activate    # on Windows use `.venv\\Scripts\\activate`
-pip install -e .[dev]        # install pulse-sdk plus dev tools (pytest, black, ruff, etc.)
+python -m venv venv         # create a virtual environment (optional but recommended)
+source venv/bin/activate    # on Windows use `venv\\Scripts\\activate`
+pip install -e ".[dev]"        # install pulse-sdk plus dev tools (pytest, black, ruff, etc.)
+pre-commit install           # set up formatting/linting on commit
 ```
 
 ## Getting Started
@@ -277,6 +319,7 @@ env:
 ## Development & Contributing
 
 ### Local Dev Setup
+Note: For onboarding, see First-Time Setup above.
 - Use Python 3.8+.
 - Create and activate a virtual environment, then install dev deps:
   ```bash
@@ -323,6 +366,10 @@ env:
 ```bash
 python -m build
 ```
+
+### Notes
+- Keep changes backward compatible with existing models and APIs.
+- Avoid committing large datasets or generated notebook outputs.
 
 Feel free to open issues or submit pull requests at the [GitHub repo](https://github.com/researchwiseai/pulse-py).
 
