@@ -1,0 +1,976 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../configuration/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+    
+    
+      
+        <title>Core Client - Pulse SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#core-client" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pulse SDK" class="md-header__button md-logo" aria-label="Pulse SDK" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pulse SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Core Client
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/researchwiseai/pulse-py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pulse SDK" class="md-nav__button md-logo" aria-label="Pulse SDK" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pulse SDK
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/researchwiseai/pulse-py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Core Client
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Client
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#constructing-a-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructing a Client
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#return-types-and-job-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Return Types and Job Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_embeddingsrequest-embeddingsrequest-await_job_result-bool-true-embeddingsresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_embeddings(request: EmbeddingsRequest, *, await_job_result: bool = True) -&gt; EmbeddingsResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compare_similarityrequest-similarityrequest-await_job_result-bool-true-similarityresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      compare_similarity(request: SimilarityRequest, *, await_job_result: bool = True) -&gt; SimilarityResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch_similarity-listlistfloat" class="md-nav__link">
+    <span class="md-ellipsis">
+      batch_similarity(... ) -&gt; list[list[float]]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_themestexts-liststr-min_themes2-max_themes50-fasttrue-contextnone-versionnone-prunenone-await_job_resulttrue-themesresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_themes(texts: list[str], min_themes=2, max_themes=50, fast=True, *, context=None, version=None, prune=None, await_job_result=True) -&gt; ThemesResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyze_sentimenttexts-liststr-version-str-none-none-fast-bool-true-await_job_result-bool-true-sentimentresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze_sentiment(texts: list[str], *, version: str | None = None, fast: bool = True, await_job_result: bool = True) -&gt; SentimentResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_elementstexts-liststr-none-categories-liststr-listtheme-none-versionnone-dictionarynone-expand_dictionarynone-use_nernone-use_llmnone-thresholdnone-fastnone-await_job_resulttrue-extractionsresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_elements(texts: list[str] | None, categories: list[str] | list[Theme] | None, *, version=None, dictionary=None, expand_dictionary=None, use_ner=None, use_llm=None, threshold=None, fast=None, await_job_result=True) -&gt; ExtractionsResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cluster_textsinputs-liststr-k-int-algorithm-str-none-none-fast-bool-none-none-await_job_result-bool-true-clusteringresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      cluster_texts(inputs: list[str], *, k: int, algorithm: str | None = None, fast: bool | None = None, await_job_result: bool = True) -&gt; ClusteringResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_summaryinputs-liststr-question-str-length-str-none-none-preset-str-none-none-fast-bool-none-none-await_job_result-bool-true-summariesresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_summary(inputs: list[str], question: str, *, length: str | None = None, preset: str | None = None, fast: bool | None = None, await_job_result: bool = True) -&gt; SummariesResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_job_statusjob_id-str-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_job_status(job_id: str) -&gt; Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#close-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      close() -&gt; None
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exceptions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analyzer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analyzer & Processes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DSL Builder
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../starters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Starters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Data Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jobs-and-errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jobs & Errors
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#constructing-a-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructing a Client
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#return-types-and-job-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Return Types and Job Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create_embeddingsrequest-embeddingsrequest-await_job_result-bool-true-embeddingsresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_embeddings(request: EmbeddingsRequest, *, await_job_result: bool = True) -&gt; EmbeddingsResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compare_similarityrequest-similarityrequest-await_job_result-bool-true-similarityresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      compare_similarity(request: SimilarityRequest, *, await_job_result: bool = True) -&gt; SimilarityResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch_similarity-listlistfloat" class="md-nav__link">
+    <span class="md-ellipsis">
+      batch_similarity(... ) -&gt; list[list[float]]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_themestexts-liststr-min_themes2-max_themes50-fasttrue-contextnone-versionnone-prunenone-await_job_resulttrue-themesresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_themes(texts: list[str], min_themes=2, max_themes=50, fast=True, *, context=None, version=None, prune=None, await_job_result=True) -&gt; ThemesResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyze_sentimenttexts-liststr-version-str-none-none-fast-bool-true-await_job_result-bool-true-sentimentresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      analyze_sentiment(texts: list[str], *, version: str | None = None, fast: bool = True, await_job_result: bool = True) -&gt; SentimentResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_elementstexts-liststr-none-categories-liststr-listtheme-none-versionnone-dictionarynone-expand_dictionarynone-use_nernone-use_llmnone-thresholdnone-fastnone-await_job_resulttrue-extractionsresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      extract_elements(texts: list[str] | None, categories: list[str] | list[Theme] | None, *, version=None, dictionary=None, expand_dictionary=None, use_ner=None, use_llm=None, threshold=None, fast=None, await_job_result=True) -&gt; ExtractionsResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cluster_textsinputs-liststr-k-int-algorithm-str-none-none-fast-bool-none-none-await_job_result-bool-true-clusteringresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      cluster_texts(inputs: list[str], *, k: int, algorithm: str | None = None, fast: bool | None = None, await_job_result: bool = True) -&gt; ClusteringResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_summaryinputs-liststr-question-str-length-str-none-none-preset-str-none-none-fast-bool-none-none-await_job_result-bool-true-summariesresponse-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate_summary(inputs: list[str], question: str, *, length: str | None = None, preset: str | None = None, fast: bool | None = None, await_job_result: bool = True) -&gt; SummariesResponse | Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_job_statusjob_id-str-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_job_status(job_id: str) -&gt; Job
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#close-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      close() -&gt; None
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exceptions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="core-client">Core Client<a class="headerlink" href="#core-client" title="Permanent link">&para;</a></h1>
+<p>Module: <code>pulse.core.client</code></p>
+<p><code>CoreClient</code> is a synchronous, HTTPX-based client for the Pulse REST API. It exposes endpoints for embeddings, similarity, themes, sentiment, extractions, clustering, and summaries. Methods support both synchronous (fast) and asynchronous (job) modes where applicable.</p>
+<h2 id="constructing-a-client">Constructing a Client<a class="headerlink" href="#constructing-a-client" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pulse.core.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreClient</span>
+
+<span class="c1"># Default construction uses gzip client + auto_auth()</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">CoreClient</span><span class="p">()</span>  <span class="c1"># base_url defaults to PROD; set auth env vars or pass auth explicitly</span>
+
+<span class="c1"># Provide explicit base_url/timeout</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">CoreClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://dev.core.researchwiseai.com/pulse/v1&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span>
+
+<span class="c1"># Provide a fully-configured HTTPX client (you manage auth and base_url)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">CoreClient</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://...&quot;</span><span class="p">))</span>
+
+<span class="c1"># Use convenience auth-aware helpers</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">CoreClient</span><span class="o">.</span><span class="n">with_client_credentials</span><span class="p">()</span>  <span class="c1"># resolves args from env</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">CoreClient</span><span class="o">.</span><span class="n">with_pkce</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">code_verifier</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Constructor parameters:
+- <code>base_url: str</code> – API base URL. Defaults to <code>PROD_BASE_URL</code>. Env override: <code>PULSE_BASE_URL</code> (via helpers).
+- <code>timeout: float</code> – Request timeout in seconds. Defaults to <code>DEFAULT_TIMEOUT</code>.
+- <code>client: httpx.Client | None</code> – Use your own client (you manage auth and compression).
+- <code>auth: httpx.Auth | None</code> – HTTPX auth (e.g., <code>ClientCredentialsAuth</code>, <code>AuthorizationCodePKCEAuth</code>). Ignored if <code>client</code> is provided.</p>
+<p>Notes:
+- When not passing <code>client</code>, <code>CoreClient</code> uses an internal <code>GzipClient</code> (gzip-compresses raw <code>content=</code> bodies) and <code>auto_auth()</code> to resolve auth.
+- Requests retry transient errors (429/5xx) with exponential backoff.</p>
+<h2 id="return-types-and-job-handling">Return Types and Job Handling<a class="headerlink" href="#return-types-and-job-handling" title="Permanent link">&para;</a></h2>
+<p>Most endpoints support synchronous and asynchronous execution. Common flags:
+- <code>fast: bool</code> – If <code>True</code>, request synchronous processing; if the server responds with 202 Accepted while <code>fast=True</code>, the client raises <code>PulseAPIError</code>.
+- <code>await_job_result: bool</code> – If <code>False</code>, return a <code>Job</code> handle instead of blocking. Call <code>job.wait()</code> or <code>job.result()</code> to retrieve the final JSON payload.</p>
+<h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
+<h3 id="create_embeddingsrequest-embeddingsrequest-await_job_result-bool-true-embeddingsresponse-job"><code>create_embeddings(request: EmbeddingsRequest, *, await_job_result: bool = True) -&gt; EmbeddingsResponse | Job</code><a class="headerlink" href="#create_embeddingsrequest-embeddingsrequest-await_job_result-bool-true-embeddingsresponse-job" title="Permanent link">&para;</a></h3>
+<p>Generate dense vector embeddings.</p>
+<p>Parameters:
+- <code>request: EmbeddingsRequest</code> – Request model. Fields:
+  - <code>inputs: list[str]</code> – 1..2000 input strings.
+  - <code>fast: bool | None</code> – If true, synchronous; otherwise async.
+- <code>await_job_result: bool</code> – Return <code>Job</code> when false and server responds 202.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pulse.core.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pulse.core.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingsRequest</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">CoreClient</span><span class="p">()</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_embeddings</span><span class="p">(</span><span class="n">EmbeddingsRequest</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">],</span> <span class="n">fast</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">embeddings</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">vector</span><span class="p">))</span>
+</code></pre></div>
+
+<h3 id="compare_similarityrequest-similarityrequest-await_job_result-bool-true-similarityresponse-job"><code>compare_similarity(request: SimilarityRequest, *, await_job_result: bool = True) -&gt; SimilarityResponse | Job</code><a class="headerlink" href="#compare_similarityrequest-similarityrequest-await_job_result-bool-true-similarityresponse-job" title="Permanent link">&para;</a></h3>
+<p>Compute cosine similarity between strings.</p>
+<p>Supply either self-similarity (<code>set</code>) or cross-similarity (<code>set_a</code> and <code>set_b</code>). Optional <code>split</code> settings allow sentence/newline unit splitting with mean/max aggregation.</p>
+<p>Parameters (via <code>SimilarityRequest</code>):
+- <code>set: list[str] | None</code> – Single set (self-similarity). Minimum length 2.
+- <code>set_a, set_b: list[str] | None</code> – Cross-similarity sets.
+- <code>fast: bool | None</code> – Synchronous or asynchronous.
+- <code>flatten: bool</code> – Flattened values or matrix.
+- <code>version: str | None</code> – Model version pin.
+- <code>split: Split | None</code> – Global or per‑set unit/agg.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pulse.core.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimilarityRequest</span><span class="p">,</span> <span class="n">Split</span><span class="p">,</span> <span class="n">UnitAgg</span>
+
+<span class="c1"># Self-similarity (matrix)</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">compare_similarity</span><span class="p">(</span><span class="n">SimilarityRequest</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">fast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">similarity</span><span class="p">)</span>  <span class="c1"># NxN matrix</span>
+
+<span class="c1"># Cross-similarity with splitting</span>
+<span class="n">sp</span> <span class="o">=</span> <span class="n">Split</span><span class="p">(</span><span class="n">set_a</span><span class="o">=</span><span class="n">UnitAgg</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">agg</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">))</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">compare_similarity</span><span class="p">(</span><span class="n">SimilarityRequest</span><span class="p">(</span><span class="n">set_a</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">set_b</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">split</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">fast</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</code></pre></div>
+
+<h3 id="batch_similarity-listlistfloat"><code>batch_similarity(... ) -&gt; list[list[float]]</code><a class="headerlink" href="#batch_similarity-listlistfloat" title="Permanent link">&para;</a></h3>
+<p>Batch large similarity requests under the 10k item limit. Called automatically when <code>fast=False</code> and input exceeds limits. You can invoke it directly to manage large inputs.</p>
+<p>Keyword parameters:
+- <code>set: list[str] | None</code>, <code>set_a: list[str] | None</code>, <code>set_b: list[str] | None</code>
+- <code>flatten: bool = False</code>
+- <code>version: str | None = None</code>
+- <code>split: Any | None = None</code></p>
+<p>Returns a full similarity matrix (<code>list[list[float]]</code>).</p>
+<h3 id="generate_themestexts-liststr-min_themes2-max_themes50-fasttrue-contextnone-versionnone-prunenone-await_job_resulttrue-themesresponse-job"><code>generate_themes(texts: list[str], min_themes=2, max_themes=50, fast=True, *, context=None, version=None, prune=None, await_job_result=True) -&gt; ThemesResponse | Job</code><a class="headerlink" href="#generate_themestexts-liststr-min_themes2-max_themes50-fasttrue-contextnone-versionnone-prunenone-await_job_resulttrue-themesresponse-job" title="Permanent link">&para;</a></h3>
+<p>Cluster texts into latent themes.</p>
+<p>Parameters:
+- <code>texts: list[str]</code> – At least 2 non‑empty strings. If fewer than 2 provided, returns an empty <code>ThemesResponse</code> without calling the API.
+- <code>min_themes: int</code> – Minimum cluster count.
+- <code>max_themes: int</code> – Maximum cluster count.
+- <code>fast: bool</code> – Synchronous (default) or asynchronous.
+- <code>context: Any | None</code> – Optional context string to guide clustering.
+- <code>version: str | None</code> – Model version pin.
+- <code>prune: int | None</code> – Drop N lowest‑frequency themes.
+- <code>await_job_result: bool</code> – Return a <code>Job</code> when false.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">generate_themes</span><span class="p">([</span><span class="s2">&quot;food was great&quot;</span><span class="p">,</span> <span class="s2">&quot;service slow&quot;</span><span class="p">,</span> <span class="s2">&quot;loved the vibe&quot;</span><span class="p">],</span> <span class="n">fast</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">th</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">themes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">th</span><span class="o">.</span><span class="n">shortLabel</span><span class="p">,</span> <span class="n">th</span><span class="o">.</span><span class="n">representatives</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="analyze_sentimenttexts-liststr-version-str-none-none-fast-bool-true-await_job_result-bool-true-sentimentresponse-job"><code>analyze_sentiment(texts: list[str], *, version: str | None = None, fast: bool = True, await_job_result: bool = True) -&gt; SentimentResponse | Job</code><a class="headerlink" href="#analyze_sentimenttexts-liststr-version-str-none-none-fast-bool-true-await_job_result-bool-true-sentimentresponse-job" title="Permanent link">&para;</a></h3>
+<p>Classify sentiment for each input text.</p>
+<p>Parameters:
+- <code>texts: list[str]</code>
+- <code>version: str | None</code> – Model version pin.
+- <code>fast: bool</code> – Synchronous; large inputs are chunked automatically when needed.
+- <code>await_job_result: bool</code></p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">analyze_sentiment</span><span class="p">([</span><span class="s2">&quot;love it&quot;</span><span class="p">,</span> <span class="s2">&quot;not great&quot;</span><span class="p">],</span> <span class="n">fast</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">sentiment</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">results</span><span class="p">])</span>
+</code></pre></div>
+
+<h3 id="extract_elementstexts-liststr-none-categories-liststr-listtheme-none-versionnone-dictionarynone-expand_dictionarynone-use_nernone-use_llmnone-thresholdnone-fastnone-await_job_resulttrue-extractionsresponse-job"><code>extract_elements(texts: list[str] | None, categories: list[str] | list[Theme] | None, *, version=None, dictionary=None, expand_dictionary=None, use_ner=None, use_llm=None, threshold=None, fast=None, await_job_result=True) -&gt; ExtractionsResponse | Job</code><a class="headerlink" href="#extract_elementstexts-liststr-none-categories-liststr-listtheme-none-versionnone-dictionarynone-expand_dictionarynone-use_nernone-use_llmnone-thresholdnone-fastnone-await_job_resulttrue-extractionsresponse-job" title="Permanent link">&para;</a></h3>
+<p>Extract elements for the given categories from texts. Accepts category names as strings or <code>Theme</code> objects.</p>
+<p>Parameters:
+- <code>texts: list[str]</code> – Input texts (alias <code>inputs</code> supported for backward compatibility).
+- <code>categories: list[str] | list[Theme]</code> – Categories (alias <code>themes</code> supported for backward compatibility).
+- <code>version: str | None</code> – Model version pin.
+- <code>dictionary: dict[str, list[str]] | None</code> – Category→terms mapping to bias extraction.
+- <code>expand_dictionary: bool | None</code> – Expand dictionary entries with synonyms.
+- <code>use_ner: bool | None</code> – Enable NER.
+- <code>use_llm: bool | None</code> – Enable LLM assistance.
+- <code>threshold: float | None</code> – Score threshold.
+- <code>fast: bool | None</code> – Synchronous/asynchronous.
+- <code>await_job_result: bool</code></p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">extract_elements</span><span class="p">(</span>
+    <span class="n">texts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;The food was great, but service was slow.&quot;</span><span class="p">],</span>
+    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;food&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">],</span>
+    <span class="n">dictionary</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;food&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;food&quot;</span><span class="p">],</span> <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]},</span>
+    <span class="n">use_ner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">fast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="cluster_textsinputs-liststr-k-int-algorithm-str-none-none-fast-bool-none-none-await_job_result-bool-true-clusteringresponse-job"><code>cluster_texts(inputs: list[str], *, k: int, algorithm: str | None = None, fast: bool | None = None, await_job_result: bool = True) -&gt; ClusteringResponse | Job</code><a class="headerlink" href="#cluster_textsinputs-liststr-k-int-algorithm-str-none-none-fast-bool-none-none-await_job_result-bool-true-clusteringresponse-job" title="Permanent link">&para;</a></h3>
+<p>Cluster texts using embeddings.</p>
+<p>Parameters:
+- <code>inputs: list[str]</code>
+- <code>k: int</code> – Desired number of clusters.
+- <code>algorithm: str | None</code> – One of <code>kmeans</code>, <code>skmeans</code>, <code>agglomerative</code>, <code>hdbscan</code>.
+- <code>fast: bool | None</code>
+- <code>await_job_result: bool</code></p>
+<h3 id="generate_summaryinputs-liststr-question-str-length-str-none-none-preset-str-none-none-fast-bool-none-none-await_job_result-bool-true-summariesresponse-job"><code>generate_summary(inputs: list[str], question: str, *, length: str | None = None, preset: str | None = None, fast: bool | None = None, await_job_result: bool = True) -&gt; SummariesResponse | Job</code><a class="headerlink" href="#generate_summaryinputs-liststr-question-str-length-str-none-none-preset-str-none-none-fast-bool-none-none-await_job_result-bool-true-summariesresponse-job" title="Permanent link">&para;</a></h3>
+<p>Summarize inputs following a guiding question.</p>
+<p>Parameters:
+- <code>inputs: list[str]</code>
+- <code>question: str</code>
+- <code>length: str | None</code> – One of <code>bullet-points</code>, <code>short</code>, <code>medium</code>, <code>long</code>.
+- <code>preset: str | None</code> – One of <code>five-point</code>, <code>ten-point</code>, <code>one-tweet</code>, <code>three-tweets</code>, <code>one-para</code>, <code>exec</code>, <code>two-pager</code>, <code>one-pager</code>.
+- <code>fast: bool | None</code>
+- <code>await_job_result: bool</code></p>
+<h3 id="get_job_statusjob_id-str-job"><code>get_job_status(job_id: str) -&gt; Job</code><a class="headerlink" href="#get_job_statusjob_id-str-job" title="Permanent link">&para;</a></h3>
+<p>Poll job status by ID. Returns a <code>Job</code> object which can be <code>.wait()</code>ed. Useful when you stored a job id and want to resume later.</p>
+<h3 id="close-none"><code>close() -&gt; None</code><a class="headerlink" href="#close-none" title="Permanent link">&para;</a></h3>
+<p>Close underlying HTTP connections.</p>
+<h2 id="exceptions">Exceptions<a class="headerlink" href="#exceptions" title="Permanent link">&para;</a></h2>
+<p>All non‑successful responses raise <code>pulse.core.exceptions.PulseAPIError</code> with useful context (status, code, message).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+    
+  </body>
+</html>

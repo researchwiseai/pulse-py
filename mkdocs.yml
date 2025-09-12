@@ -15,7 +15,6 @@ markdown_extensions:
   - tables
 nav:
   - Home: index.md
-  - Overview: README.md
   - Core Client: core-client.md
   - Configuration: configuration.md
   - Authentication: authentication.md
@@ -24,4 +23,3 @@ nav:
   - Starters: starters.md
   - Data Models: models.md
   - Jobs & Errors: jobs-and-errors.md
-
