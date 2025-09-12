@@ -1,4 +1,6 @@
 # pulse-sdk
+[![Deploy Docs to GitHub Pages](https://github.com/researchwiseai/pulse-py/actions/workflows/docs.yml/badge.svg)](https://github.com/researchwiseai/pulse-py/actions/workflows/docs.yml)
+
 Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 
 ## Features
@@ -10,7 +12,15 @@ Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 - On‑disk and in‑memory caching via diskcache
 - First-class interop with pandas, NumPy, and scikit‑learn
 
+## Documentation
 
+- Online docs: https://researchwiseai.github.io/pulse-py/
+- In-repo docs: see `docs/README.md` for the index.
+- Build with MkDocs:
+  - Install: `pip install mkdocs mkdocs-material`
+  - Serve locally: `mkdocs serve` (http://127.0.0.1:8000)
+  - Build static site: `mkdocs build`
+ 
 ## Installation
 
 ### From PyPI
@@ -33,7 +43,6 @@ pip install -e .[dev]        # install pulse-sdk plus dev tools (pytest, black, 
 
 Once installed, you can quickly try out the core and DSL APIs.
 
-### CoreClient example
 ### CoreClient
 ```python
 from pulse.core.client import CoreClient
@@ -49,7 +58,7 @@ job = client.create_embeddings(["foo"] * 300, fast=False, await_job_result=False
 result = job.wait()
 ```
 
-### CoreClient with Authentication
+### CoreClient With Authentication
 
 Secure your requests by providing an OAuth2 auth object to CoreClient:
 
@@ -80,7 +89,7 @@ client = CoreClient(auth=auth)
 resp = client.create_embeddings(["Hello world", "Goodbye"])
 ```
 
-### Usage reporting
+### Usage Reporting
 
 All feature responses include usage information when available:
 
@@ -91,7 +100,7 @@ for record in resp.usage.records:
     print(record.feature, record.units)
 ```
 
-### Summarize text
+### Summarize Text
 
 ```python
 from pulse.starters import summarize
@@ -101,7 +110,7 @@ summary = summarize("reviews.txt", question="What do people think?")
 print(summary.summary)
 ```
 
-### Generate summary
+### Generate Summary
 
 ```python
 from pulse.core.client import CoreClient
@@ -117,7 +126,7 @@ resp = client.generate_summary(
 print(resp.summary)
 ```
 
-### Cluster texts
+### Cluster Texts
 
 ```python
 from pulse.starters import cluster_analysis
@@ -127,7 +136,7 @@ clusters = cluster_analysis("reviews.csv", k=2)
 print(clusters.clusters)
 ```
 
-### Cluster texts with CoreClient
+### Cluster Texts With CoreClient
 
 ```python
 from pulse.core.client import CoreClient
@@ -142,7 +151,7 @@ resp = client.cluster_texts(
 print(resp.clusters)
 ```
 
-### Extract elements
+### Extract Elements
 
 ```python
 client = CoreClient()
@@ -158,7 +167,7 @@ print(resp.columns)
 print(resp.matrix)
 ```
 
-### Polling asynchronous jobs
+### Polling Asynchronous Jobs
 
 ```python
 import time
@@ -189,7 +198,7 @@ print(results.theme_generation.to_dataframe())
 print(results.sentiment.summary())
 ```
 
-### DSL Builder with Monitoring
+### DSL Builder With Monitoring
 
 ```python
 from pulse.dsl import Workflow
@@ -230,7 +239,7 @@ print(results.theme_generation.themes)
 print(results.sentiment.sentiments)
 ```
 
-### Optional parameters
+### Optional Parameters
 
 - **context** – provide additional context or focus for `generate_themes`.
 - **version** – lock API calls (e.g., `analyze_sentiment`, `generate_themes`) to a specific model version.
@@ -266,41 +275,54 @@ env:
 ```
 
 ## Development & Contributing
-Clone the project and install as above.  We recommend using a virtual environment.
 
-1. Set up pre-commit (formats, linters, and tests on each commit). **Ensure your virtual environment is activated** so that `pre-commit` refers to your venv installation:
-   ```bash
-   # install or upgrade to a recent pre-commit
-   pip install 'pre-commit>=2.9.2'
-   # install git hook scripts
-   pre-commit install
-   # run all hooks against all files now
-   pre-commit run --all-files
-   ```
-   If you still see an old version, invoke directly via Python:
-   ```bash
-   python -m pre_commit run --all-files
-   ```
-2. Run tests without re-recording cassettes:
-   ```bash
-   make test
-   # or, directly:
-   pytest --vcr-record=none
-   ```
-3. To reset and re-record all VCR cassettes from scratch:
-   ```bash
-   make vcr-record
-   ```
-4. Run code formatters & linters:
-   ```bash
-   black .                      # format Python source
-   nbqa black .                 # format Jupyter notebooks
-   ruff check pulse tests  # lint only code and tests
-   ```
-5. Build distributions:
-   ```bash
-   python -m build
-   ```
+### Local Dev Setup
+- Use Python 3.8+.
+- Create and activate a virtual environment, then install dev deps:
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate   # Windows: .venv\Scripts\activate
+  pip install -e .[dev]
+  ```
+- Install pre-commit hooks (auto-runs formatters/linters on commit):
+  ```bash
+  pre-commit install
+  # optional: run hooks on all files once
+  pre-commit run --all-files
+  ```
+
+### Format & Lint
+- Format Python: `black .` (configured to line length 88)
+- Format notebooks: `nbqa black .`
+- Lint: `ruff check pulse tests`
+- Note: these commands are also enforced by pre-commit.
+
+### Tests
+- Run tests:
+  ```bash
+  make test
+  # or directly
+  pytest
+  ```
+- Many tests require OAuth credentials. Set:
+  - `PULSE_CLIENT_ID`
+  - `PULSE_CLIENT_SECRET`
+  - Optional: `PULSE_TOKEN_URL`, `PULSE_AUDIENCE`
+- CI runs pytest with:
+  ```bash
+  pytest -q --disable-warnings --maxfail=1 --vcr-record=none
+  ```
+
+### HTTP Cassette Recording (pytest-vcr)
+- Re-record all cassettes from scratch:
+  ```bash
+  make vcr-record
+  ```
+
+### Packaging
+```bash
+python -m build
+```
 
 Feel free to open issues or submit pull requests at the [GitHub repo](https://github.com/researchwiseai/pulse-py).
 
