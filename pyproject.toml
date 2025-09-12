@@ -30,6 +30,20 @@ dependencies = [
 Repository = "https://github.com/researchwiseai/pulse-py"
 Homepage = "https://github.com/researchwiseai/pulse-py#readme"
 
+[tool.setuptools.packages.find]
+# Limit package discovery to the library code and avoid picking up
+# MkDocs build output in `site/` as a top-level package.
+include = ["pulse*"]
+exclude = [
+    "tests*",
+    "site*",
+    "docs*",
+    "build*",
+    "examples*",
+    "venv*",
+    ".venv*",
+]
+
  [tool.black]
  line-length = 88
  target-version = ['py38']

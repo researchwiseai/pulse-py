@@ -516,9 +516,8 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        # Async job enqueued during fast sync: error
-        if response.status_code == 202 and fast:
-            raise PulseAPIError(response)
+        # If server enqueues an async job (202), handle via job flow regardless
+        # of the fast flag; callers control waiting via await_job_result.
         if response.status_code == 202:
             # Async/job path: initial submission returned only jobId
             submission = JobSubmissionResponse.model_validate(data)
@@ -563,8 +562,6 @@ class CoreClient:
                     raise PulseAPIError(resp)
                 payload = resp.json()
                 if resp.status_code == 202:
-                    if fast:
-                        raise PulseAPIError(resp)
                     submission = JobSubmissionResponse.model_validate(payload)
                     job = Job(id=submission.jobId, status="pending")
                     job._client = self.client
@@ -585,8 +582,6 @@ class CoreClient:
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
         data = response.json()
-        if response.status_code == 202 and fast:
-            raise PulseAPIError(response)
         if response.status_code == 202:
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(jobId=submission.jobId, jobStatus="pending")
@@ -669,8 +664,6 @@ class CoreClient:
 
         data = response.json()
         if response.status_code == 202:
-            if fast:
-                raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
@@ -716,8 +709,6 @@ class CoreClient:
         data = response.json()
 
         if response.status_code == 202:
-            if fast:
-                raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client
@@ -767,8 +758,6 @@ class CoreClient:
         data = response.json()
 
         if response.status_code == 202:
-            if fast:
-                raise PulseAPIError(response)
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(jobId=submission.jobId, jobStatus="pending")
             job._client = self.client

@@ -49,7 +49,7 @@ def disable_sleep(monkeypatch, request):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
-base_url = "https://pulse.staging.researchwiseai.com/v1"
+base_url = "https://dev.core.researchwiseai.com/pulse/v1"
 
 # Load credentials from environment variables
 client_id = os.getenv("PULSE_CLIENT_ID")

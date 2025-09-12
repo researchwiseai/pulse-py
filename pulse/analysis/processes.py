@@ -2,6 +2,7 @@
 
 from typing import Any, Tuple
 from pulse.core.models import Theme as ThemeModel
+from pulse.core.models import SimilarityRequest
 
 try:
     from typing import Protocol
@@ -126,7 +127,12 @@ class ThemeAllocation:
         fast_flag = self.fast if self.fast is not None else ctx.fast
 
         resp = ctx.client.compare_similarity(
-            set_a=texts, set_b=sim_texts, fast=fast_flag, flatten=False
+            SimilarityRequest(
+                set_a=texts,
+                set_b=sim_texts,
+                fast=fast_flag,
+                flatten=False,
+            )
         )
         # normalize similarity matrix from response or raw matrix
         similarity = getattr(resp, "similarity", resp)
@@ -225,7 +231,7 @@ class Cluster:
         texts = list(ctx.dataset)
         # request full matrix (flatten=False for NxN)
         resp = ctx.client.compare_similarity(
-            set=texts, fast=self.fast or ctx.fast, flatten=False
+            SimilarityRequest(set=texts, fast=self.fast or ctx.fast, flatten=False)
         )
         # resp.similarity is List[List[float]]
         return resp.similarity

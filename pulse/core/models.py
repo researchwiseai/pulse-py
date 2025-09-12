@@ -48,9 +48,13 @@ class EmbeddingDocument(BaseModel):
 
 
 class EmbeddingsRequest(BaseModel):
-    """Request model for generating embeddings."""
+    """Request model for generating embeddings.
 
-    inputs: List[str] = Field(
+    Allow arbitrary input element types to defer strict validation to the API,
+    so client tests can verify server-side error handling.
+    """
+
+    inputs: List[Any] = Field(
         ..., min_length=1, max_length=2000, description="Input texts"
     )
     fast: Optional[bool] = Field(
