@@ -9,7 +9,7 @@ import webbrowser
 from urllib.parse import parse_qs, urlencode, urlparse
 import httpx
 
-from pulse.config import DEFAULT_SCOPES, PROD_AUTH_DOMAIN, PROD_BASE_URL, PROD_CLIENT_ID
+from pulse.config import DEFAULT_SCOPES, AUTH_DOMAIN, BASE_URL, CLIENT_ID
 
 __all__ = [
     "ClientCredentialsAuth",
@@ -37,10 +37,10 @@ class _BaseOAuth2Auth(httpx.Auth):
         self.token_url = (
             token_url
             or os.getenv("PULSE_TOKEN_URL")
-            or f"https://{PROD_AUTH_DOMAIN}/oauth/token"
+            or f"https://{AUTH_DOMAIN}/oauth/token"
         )
-        self.client_id = client_id or os.getenv("PULSE_CLIENT_ID") or PROD_CLIENT_ID
-        self.audience = audience or os.getenv("PULSE_API_URL") or PROD_BASE_URL
+        self.client_id = client_id or os.getenv("PULSE_CLIENT_ID") or CLIENT_ID
+        self.audience = audience or os.getenv("PULSE_API_URL") or BASE_URL
         self._access_token: str | None = None
         self._expires_at: float = 0.0
 
@@ -151,12 +151,12 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         # Retrieve configuration from environment
 
         # redirect_uri = "http://localhost:8888/callback"
-        authorize_url = f"https://{PROD_AUTH_DOMAIN}/authorize"
+        authorize_url = f"https://{AUTH_DOMAIN}/authorize"
 
         params: dict[str, str] = {
             "response_type": "code",
-            "client_id": self.client_id or PROD_CLIENT_ID,
-            "audience": self.audience or PROD_BASE_URL,
+            "client_id": self.client_id or CLIENT_ID,
+            "audience": self.audience or BASE_URL,
             "redirect_uri": self.redirect_uri,
             "code_challenge": code_challenge,
             "code_challenge_method": "S256",
@@ -223,7 +223,7 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         # Build token request payload
         data: dict[str, str] = {
             "grant_type": "authorization_code",
-            "client_id": self.client_id or PROD_CLIENT_ID,
+            "client_id": self.client_id or CLIENT_ID,
             "code": self.code,
             "redirect_uri": self.redirect_uri,
             "code_verifier": self.code_verifier,

@@ -6,7 +6,6 @@ import pytest
 import httpx
 
 from pulse.auth import ClientCredentialsAuth
-from pulse.config import DEV_BASE_URL
 from pulse.core.client import CoreClient
 from pulse.starters import theme_allocation
 
@@ -50,7 +49,7 @@ def disable_sleep(monkeypatch, request):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
-base_url = DEV_BASE_URL
+base_url = "https://pulse.staging.researchwiseai.com/v1"
 
 # Load credentials from environment variables
 client_id = os.getenv("PULSE_CLIENT_ID")

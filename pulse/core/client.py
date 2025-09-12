@@ -8,7 +8,7 @@ from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
 from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth, auto_auth
 
-from pulse.config import PROD_BASE_URL, DEFAULT_TIMEOUT
+from pulse.config import BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
 from pulse.core.models import (
     EmbeddingsRequest,
@@ -37,7 +37,7 @@ class CoreClient:
 
     def __init__(
         self,
-        base_url: str = PROD_BASE_URL,
+        base_url: str = BASE_URL,
         timeout: float = DEFAULT_TIMEOUT,
         client: Optional[httpx.Client] = None,
         auth: Optional[httpx.Auth] = None,
@@ -86,7 +86,7 @@ class CoreClient:
         3. Default values:
            - token_url defaults to
              "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
-           - base_url defaults to PROD_BASE_URL (from pulse.config)
+           - base_url defaults to BASE_URL (from pulse.config)
            - audience defaults to None if not otherwise specified.
 
         Args:
@@ -133,9 +133,9 @@ class CoreClient:
         # Resolve audience: argument > environment variable (default is None if not set)
         final_audience = audience or os.getenv("PULSE_AUDIENCE")
 
-        # Resolve base_url: argument > environment variable > default (PROD_BASE_URL)
-        # PROD_BASE_URL should be imported from pulse.config at the module level.
-        final_base_url = base_url or os.getenv("PULSE_BASE_URL") or PROD_BASE_URL
+        # Resolve base_url: argument > environment variable > default (BASE_URL)
+        # BASE_URL should be imported from pulse.config at the module level.
+        final_base_url = base_url or os.getenv("PULSE_BASE_URL") or BASE_URL
 
         auth = ClientCredentialsAuth(
             token_url=final_token_url,
@@ -170,7 +170,7 @@ class CoreClient:
            - PULSE_TOKEN_URL
            - PULSE_SCOPE
         3. Default values:
-           - base_url defaults to PROD_BASE_URL (from pulse.config).
+           - base_url defaults to BASE_URL (from pulse.config).
            - token_url defaults to
              "https://research-wise-ai-eu.eu.auth0.com/oauth/token".
            - scope defaults to None if not otherwise specified.
@@ -214,9 +214,9 @@ class CoreClient:
                 "or via the PULSE_REDIRECT_URI environment variable."
             )
 
-        # Resolve base_url: argument > environment variable > default (PROD_BASE_URL)
-        # PROD_BASE_URL should be imported from pulse.config at the module level.
-        final_base_url = base_url or os.getenv("PULSE_BASE_URL") or PROD_BASE_URL
+        # Resolve base_url: argument > environment variable > default (BASE_URL)
+        # BASE_URL should be imported from pulse.config at the module level.
+        final_base_url = base_url or os.getenv("PULSE_BASE_URL") or BASE_URL
 
         # Resolve token_url: argument > environment variable > default
         default_token_url = "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
