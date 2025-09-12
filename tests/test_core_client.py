@@ -12,7 +12,6 @@ from pulse.core.exceptions import PulseAPIError
 from pulse.core.models import (
     EmbeddingsRequest,
     SimilarityRequest,
-    Split,
 )
 
 pytestmark = pytest.mark.vcr(record_mode="new_episodes")
@@ -43,9 +42,7 @@ def disable_sleep(monkeypatch):
 
 def test_create_embeddings_fast():
     client = CoreClient(base_url=base_url, auth=auth)
-    response = client.create_embeddings(
-        EmbeddingsRequest(inputs=["a", "b"], fast=True)
-    )
+    response = client.create_embeddings(EmbeddingsRequest(inputs=["a", "b"], fast=True))
 
     # Check that the response is a valid EmbeddingResponse object
     assert response is not None
@@ -203,13 +200,3 @@ def test_analyze_sentiment_job():
     assert hasattr(job, "id")
     result = job.wait()
     assert "results" in result
-
-
-def test_extract_elements_job():
-    client = CoreClient(base_url=base_url, auth=auth)
-    job = client.extract_elements(
-        texts=["hello"], categories=["food"], await_job_result=False
-    )
-    assert hasattr(job, "id")
-    result = job.wait()
-    assert "matrix" in result

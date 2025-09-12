@@ -2,9 +2,9 @@
  requires = ["setuptools>=61", "wheel"]
  build-backend = "setuptools.build_meta"
 
- [project]
+[project]
 name = "pulse-sdk"
-version = "0.2.0a35"
+version = "0.3.0"
 description = "Idiomatic, type-safe Python client for the Pulse REST API"
 readme = "README.md"
 license = { text = "MIT" }

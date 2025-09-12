@@ -1,7 +1,6 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
 from typing import Any, Dict, List, Union, Optional, Mapping, cast
-import warnings
 import httpx
 from pulse.core.retry import retry_request
 from pulse.core.utils import chunk_texts
@@ -16,12 +15,11 @@ from pulse.core.models import (
     EmbeddingsResponse,
     SimilarityRequest,
     SimilarityResponse,
-    Theme,
     ThemesResponse,
     SentimentResponse,
     SentimentResult,
-    ExtractionsResponse,
     JobSubmissionResponse,
+    ExtractionsResponse,
     ClusteringResponse,
     SummariesResponse,
 )
@@ -30,7 +28,6 @@ from pulse.core.exceptions import PulseAPIError
 MAX_EMBEDDINGS = 2000
 MAX_SENTIMENT = 10000
 MAX_THEMES = 500
-MAX_EXTRACTION_TEXTS = 200
 MAX_CLUSTERING = 500
 MAX_SUMMARIES = 5000
 
@@ -287,10 +284,10 @@ class CoreClient:
         """Compute cosine similarity between strings.
 
         Exactly one of ``set`` (self-similarity) or the pair ``set_a``/``set_b``
-        (cross-similarity) must be provided in the ``request``. Optional ``version`` and ``split``
-        values are forwarded to the API. When ``await_job_result`` is ``False``
-        the asynchronous job handle is returned instead of waiting for
-        completion.
+        (cross-similarity) must be provided in the ``request``. Optional
+        ``version`` and ``split`` values are forwarded to the API. When
+        ``await_job_result`` is ``False`` the asynchronous job handle is
+        returned instead of waiting for completion.
         """
         # validate arguments
         set = request.set
@@ -621,10 +618,9 @@ class CoreClient:
 
     def extract_elements(
         self,
-        texts: list[str] | None = None,
-        categories: list[Union[str, Theme]] | None = None,
+        texts: list[str],
+        categories: list[str],
         *,
-        version: str | None = None,
         dictionary: Mapping[str, list[str]] | None = None,
         expand_dictionary: bool | None = None,
         use_ner: bool | None = None,
@@ -632,56 +628,28 @@ class CoreClient:
         threshold: float | None = None,
         fast: bool | None = None,
         await_job_result: bool = True,
-        **legacy_kwargs: Any,
     ) -> Union[ExtractionsResponse, Job]:
         """Extract elements matching categories from input texts.
 
         Args:
             texts: Input strings to analyze.
-            categories: List of categories or :class:`Theme` objects.
-            version: Optional model version for reproducible output.
-            dictionary: Optional mapping of categories to search terms.
-            expand_dictionary: Expand dictionary entries with synonyms when ``True``.
-            use_ner: Enable named-entity recognition based extraction.
+            categories: List of category labels to extract.
+            dictionary: Optional mapping of category to search terms.
+            expand_dictionary: Expand dictionary entries with synonyms.
+            use_ner: Enable named-entity recognition extraction.
             use_llm: Enable LLM-powered extraction.
-            threshold: Score threshold for extraction.
+            threshold: Score threshold for extraction results.
             fast: Use synchronous (True) or asynchronous (False) mode.
             await_job_result: When ``False``, return a :class:`Job` handle
                 instead of waiting for results.
-
-        Returns:
-            If ``await_job_result`` is ``True`` (default) this method returns an
-            :class:`ExtractionsResponse` where ``resp.columns`` contains
-            metadata for each category and ``resp.matrix`` is a 2-D list of
-            extractions for each input and category. When ``await_job_result``
-            is ``False`` and ``fast`` is also ``False``, a :class:`Job` object is
-            returned instead.
         """
 
-        if "inputs" in legacy_kwargs and texts is None:
-            texts = legacy_kwargs.pop("inputs")
-        if "themes" in legacy_kwargs and categories is None:
-            warnings.warn(
-                "'themes' argument is deprecated; use 'categories' instead",
-                DeprecationWarning,
-            )
-            categories = legacy_kwargs.pop("themes")
+        if len(texts) > 200:
+            raise ValueError("'texts' cannot exceed 200 items")
+        if len(categories) > 50:
+            raise ValueError("'categories' cannot exceed 50 items")
 
-        if legacy_kwargs:
-            raise TypeError(f"Unexpected keyword arguments: {', '.join(legacy_kwargs)}")
-
-        if texts is None:
-            raise TypeError("'texts' parameter is required")
-        if categories is None:
-            raise TypeError("'categories' parameter is required")
-
-        serialized_categories = [
-            c if isinstance(c, str) else c.label for c in categories
-        ]
-
-        body: Dict[str, Any] = {"texts": texts, "categories": serialized_categories}
-        if version is not None:
-            body["version"] = version
+        body: Dict[str, Any] = {"texts": texts, "categories": categories}
         if dictionary is not None:
             body["dictionary"] = dictionary
         if expand_dictionary is not None:
@@ -696,12 +664,10 @@ class CoreClient:
             body["fast"] = fast
 
         response = self._request("post", "/extractions", json=body)
-
         if response.status_code not in (200, 202):
             raise PulseAPIError(response)
 
         data = response.json()
-
         if response.status_code == 202:
             if fast:
                 raise PulseAPIError(response)

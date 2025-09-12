@@ -2,12 +2,14 @@
 Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 
 ## Features
-- Low‑level CoreClient for direct API calls: embeddings, similarity, themes, sentiment
+- Low‑level CoreClient for direct API calls: embeddings, similarity, themes, clustering, sentiment, summaries, extractions
+- Usage reporting surfaced on all responses (`resp.usage_total`, `resp.usage_records_by_feature()`)
 - High‑level Analyzer for orchestrating multi‑step workflows with caching
 - Built-in processes: ThemeGeneration, ThemeAllocation, SentimentProcess, Cluster
 - Result helpers: pandas DataFrame conversion, summaries, visualizations (bar charts, scatter, dendrogram)
 - On‑disk and in‑memory caching via diskcache
 - First-class interop with pandas, NumPy, and scikit‑learn
+
 
 ## Installation
 
@@ -38,8 +40,9 @@ from pulse.core.client import CoreClient
 
 # Unauthenticated (dev) environment
 client = CoreClient()  # default to dev environment
-emb = client.create_embeddings(["Hello world", "Goodbye"])  # sync "fast" call
+emb = client.create_embeddings(["Hello world", "Goodbye"], fast=True)
 print(emb.embeddings)
+print("total usage:", emb.usage_total)
 
 # Submit a long-running job asynchronously
 job = client.create_embeddings(["foo"] * 300, fast=False, await_job_result=False)
@@ -75,6 +78,17 @@ auth = AuthorizationCodePKCEAuth(
 )
 client = CoreClient(auth=auth)
 resp = client.create_embeddings(["Hello world", "Goodbye"])
+```
+
+### Usage reporting
+
+All feature responses include usage information when available:
+
+```python
+resp = client.create_embeddings(["Hello world"], fast=True)
+print(resp.usage_total)
+for record in resp.usage.records:
+    print(record.feature, record.units)
 ```
 
 ### Summarize text
