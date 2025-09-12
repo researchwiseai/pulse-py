@@ -1,6 +1,6 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-from typing import Any, Dict, List, Union, Optional, cast
+from typing import Any, Dict, List, Union, Optional, Mapping, cast
 import httpx
 from pulse.core.retry import retry_request
 from pulse.core.utils import chunk_texts
@@ -19,6 +19,7 @@ from pulse.core.models import (
     SentimentResponse,
     SentimentResult,
     JobSubmissionResponse,
+    ExtractionsResponse,
     ClusteringResponse,
     SummariesResponse,
 )
@@ -615,15 +616,70 @@ class CoreClient:
         job._client = self.client
         return job
 
-    def extract_elements(self, *args: Any, **kwargs: Any) -> None:
-        """Stub for the Extractions endpoint.
+    def extract_elements(
+        self,
+        texts: list[str],
+        categories: list[str],
+        *,
+        dictionary: Mapping[str, list[str]] | None = None,
+        expand_dictionary: bool | None = None,
+        use_ner: bool | None = None,
+        use_llm: bool | None = None,
+        threshold: float | None = None,
+        fast: bool | None = None,
+        await_job_result: bool = True,
+    ) -> Union[ExtractionsResponse, Job]:
+        """Extract elements matching categories from input texts.
 
-        Extractions are not yet implemented for the Python SDK. This method
-        exists to mirror the TypeScript client surface but will raise an
-        informative error when called.
+        Args:
+            texts: Input strings to analyze.
+            categories: List of category labels to extract.
+            dictionary: Optional mapping of category to search terms.
+            expand_dictionary: Expand dictionary entries with synonyms.
+            use_ner: Enable named-entity recognition extraction.
+            use_llm: Enable LLM-powered extraction.
+            threshold: Score threshold for extraction results.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            await_job_result: When ``False``, return a :class:`Job` handle
+                instead of waiting for results.
         """
 
-        raise NotImplementedError("Extractions will be added after GA")
+        if len(texts) > 200:
+            raise ValueError("'texts' cannot exceed 200 items")
+        if len(categories) > 50:
+            raise ValueError("'categories' cannot exceed 50 items")
+
+        body: Dict[str, Any] = {"texts": texts, "categories": categories}
+        if dictionary is not None:
+            body["dictionary"] = dictionary
+        if expand_dictionary is not None:
+            body["expand_dictionary"] = expand_dictionary
+        if use_ner is not None:
+            body["use_ner"] = use_ner
+        if use_llm is not None:
+            body["use_llm"] = use_llm
+        if threshold is not None:
+            body["threshold"] = threshold
+        if fast is not None:
+            body["fast"] = fast
+
+        response = self._request("post", "/extractions", json=body)
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+
+        data = response.json()
+        if response.status_code == 202:
+            if fast:
+                raise PulseAPIError(response)
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(jobId=submission.jobId, jobStatus="pending")
+            job._client = self.client
+            if not await_job_result:
+                return job
+            result = job.wait()
+            return ExtractionsResponse.model_validate(result)
+
+        return ExtractionsResponse.model_validate(data)
 
     def cluster_texts(
         self,

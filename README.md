@@ -2,7 +2,7 @@
 Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 
 ## Features
-- Low‑level CoreClient for direct API calls: embeddings, similarity, themes, clustering, sentiment, summaries
+- Low‑level CoreClient for direct API calls: embeddings, similarity, themes, clustering, sentiment, summaries, extractions
 - Usage reporting surfaced on all responses (`resp.usage_total`, `resp.usage_records_by_feature()`)
 - High‑level Analyzer for orchestrating multi‑step workflows with caching
 - Built-in processes: ThemeGeneration, ThemeAllocation, SentimentProcess, Cluster
@@ -10,7 +10,6 @@ Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 - On‑disk and in‑memory caching via diskcache
 - First-class interop with pandas, NumPy, and scikit‑learn
 
-> **Note:** The Extractions feature is not yet implemented in the Python SDK.
 
 ## Installation
 

@@ -200,9 +200,3 @@ def test_analyze_sentiment_job():
     assert hasattr(job, "id")
     result = job.wait()
     assert "results" in result
-
-
-def test_extract_elements_not_implemented():
-    client = CoreClient(base_url=base_url, auth=auth)
-    with pytest.raises(NotImplementedError):
-        client.extract_elements(texts=["hello"], categories=["food"])
