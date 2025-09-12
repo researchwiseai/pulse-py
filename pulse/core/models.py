@@ -1,7 +1,42 @@
 """Pydantic models for Pulse API responses."""
 
-from typing import Any, List, Optional, Literal
+from typing import Any, List, Optional, Literal, Dict
 from pydantic import BaseModel, Field, model_validator, ConfigDict
+
+
+class UsageRecord(BaseModel):
+    """Single usage record for a feature."""
+
+    feature: str = Field(..., description="Name of the feature")
+    units: int = Field(..., description="Units consumed for the feature")
+
+
+class UsageReport(BaseModel):
+    """Usage summary returned by the API."""
+
+    total: int = Field(..., description="Total units consumed")
+    records: List[UsageRecord] = Field(
+        default_factory=list, description="Per-feature usage records"
+    )
+
+
+class UsageModel(BaseModel):
+    """Mixin for responses that include usage information."""
+
+    usage: Optional[UsageReport] = Field(
+        None, description="Usage information for the request"
+    )
+
+    @property
+    def usage_total(self) -> Optional[int]:
+        """Return total units consumed if usage info is available."""
+        return self.usage.total if self.usage else None
+
+    def usage_records_by_feature(self) -> Dict[str, UsageRecord]:
+        """Return usage records keyed by feature name."""
+        if not self.usage:
+            return {}
+        return {record.feature: record for record in self.usage.records}
 
 
 class EmbeddingDocument(BaseModel):
@@ -15,13 +50,17 @@ class EmbeddingDocument(BaseModel):
 class EmbeddingsRequest(BaseModel):
     """Request model for generating embeddings."""
 
-    inputs: List[str] = Field(..., min_length=1, max_length=2000, description="Input texts")
-    fast: Optional[bool] = Field(None, description="Synchronous (True) or asynchronous (False)")
+    inputs: List[str] = Field(
+        ..., min_length=1, max_length=2000, description="Input texts"
+    )
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
 
     model_config = ConfigDict(populate_by_name=True)
 
 
-class EmbeddingsResponse(BaseModel):
+class EmbeddingsResponse(UsageModel):
     """Response model for batch embeddings."""
 
     embeddings: List[EmbeddingDocument] = Field(
@@ -30,7 +69,7 @@ class EmbeddingsResponse(BaseModel):
     requestId: Optional[str] = Field(None, description="Unique request identifier")
 
 
-class SimilarityResponse(BaseModel):
+class SimilarityResponse(UsageModel):
     """Response model for cosine similarity computations."""
 
     scenario: Literal["self", "cross"] = Field(
@@ -158,7 +197,7 @@ class Theme(BaseModel):
     )
 
 
-class ThemesResponse(BaseModel):
+class ThemesResponse(UsageModel):
     """Response model for thematic clustering."""
 
     themes: List[Theme] = Field(..., description="List of cluster metadata objects")
@@ -174,7 +213,7 @@ class SentimentResult(BaseModel):
     confidence: float = Field(..., description="Confidence score between 0 and 1")
 
 
-class SentimentResponse(BaseModel):
+class SentimentResponse(UsageModel):
     """Response model for sentiment analysis."""
 
     results: List[SentimentResult] = Field(
@@ -239,7 +278,7 @@ class ExtractionsRequest(BaseModel):
         return values
 
 
-class ExtractionsResponse(BaseModel):
+class ExtractionsResponse(UsageModel):
     """Response model for text element extraction."""
 
     class ExtractionColumn(BaseModel):
@@ -292,7 +331,7 @@ class Cluster(BaseModel):
     items: List[str] = Field(..., description="Items assigned to this cluster")
 
 
-class ClusteringResponse(BaseModel):
+class ClusteringResponse(UsageModel):
     """Response model for clustering request."""
 
     algorithm: str = Field(..., description="Algorithm used for clustering")
@@ -325,7 +364,7 @@ class SummariesRequest(BaseModel):
     )
 
 
-class SummariesResponse(BaseModel):
+class SummariesResponse(UsageModel):
     """Response model for text summarization."""
 
     summary: str = Field(..., description="Generated summary text")
