@@ -1,6 +1,6 @@
- __pycache__/
- *.py[cod]
- *.$py.class
+__pycache__/
+*.py[cod]
+*.$py.class
 
 # Virtual environments
 .venv/
@@ -14,21 +14,21 @@ dist/
 *.egg-info/
 .eggs/
 
- # Pytest
+# Pytest
 .pytest_cache/
 cache/
 # Mypy cache
 .mypy_cache/
 
- # VSCode
+# VSCode
 .vscode/
 
- # cache
+# cache
 .pulse_cache/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
- # OS files
+# OS files
 .DS_Store
 # Coverage reports
 .coverage
