@@ -4,6 +4,8 @@
 Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 
 ## Changelog
+- 0.3.3
+  - Fix: decouple base URL and OAuth audience configuration to avoid unintended coupling between environments.
 - 0.3.2
   - Improve 401 Unauthorized diagnostics: PulseAPIError now includes AWS API Gateway hints when available (e.g., `www-authenticate`, `x-amzn-errortype`, `apigw-requestid`). This makes it easier to troubleshoot token and audience issues.
 
