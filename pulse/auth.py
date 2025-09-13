@@ -9,7 +9,7 @@ import webbrowser
 from urllib.parse import parse_qs, urlencode, urlparse
 import httpx
 
-from pulse.config import DEFAULT_SCOPES, AUTH_DOMAIN, BASE_URL, CLIENT_ID
+from pulse.config import DEFAULT_SCOPES, AUTH_DOMAIN, BASE_URL, CLIENT_ID, AUDIENCE
 
 __all__ = [
     "ClientCredentialsAuth",
@@ -40,7 +40,7 @@ class _BaseOAuth2Auth(httpx.Auth):
             or f"https://{AUTH_DOMAIN}/oauth/token"
         )
         self.client_id = client_id or os.getenv("PULSE_CLIENT_ID") or CLIENT_ID
-        self.audience = audience or os.getenv("PULSE_API_URL") or BASE_URL
+        self.audience = audience or os.getenv("PULSE_AUDIENCE") or AUDIENCE
         self._access_token: str | None = None
         self._expires_at: float = 0.0
 

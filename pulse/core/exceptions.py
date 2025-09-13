@@ -18,19 +18,17 @@ class PulseAPIError(Exception):
         # Note: httpx.Headers is case-insensitive
         self.headers = dict(response.headers)
         # Common AWS API Gateway headers that help diagnose 401s
-        self.aws_www_authenticate: Optional[str] = (
-            response.headers.get("www-authenticate")
-            or response.headers.get("x-amzn-remapped-www-authenticate")
-        )
+        self.aws_www_authenticate: Optional[str] = response.headers.get(
+            "www-authenticate"
+        ) or response.headers.get("x-amzn-remapped-www-authenticate")
         self.aws_request_id: Optional[str] = (
             response.headers.get("apigw-requestid")
             or response.headers.get("x-amzn-requestid")
             or response.headers.get("x-amz-apigw-id")
         )
-        self.aws_error_type: Optional[str] = (
-            response.headers.get("x-amzn-errortype")
-            or response.headers.get("x-amzn-ErrorType")
-        )
+        self.aws_error_type: Optional[str] = response.headers.get(
+            "x-amzn-errortype"
+        ) or response.headers.get("x-amzn-ErrorType")
         try:
             body: Any = response.json()
         except ValueError:
@@ -59,9 +57,7 @@ class PulseAPIError(Exception):
             if hints:
                 # Preserve original message and append concise guidance.
                 base_msg = self.message or "Unauthorized"
-                self.message = (
-                    f"{base_msg} | AWS API Gateway hint: " + ", ".join(hints)
-                )
+                self.message = f"{base_msg} | AWS API Gateway hint: " + ", ".join(hints)
 
         super().__init__(str(self))
 
