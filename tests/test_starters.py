@@ -1,6 +1,7 @@
 """Tests for our quick starter helpers"""
 
 import os
+from pulse.config import BASE_URL, AUDIENCE, AUTH_DOMAIN
 import pandas as pd
 import pytest
 import httpx
@@ -49,15 +50,15 @@ def disable_sleep(monkeypatch, request):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
-base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+base_url = os.getenv("PULSE_BASE_URL", BASE_URL)
 
 # Load credentials from environment variables
 client_id = os.getenv("PULSE_CLIENT_ID")
 client_secret = os.getenv("PULSE_CLIENT_SECRET")
 if not client_id or not client_secret:
     pytest.skip("Pulse client credentials not set", allow_module_level=True)
-token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
-audience = os.getenv("PULSE_AUDIENCE", base_url)
+token_url = os.getenv("PULSE_TOKEN_URL", f"https://{AUTH_DOMAIN}/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", AUDIENCE)
 auth = ClientCredentialsAuth(
     client_id=client_id,
     client_secret=client_secret,

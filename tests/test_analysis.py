@@ -3,6 +3,7 @@
 import pandas as pd
 import pytest
 import os
+from pulse.config import BASE_URL, AUDIENCE, AUTH_DOMAIN
 
 # from pydantic import BaseModel  # Unused import removed
 
@@ -47,15 +48,15 @@ def disable_sleep(monkeypatch):
     monkeypatch.setattr(time, "sleep", lambda x: None)
 
 
-base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+base_url = os.getenv("PULSE_BASE_URL", BASE_URL)
 
 # Load credentials from environment variables
 client_id = os.getenv("PULSE_CLIENT_ID")
 client_secret = os.getenv("PULSE_CLIENT_SECRET")
 if not client_id or not client_secret:
     pytest.skip("Pulse client credentials not set", allow_module_level=True)
-token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
-audience = os.getenv("PULSE_AUDIENCE", base_url)
+token_url = os.getenv("PULSE_TOKEN_URL", f"https://{AUTH_DOMAIN}/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", AUDIENCE)
 auth = ClientCredentialsAuth(
     client_id=client_id,
     client_secret=client_secret,
@@ -66,9 +67,7 @@ auth = ClientCredentialsAuth(
 
 @pytest.mark.vcr()
 def test_analyzer_no_processes():
-    client = CoreClient(
-        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
-    )
+    client = CoreClient(base_url=base_url, auth=auth)
     az = Analyzer(dataset=reviews, processes=[], client=client)
     res = az.run()
     assert isinstance(res, AnalysisResult)
@@ -78,9 +77,7 @@ def test_analyzer_no_processes():
 
 @pytest.mark.vcr()
 def test_theme_generation_process():
-    client = CoreClient(
-        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
-    )
+    client = CoreClient(base_url=base_url, auth=auth)
     proc = ThemeGeneration(min_themes=2, max_themes=3)
     az = Analyzer(dataset=reviews, processes=[proc], fast=True, client=client)
     res = az.run()
@@ -99,9 +96,7 @@ def test_theme_generation_process():
 
 @pytest.mark.vcr()
 def test_sentiment_process():
-    client = CoreClient(
-        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
-    )
+    client = CoreClient(base_url=base_url, auth=auth)
     proc = SentimentProcess(fast=True)
     az = Analyzer(dataset=reviews, processes=[proc], client=client)
     res = az.run()

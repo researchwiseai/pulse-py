@@ -6,6 +6,7 @@
 
 import pytest
 import os
+from pulse.config import BASE_URL, AUDIENCE, AUTH_DOMAIN
 
 from pulse.analysis.analyzer import Analyzer
 from pulse.auth import ClientCredentialsAuth
@@ -37,13 +38,13 @@ def cache_dir(tmp_path):
     return str(tmp_path / "cache")
 
 
-base_url = "https://dev.core.researchwiseai.com/pulse/v1"
+base_url = os.getenv("PULSE_BASE_URL", BASE_URL)
 
 # Load credentials from environment variables or use dummy defaults for caching tests
 client_id = os.getenv("PULSE_CLIENT_ID") or "DUMMY_CLIENT_ID"
 client_secret = os.getenv("PULSE_CLIENT_SECRET") or "DUMMY_CLIENT_SECRET"
-token_url = os.getenv("PULSE_TOKEN_URL", "https://wise-dev.eu.auth0.com/oauth/token")
-audience = os.getenv("PULSE_AUDIENCE", base_url)
+token_url = os.getenv("PULSE_TOKEN_URL", f"https://{AUTH_DOMAIN}/oauth/token")
+audience = os.getenv("PULSE_AUDIENCE", AUDIENCE)
 auth = ClientCredentialsAuth(
     client_id=client_id,
     client_secret=client_secret,

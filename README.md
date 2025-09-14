@@ -306,13 +306,26 @@ For authenticated access and test recording/playback, configure the following en
 
 - `PULSE_CLIENT_ID`: your OAuth2 client ID (e.g., Auth0 client ID).
 - `PULSE_CLIENT_SECRET`: your OAuth2 client secret.
-- `PULSE_TOKEN_URL` (optional): token endpoint URL. Defaults to `https://wise-dev.eu.auth0.com/oauth/token`.
-- `PULSE_AUDIENCE` (optional): API audience URL. Defaults to `https://dev.core.researchwiseai.com/pulse/v1`.
+- `PULSE_TOKEN_URL` (optional): token endpoint URL. Defaults to `https://{AUTH_DOMAIN}/oauth/token`.
+- `PULSE_AUDIENCE` (optional): API audience URL. Defaults to env-based config (see below).
+- `PULSE_BASE_URL` (optional): API base URL. Defaults to env-based config (see below).
+- `PULSE_AUTH_DOMAIN` (optional): Auth0 domain, overrides env-based default.
+- `PULSE_ENV` (optional): selects environment defaults:
+  - `prod` (default):
+    - `PULSE_BASE_URL` = `https://pulse.researchwiseai.com/v1`
+    - `PULSE_AUDIENCE` = `https://core.researchwiseai.com/pulse/v1`
+    - `AUTH_DOMAIN` = `research-wise-ai-eu.eu.auth0.com`
+  - `staging` (or `dev`):
+    - `PULSE_BASE_URL` = `https://staging.pulse.researchwiseai.com/v1`
+    - `PULSE_AUDIENCE` = `https://dev.core.researchwiseai.com/pulse/v1`
+    - `AUTH_DOMAIN` = `wise-dev.eu.auth0.com`
 
 In local development, you can export these variables:
 ```bash
 export PULSE_CLIENT_ID="your_client_id"
 export PULSE_CLIENT_SECRET="your_client_secret"
+# Example: switch to staging defaults
+export PULSE_ENV=staging
 ```
 
 In CI (e.g., GitHub Actions), add these values as repository secrets and reference them in your workflow:

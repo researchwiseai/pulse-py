@@ -21,23 +21,23 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
     headers:
       CF-Cache-Status:
       - DYNAMIC
       CF-Ray:
-      - 93e42bd77e2fef4e-LHR
+      - 97e859514fb6ed08-LHR
       Cache-Control:
       - no-store
       Connection:
@@ -47,18 +47,18 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 11 May 2025 19:44:29 GMT
+      - Sat, 13 Sep 2025 14:31:33 GMT
       Pragma:
       - no-cache
       Server:
       - cloudflare
       Set-Cookie:
-      - did=s%3Av0%3A6e92680c-a091-4f63-a32b-9ee133fb5d20.m75n5SakTLuR82AxmI11o6Nm46tKaiPyITxa0iCm3QY;
-        Path=/; Expires=Tue, 12 May 2026 01:44:29 GMT; HttpOnly; Secure; SameSite=None
-      - did_compat=s%3Av0%3A6e92680c-a091-4f63-a32b-9ee133fb5d20.m75n5SakTLuR82AxmI11o6Nm46tKaiPyITxa0iCm3QY;
-        Path=/; Expires=Tue, 12 May 2026 01:44:29 GMT; HttpOnly; Secure
-      - __cf_bm=s8xbHCO4d7CsQGRJrcPFPB87ERahZ8xPeWOMk5.Lwlg-1746992669-1.0.1.1-5bbgdLySJjGSbsMWSBbMPj.dGcdTZn5uIeR6bAJ0TgL6opVh7rzbfJu7cNKRMUoN;
-        path=/; expires=Sun, 11-May-25 20:14:29 GMT; domain=.eu.auth0.com; HttpOnly;
+      - did=s%3Av0%3Abef62d04-eba4-4f53-95a9-520bb3124db5.ZEuG0Mw24hcrizj2gTHG2pjghqCAxGxCTLaEJnASNrk;
+        Path=/; Expires=Sun, 13 Sep 2026 20:31:33 GMT; HttpOnly; Secure; SameSite=None
+      - did_compat=s%3Av0%3Abef62d04-eba4-4f53-95a9-520bb3124db5.ZEuG0Mw24hcrizj2gTHG2pjghqCAxGxCTLaEJnASNrk;
+        Path=/; Expires=Sun, 13 Sep 2026 20:31:33 GMT; HttpOnly; Secure
+      - __cf_bm=n.FSo8rDC.3OXcoA53Q8DdkNQ2jU011jvs6hXQB4T3s-1757773893-1.0.1.1-O89_V7RBOnHBJsqT505lLRVMYYUw0pN3DefJBg0TIE5f.5QxOocLG4YejJBS2voS;
+        path=/; expires=Sat, 13-Sep-25 15:01:33 GMT; domain=.eu.auth0.com; HttpOnly;
         Secure; SameSite=None
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
@@ -67,85 +67,19 @@ interactions:
       Vary:
       - Accept-Encoding, Origin
       X-Auth0-L:
-      - '0.090'
+      - '0.053'
       X-Auth0-RequestId:
-      - bf2791edd9e062ed2231
+      - d888cedf970391232b94
       X-Content-Type-Options:
       - nosniff
       X-RateLimit-Limit:
-      - '300'
+      - '100'
       X-RateLimit-Remaining:
-      - '299'
+      - '99'
       X-RateLimit-Reset:
-      - '1746992730'
+      - '1757773895'
       alt-svc:
       - h3=":443"; ma=86400
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"inputs":["Had a blast! The rollercoasters were thrilling and the staff
-      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
-      lines, but the shows were entertaining. Would come again.","Disappointing. Many
-      rides were closed, and the food was overpriced.","Awesome day out! The kids
-      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
-      crowded, making it difficult to enjoy the rides.","Excellent customer service.
-      The staff went above and beyond.","A magical experience! Highly recommend for
-      all ages.","Not impressed with the variety of rides. Could be better.","The
-      atmosphere was fantastic. Great music and decorations.","Spent too much time
-      waiting in line. Needs better queue management.","My kids had a wonderful time!
-      We''ll definitely return.","The food options were limited and not very tasty.","A
-      truly unforgettable day at the park. Highly recommended!","The park was clean
-      and well-kept, but the rides were too short.","Great value for the money.  Lots
-      of fun for the whole family.","We had a mixed experience. Some rides were great,
-      others were underwhelming.","The staff were helpful and courteous.  The park
-      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"minThemes":2,"maxThemes":3,"fast":true}'
-    headers:
-      accept:
-      - '*/*'
-      accept-encoding:
-      - gzip, deflate
-      authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NDY5OTI2NjksImV4cCI6MTc0NzA3OTA2OSwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.Ud90P8sBlQZW7MgXs-m-9N_eGEOtpnqN7mDC5KAJqFtMINdJFValvuMlVFv4RX_hOTArnAM4VfNuIiy9n7cGkVhaJcGd_0odbs41pRuC0V2J2-hD3HJcvtG67-RpzEC3U4HpH87Sep3GYmTd5Zy9zpJCuELC8RtbPTNY9vdtNy1NdYkd3qP66Z-jPygHS_iGeXrsjTNHsJfNNHvt462pGJnLg2G0ERzjDVxi1VoQeS8K_x6nQIo7S1hWaUB2gs8QrZ7gSjMw6srZQdUPQs5uOwB42SrXpCyjGDdQ598D5_UAhiqH2g3JlJMuq-Sl0IxNz0qB84XuYPO8a9dqn7yT3g
-      connection:
-      - keep-alive
-      content-length:
-      - '1319'
-      content-type:
-      - application/json
-      host:
-      - dev.core.researchwiseai.com
-      user-agent:
-      - python-httpx/0.28.1
-    method: POST
-    uri: https://dev.core.researchwiseai.com/pulse/v1/themes
-  response:
-    body:
-      string: !!binary |
-        H4sIAAAAAAAAA3WSQU8bMRSE/8qTD5wSJFpCIDeEqFSplaoW9VJxsL2zrBXHXt57mxAh/ntlb4AQ
-        4LbWjr8Zj+bRaIcVxCz+PRrpMusP6xDNwvwODYSO6FKVrdeQk5iJibu/1w89OCB5UG6Jq9amhuwb
-        dQPxHPpyNAtz04EY0uckEGJEq2hIM2kHuh9sDLqd0NpyQPmoOO8hElwo/z51IquV0VteHpuJYfQM
-        QVKrYV3fNnrXuxswSDsOMYZ0V1GbzNpVwsYGLYSfNm339T5mQTNm0gNUzlSLOza3T5ODEq8G0bwC
-        015fR/RHbdvulfmiEvA6eFQbKSJy6Ow6ZH5X5lVerZC09HhnuSlPKcHaYtLEkCAyoQ6xb4c4Hgo0
-        r8E2RsJrnE3QbmdWbccIn9R4/eARI5KSP8h8TKXikbMpAuvyenyJwzanphD3JYzneFXk88CKPMiH
-        NWZROqK/Ng7Y6+0XBx/SXdlMHDC+8HlWPicP/mCF34DGWb8sAYdxN77gc/uyoR2Q2sy0ygnbt+h+
-        tKUgMkA+aeqSXNAqLdfdzmlvN+Poxrnd7IwpCDnYQUM7xNdbGvwSO5iQZRAeMrugNtXV3ZYE9wNE
-        vzdmYfzZvP3q3MW0nX9pp6eYnU+duzibNrO5n5/489mpOzFP/wH450pq+gMAAA==
-    headers:
-      Apigw-Requestid:
-      - KaykrhtjjoEEJ6g=
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '502'
-      Content-Type:
-      - application/json
-      Date:
-      - Sun, 11 May 2025 19:44:33 GMT
-      content-encoding:
-      - gzip
-      vary:
-      - Accept-Encoding
     status:
       code: 200
       message: OK

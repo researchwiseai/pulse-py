@@ -45,9 +45,29 @@ class _BaseOAuth2Auth(httpx.Auth):
         self._expires_at: float = 0.0
 
     def auth_flow(self, request: httpx.Request) -> httpx.Request:
-        # Only attach token to core.researchwiseai.com endpoints
+        # Attach token to API or audience host, never to the OAuth token host
         host = request.url.host or ""
-        if host.endswith("core.researchwiseai.com"):
+        try:
+            token_host = urlparse(self.token_url).netloc
+        except Exception:
+            token_host = ""
+        try:
+            audience_host = urlparse(self.audience or "").netloc
+        except Exception:
+            audience_host = ""
+        try:
+            api_host = urlparse(BASE_URL).netloc
+        except Exception:
+            api_host = ""
+
+        should_attach = False
+        if host and host != token_host:
+            if audience_host and host == audience_host:
+                should_attach = True
+            if api_host and host == api_host:
+                should_attach = True
+
+        if should_attach:
             token = self._get_token()
             request.headers["Authorization"] = f"Bearer {token}"
         yield request
@@ -131,7 +151,8 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         self.scope = scope
         # Track whether audience or scope were explicitly provided
         self._provided_audience = audience is not None
-        self._provided_env_audience = os.getenv("PULSE_API_URL") is not None
+        # Respect PULSE_AUDIENCE when deciding whether to include audience in token request
+        self._provided_env_audience = os.getenv("PULSE_AUDIENCE") is not None
         self._provided_scope = scope is not None
         self._provided_env_scope = os.getenv("PULSE_SCOPE") is not None
         self._refresh_token_value: str | None = None
