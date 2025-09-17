@@ -1,6 +1,12 @@
-# Security Scanning Scripts
+# Scripts
 
-This directory contains scripts for running security scans on the Pulse SDK.
+This directory contains utility scripts for the Pulse SDK project.
+
+## Available Scripts
+
+- `security-scan.sh` - Security scanning script for CI/CD pipelines
+- `verify-supply-chain.sh` - Supply chain security verification script
+- `conventional-commits-guide.md` - Guide for writing conventional commit messages
 
 ## security-scan.sh
 
@@ -54,3 +60,58 @@ If you encounter issues:
 2. Check that you're running from the project root directory
 3. Verify Python 3.8+ is available
 4. For permission issues, run: `chmod +x scripts/security-scan.sh`
+#
+# verify-supply-chain.sh
+
+Provides comprehensive verification of Pulse SDK releases including digital signatures, SBOM integrity, and build provenance.
+
+### Usage
+
+```bash
+# Verify a specific release
+./scripts/verify-supply-chain.sh v1.0.0
+```
+
+### What it verifies
+
+- **Digital signatures** - Verifies Sigstore/Cosign signatures for all artifacts
+- **SBOM integrity** - Validates Software Bill of Materials content
+- **Build provenance** - Checks build provenance information
+- **Certificate chains** - Verifies signing certificates against GitHub OIDC
+
+### Prerequisites
+
+The script will automatically install required tools:
+- `cosign` - For signature verification
+- `syft` - For SBOM content verification (optional)
+- `jq` - For JSON processing (optional, for detailed reports)
+
+### Output
+
+The script provides:
+- Step-by-step verification progress
+- Detailed verification report
+- File checksums and metadata
+- SBOM and provenance summaries
+- Cleanup of temporary files
+
+### Example Output
+
+```
+================================================
+  Pulse SDK Supply Chain Security Verification
+================================================
+
+[STEP] Checking dependencies...
+[SUCCESS] Dependencies checked
+[STEP] Downloading release artifacts for version v1.0.0...
+[INFO] Downloading from: https://github.com/researchwiseai/pulse-py/releases/download/v1.0.0
+[STEP] Verifying digital signatures...
+[INFO] Verifying signature for pulse_sdk-1.0.0-py3-none-any.whl
+[SUCCESS] Wheel signature verified
+[SUCCESS] Source distribution signature verified
+[SUCCESS] SBOM signature verified
+[STEP] Verifying SBOM content...
+[SUCCESS] SBOM content verification passed
+[SUCCESS] Supply chain verification completed successfully!
+```

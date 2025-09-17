@@ -13,3 +13,6 @@ Welcome to the Pulse SDK docs. This section documents the complete public API of
 
 If you’re new, start with the Core Client and Starters. For multi‑step pipelines, see Analyzer or the DSL Builder.
 
+## Security and Compliance
+
+- Supply Chain Security: `supply-chain-security.md`

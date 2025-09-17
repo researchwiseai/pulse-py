@@ -1,0 +1,203 @@
+name: Reproducible Build Verification
+
+on:
+  workflow_run:
+    workflows: ["Publish to PyPI"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to verify (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  verify-reproducible-build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip build
+          # Install tools for verification
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Reproduce build
+        run: |
+          # Set reproducible build environment
+          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+          export PYTHONHASHSEED=0
+          export BUILD_DATE=$(date -u -d "@${SOURCE_DATE_EPOCH}" +"%Y-%m-%dT%H:%M:%SZ")
+
+          echo "Building with SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH}"
+          echo "Build date: ${BUILD_DATE}"
+
+          # Build distributions
+          python -m build --sdist --wheel
+
+          # Create build info
+          cat > build-info.json << EOF
+          {
+            "source_date_epoch": "${SOURCE_DATE_EPOCH}",
+            "build_date": "${BUILD_DATE}",
+            "git_commit": "${{ github.sha }}",
+            "python_version": "$(python --version)",
+            "build_backend": "$(python -c 'import setuptools; print(setuptools.__version__)')",
+            "environment": {
+              "PYTHONHASHSEED": "${PYTHONHASHSEED}",
+              "SOURCE_DATE_EPOCH": "${SOURCE_DATE_EPOCH}"
+            }
+          }
+          EOF
+
+      - name: Generate verification SBOM
+        run: |
+          # Generate SBOM for verification
+          syft dist/ -o spdx-json=verification-sbom.spdx.json
+          syft dist/ -o cyclonedx-json=verification-sbom.cyclonedx.json
+
+      - name: Calculate checksums
+        run: |
+          # Calculate checksums for all built artifacts
+          cd dist
+          sha256sum * > ../checksums-verification.txt
+          cd ..
+
+          # Also calculate checksums for SBOMs
+          sha256sum verification-sbom.*.json >> checksums-verification.txt
+
+      - name: Download original artifacts (if available)
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
+        with:
+          name: supply-chain-artifacts
+          path: original-artifacts/
+        continue-on-error: true
+
+      - name: Compare builds (if original available)
+        if: github.event_name == 'workflow_run'
+        run: |
+          if [ -d "original-artifacts/dist" ]; then
+            echo "Comparing reproduced build with original..."
+
+            # Compare file sizes and checksums
+            echo "=== File size comparison ==="
+            ls -la dist/
+            echo "--- Original ---"
+            ls -la original-artifacts/dist/
+
+            echo "=== Checksum comparison ==="
+            cd original-artifacts/dist
+            sha256sum * > ../../checksums-original.txt
+            cd ../../
+
+            echo "Original checksums:"
+            cat checksums-original.txt
+            echo "Verification checksums:"
+            cat checksums-verification.txt
+
+            # Compare checksums
+            if diff -u checksums-original.txt checksums-verification.txt; then
+              echo "✅ Build is reproducible! Checksums match."
+              echo "REPRODUCIBLE=true" >> $GITHUB_ENV
+            else
+              echo "❌ Build is not reproducible. Checksums differ."
+              echo "REPRODUCIBLE=false" >> $GITHUB_ENV
+            fi
+          else
+            echo "⚠️ Original artifacts not available for comparison"
+            echo "REPRODUCIBLE=unknown" >> $GITHUB_ENV
+          fi
+
+      - name: Create reproducibility report
+        run: |
+          cat > reproducibility-report.md << EOF
+          # Reproducible Build Verification Report
+
+          **Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Commit:** ${{ github.sha }}
+          **Tag:** ${{ github.event.inputs.tag || github.event.workflow_run.head_branch }}
+          **Reproducible:** ${REPRODUCIBLE:-unknown}
+
+          ## Build Environment
+          - Python Version: $(python --version)
+          - Build Backend: setuptools $(python -c 'import setuptools; print(setuptools.__version__)')
+          - SOURCE_DATE_EPOCH: $(git log -1 --format=%ct)
+          - PYTHONHASHSEED: 0
+
+          ## Artifacts Generated
+          $(ls -la dist/)
+
+          ## Checksums
+          \`\`\`
+          $(cat checksums-verification.txt)
+          \`\`\`
+
+          ## Build Configuration
+          \`\`\`json
+          $(cat build-info.json)
+          \`\`\`
+
+          ## Verification Instructions
+          To verify this build locally:
+
+          1. Checkout the exact commit: \`git checkout ${{ github.sha }}\`
+          2. Set environment variables:
+             \`\`\`bash
+             export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+             export PYTHONHASHSEED=0
+             \`\`\`
+          3. Build: \`python -m build --sdist --wheel\`
+          4. Compare checksums with this report
+
+          EOF
+
+      - name: Upload verification artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reproducible-build-verification
+          path: |
+            dist/
+            verification-sbom.*.json
+            checksums-verification.txt
+            build-info.json
+            reproducibility-report.md
+          retention-days: 90
+
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('reproducibility-report.md', 'utf8');
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🔄 Reproducible Build Verification\n\n${report}`
+            });
+
+      - name: Fail if build is not reproducible
+        if: env.REPRODUCIBLE == 'false'
+        run: |
+          echo "❌ Build reproducibility verification failed"
+          exit 1

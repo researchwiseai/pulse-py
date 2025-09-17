@@ -15,7 +15,7 @@
   - Create coverage badge and PR comment integration
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-- [ ] 3. Create authentication edge case test suite
+- [x] 3. Create authentication edge case test suite
 
   - Write test cases for expired token scenarios with proper mocking
   - Implement tests for invalid client credentials handling
@@ -26,7 +26,7 @@
   - Implement rate limiting handling tests with retry logic
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7_
 
-- [ ] 4. Set up automated changelog generation
+- [-] 4. Set up automated changelog generation
 
   - Add Release Please GitHub Action configuration
   - Configure conventional commit message validation in pre-commit hooks
@@ -34,7 +34,7 @@
   - Create release workflow integration with existing PyPI publishing
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 5. Enhance supply chain security and attestations
+- [-] 5. Enhance supply chain security and attestations
 
   - Configure SLSA attestation generation in publishing workflow
   - Add SBOM (Software Bill of Materials) generation

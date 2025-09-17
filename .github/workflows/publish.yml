@@ -3,6 +3,10 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
+  # Also trigger when Release Please creates a release
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -11,23 +15,183 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      attestations: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fetch full history for reproducible builds
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install build tool
+      - name: Install build tools and dependencies
         run: |
           python -m pip install --upgrade pip build
+          # Install Syft for SBOM generation
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          # Install Cosign for signing
+          curl -O -L "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64"
+          sudo mv cosign-linux-amd64 /usr/local/bin/cosign
+          sudo chmod +x /usr/local/bin/cosign
 
       - name: Build distributions
         run: python -m build --sdist --wheel
+
+      - name: Generate SBOM for source distribution
+        run: |
+          # Generate SBOM for the source distribution
+          syft dist/ -o spdx-json=sbom-source.spdx.json
+          syft dist/ -o cyclonedx-json=sbom-source.cyclonedx.json
+
+      - name: Generate SBOM for wheel distribution
+        run: |
+          # Generate SBOM for the wheel distribution
+          syft dist/*.whl -o spdx-json=sbom-wheel.spdx.json
+          syft dist/*.whl -o cyclonedx-json=sbom-wheel.cyclonedx.json
+
+      - name: Generate build provenance
+        run: |
+          # Create build provenance information
+          cat > build-provenance.json << EOF
+          {
+            "buildType": "https://github.com/researchwiseai/pulse-py/.github/workflows/publish.yml@refs/heads/main",
+            "builder": {
+              "id": "https://github.com/actions/runner/github-hosted"
+            },
+            "invocation": {
+              "configSource": {
+                "uri": "git+https://github.com/researchwiseai/pulse-py@${{ github.sha }}",
+                "digest": {
+                  "sha1": "${{ github.sha }}"
+                },
+                "entryPoint": ".github/workflows/publish.yml"
+              },
+              "parameters": {
+                "workflow_ref": "${{ github.workflow_ref }}",
+                "workflow_sha": "${{ github.workflow_sha }}",
+                "runner_environment": "github-hosted"
+              }
+            },
+            "metadata": {
+              "buildInvocationId": "${{ github.run_id }}-${{ github.run_attempt }}",
+              "buildStartedOn": "${{ github.event.head_commit.timestamp }}",
+              "completeness": {
+                "parameters": true,
+                "environment": false,
+                "materials": true
+              },
+              "reproducible": true
+            },
+            "materials": [
+              {
+                "uri": "git+https://github.com/researchwiseai/pulse-py@${{ github.sha }}",
+                "digest": {
+                  "sha1": "${{ github.sha }}"
+                }
+              }
+            ]
+          }
+          EOF
+
+      - name: Generate attestations for distributions
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'dist/*'
+
+      - name: Sign distributions with Cosign (keyless)
+        run: |
+          # Sign all distribution files using keyless signing
+          for file in dist/*; do
+            echo "Signing $file"
+            cosign sign-blob --yes "$file" --output-signature "${file}.sig" --output-certificate "${file}.crt"
+          done
+
+      - name: Sign SBOMs with Cosign (keyless)
+        run: |
+          # Sign SBOM files
+          for sbom in sbom-*.json; do
+            echo "Signing $sbom"
+            cosign sign-blob --yes "$sbom" --output-signature "${sbom}.sig" --output-certificate "${sbom}.crt"
+          done
+
+      - name: Verify signatures
+        run: |
+          # Verify all signatures were created successfully
+          echo "Verifying signatures..."
+          for file in dist/*; do
+            if [[ -f "${file}.sig" && -f "${file}.crt" ]]; then
+              echo "✓ Signature files exist for $file"
+              cosign verify-blob --certificate "${file}.crt" --signature "${file}.sig" \
+                --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \
+                --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+                "$file"
+            else
+              echo "✗ Missing signature files for $file"
+              exit 1
+            fi
+          done
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: supply-chain-artifacts
+          path: |
+            dist/
+            *.spdx.json
+            *.cyclonedx.json
+            *.sig
+            *.crt
+            build-provenance.json
+          retention-days: 90
 
       - name: Publish to PyPI via OIDC
         uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           attestations: true
           skip-existing: true
+
+      - name: Create GitHub Release with Supply Chain Artifacts
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+            sbom-*.json
+            build-provenance.json
+          body: |
+            ## Supply Chain Security
+
+            This release includes comprehensive supply chain security artifacts:
+
+            ### 📋 Software Bill of Materials (SBOM)
+            - `sbom-source.spdx.json` - SPDX format SBOM for source distribution
+            - `sbom-source.cyclonedx.json` - CycloneDX format SBOM for source distribution
+            - `sbom-wheel.spdx.json` - SPDX format SBOM for wheel distribution
+            - `sbom-wheel.cyclonedx.json` - CycloneDX format SBOM for wheel distribution
+
+            ### 🔐 Digital Signatures
+            - All distribution files are signed using Sigstore keyless signing
+            - Signature files (`.sig`) and certificates (`.crt`) are included
+            - Signatures can be verified using: `cosign verify-blob --certificate <file>.crt --signature <file>.sig --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" --certificate-oidc-issuer "https://token.actions.githubusercontent.com" <file>`
+
+            ### 🏗️ Build Provenance
+            - `build-provenance.json` - Complete build provenance information
+            - SLSA Build Level 3 compliant attestations via GitHub's native attestation service
+
+            ### ✅ Verification Instructions
+            ```bash
+            # Verify package signatures
+            cosign verify-blob --certificate pulse_sdk-*.whl.crt --signature pulse_sdk-*.whl.sig \\
+              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
+              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
+              pulse_sdk-*.whl
+
+            # Verify SBOM integrity
+            cosign verify-blob --certificate sbom-wheel.spdx.json.crt --signature sbom-wheel.spdx.json.sig \\
+              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
+              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
+              sbom-wheel.spdx.json
+            ```

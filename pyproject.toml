@@ -11,7 +11,31 @@ license = { text = "MIT" }
 authors = [
     { name="Researchwise AI", email="dev@researchwiseai.com" }
 ]
+maintainers = [
+    { name="Researchwise AI", email="dev@researchwiseai.com" }
+]
 requires-python = ">=3.8"
+keywords = [
+    "ai", "nlp", "text-analysis", "machine-learning", "api-client",
+    "sentiment-analysis", "embeddings", "clustering", "summarization"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+    "Typing :: Typed",
+]
 dependencies = [
     "httpx",
     "pydantic>=2.0",
@@ -27,8 +51,13 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/researchwiseai/pulse-py"
 Homepage = "https://github.com/researchwiseai/pulse-py#readme"
+Repository = "https://github.com/researchwiseai/pulse-py"
+Documentation = "https://researchwiseai.github.io/pulse-py/"
+Changelog = "https://github.com/researchwiseai/pulse-py/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/researchwiseai/pulse-py/issues"
+"Security Policy" = "https://github.com/researchwiseai/pulse-py/blob/main/SECURITY.md"
+Funding = "https://github.com/sponsors/researchwiseai"
 
 [tool.setuptools.packages.find]
 # Limit package discovery to the library code and avoid picking up
@@ -119,7 +148,7 @@ output = "coverage.json"
 exclude_dirs = ["tests", "examples", "docs", "site", "build", ".venv", "venv", ".ipynb_checkpoints"]
 # Skip specific security checks that are false positives for this codebase:
 # B101: assert_used - used for runtime validation in client code
-# B110: try_except_pass - used for cleanup operations  
+# B110: try_except_pass - used for cleanup operations
 # B105: hardcoded_password_string - these are public OAuth endpoints
 # B311: random - used for sampling, not cryptographic purposes
 # B403: pickle import - used for cache key generation only

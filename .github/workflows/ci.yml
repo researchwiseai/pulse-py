@@ -34,7 +34,35 @@ jobs:
       run: nbqa black --check .
     - name: Lint with Ruff
       run: ruff check pulse tests
-    
+
+    - name: Validate Conventional Commits
+      if: github.event_name == 'pull_request'
+      uses: amannn/action-semantic-pull-request@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # Configure the types of commits that are allowed
+        types: |
+          feat
+          fix
+          docs
+          style
+          refactor
+          perf
+          test
+          build
+          ci
+          chore
+          revert
+        # Require a scope for certain types
+        requireScope: false
+        # Disable validation of the subject's case
+        subjectPattern: ^(?![A-Z]).+$
+        subjectPatternError: |
+          The subject "{subject}" found in the pull request title "{title}"
+          didn't match the configured pattern. Please ensure that the subject
+          doesn't start with an uppercase character.
+
     # Security scanning steps
     - name: Run Bandit Security Scan
       run: |
@@ -48,17 +76,17 @@ jobs:
           --exclude pulse/core/.ipynb_checkpoints \
           --skip B101,B110,B105,B311,B403,B601
       continue-on-error: false
-    
+
     # Note: SARIF upload requires bandit[sarif] which may not be available in all environments
     # For now, we'll rely on JSON reports and manual review
-    
+
     - name: Run pip-audit Vulnerability Scan
       run: |
         pip-audit --format=json --output=pip-audit-report.json || true
         # Also run with standard output for immediate feedback
         pip-audit --format=columns
       continue-on-error: false
-    
+
     - name: Upload Coverage Reports
       if: always()
       uses: actions/upload-artifact@v4
@@ -68,7 +96,7 @@ jobs:
           htmlcov/
           coverage.json
         retention-days: 30
-    
+
     - name: Coverage Comment
       if: github.event_name == 'pull_request'
       uses: py-cov-action/python-coverage-comment-action@v3
@@ -76,7 +104,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
         MINIMUM_GREEN: 90
         MINIMUM_ORANGE: 80
-    
+
     - name: Upload Security Scan Artifacts
       if: always()
       uses: actions/upload-artifact@v4

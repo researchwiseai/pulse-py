@@ -6,6 +6,10 @@
 Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 
 ## Changelog
+
+Starting with version 0.3.4, changelogs are automatically generated using [Release Please](https://github.com/googleapis/release-please) based on [Conventional Commits](https://www.conventionalcommits.org/). See [CHANGELOG.md](CHANGELOG.md) for the full changelog.
+
+### Recent Changes
 - 0.3.3
   - Fix: decouple base URL and OAuth audience configuration to avoid unintended coupling between environments.
 - 0.3.2
@@ -28,7 +32,7 @@ Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
   - Install: `pip install mkdocs mkdocs-material`
   - Serve locally: `mkdocs serve` (http://127.0.0.1:8000)
   - Build static site: `mkdocs build`
- 
+
 ## First-Time Setup (Developers)
 
 Use Python 3.8+ and a virtual environment.
@@ -47,6 +51,7 @@ pip install -e ".[dev]"
 3) Install pre-commit hooks
 ```bash
 pre-commit install
+pre-commit install --hook-type commit-msg
 # optional: run once on all files
 pre-commit run --all-files
 ```
@@ -79,7 +84,7 @@ ruff check pulse tests
 bandit -r pulse --exclude pulse/core/.ipynb_checkpoints --skip B101,B110,B105,B311,B403,B601
 pip-audit --format=columns
 ```
- 
+
 ## Installation
 
 ### From PyPI
@@ -361,9 +366,31 @@ Note: For onboarding, see First-Time Setup above.
 - Install pre-commit hooks (auto-runs formatters/linters on commit):
   ```bash
   pre-commit install
+  pre-commit install --hook-type commit-msg
   # optional: run hooks on all files once
   pre-commit run --all-files
   ```
+
+### Commit Message Format
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated changelog generation. Please format your commit messages as:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+
+**Examples:**
+- `feat: add sentiment analysis caching`
+- `fix: handle network timeout in auth flow`
+- `docs: update quick start guide`
+- `feat!: change API response format` (breaking change)
+
+See [scripts/conventional-commits-guide.md](scripts/conventional-commits-guide.md) for detailed guidance.
 
 ### Format & Lint
 - Format Python: `black .` (configured to line length 88)

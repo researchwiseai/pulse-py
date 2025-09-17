@@ -15,11 +15,14 @@ markdown_extensions:
   - tables
 nav:
   - Home: index.md
-  - Core Client: core-client.md
-  - Configuration: configuration.md
-  - Authentication: authentication.md
-  - Analyzer & Processes: analyzer.md
-  - DSL Builder: dsl.md
-  - Starters: starters.md
-  - Data Models: models.md
-  - Jobs & Errors: jobs-and-errors.md
+  - API Documentation:
+    - Core Client: core-client.md
+    - Configuration: configuration.md
+    - Authentication: authentication.md
+    - Analyzer & Processes: analyzer.md
+    - DSL Builder: dsl.md
+    - Starters: starters.md
+    - Data Models: models.md
+    - Jobs & Errors: jobs-and-errors.md
+  - Security & Compliance:
+    - Supply Chain Security: supply-chain-security.md

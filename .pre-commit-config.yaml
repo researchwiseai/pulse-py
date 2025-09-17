@@ -29,3 +29,10 @@ repos:
       - id: bandit
         args: ['-r', 'pulse', '--exclude', 'pulse/core/.ipynb_checkpoints', '--skip', 'B101,B110,B105,B311,B403,B601']
         exclude: ^(tests/|examples/|docs/)
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [--strict]
