@@ -1,0 +1,40 @@
+interactions:
+- request:
+    body: '{"inputs":["happy","sad"],"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTc4NDIzNDMsImV4cCI6MTc1NzkyODc0MywiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.W5PVotGlpdbYdIhUG3gUtMoLVuHIcS6wjHK0rRAhYQlP2kZ_r_QFLkoT2KEfb1eIWBk4kgQ32gWQQhE739vTECbAkNV6v1RVJR0Y8S8smWcWW9mJ10LSC3Umf1XGN6-pfLGGO5OIohp3qjZY86F4jkd_Q73rjVQr_p8y_uXE53ozm-1XnEvFhQrQBrImNEYpb46StzqT_uLDEcoQ0FMspydrqoKRKxT3t3wv4i12nRbHgi-vsQZcx4w7Zu6f7EKO51SdXUF13hlu_pU66SP1rSxH8JK9sarmYMvLMBhrIn4qlM_Moobd93kJojjwzH4pZBKn-FD1NHfXXvcYLBxX3g
+      connection:
+      - keep-alive
+      content-length:
+      - '38'
+      content-type:
+      - application/json
+      host:
+      - staging.pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://staging.pulse.researchwiseai.com/v1/sentiment
+  response:
+    body:
+      string: '{"results":[{"sentiment":"positive","confidence":0.98},{"sentiment":"negative","confidence":0.97}],"requestId":"fe15f058351aae0e4d6ac84446c4d841e2dacd13","usage":{"records":[{"feature":"sentiment","quantity":1}],"total":1}}'
+    headers:
+      Apigw-Requestid:
+      - Q4rDQi_WjoEEPpA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '223'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 14 Sep 2025 09:32:30 GMT
+    status:
+      code: 200
+      message: OK
+version: 1

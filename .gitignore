@@ -35,3 +35,9 @@ cache/
 htmlcov/
 # Environment files
 .env
+
+# Security scan reports
+security-reports/
+bandit-report.*
+pip-audit-report.*
+.pip-audit-cache/

@@ -34,3 +34,37 @@ jobs:
       run: nbqa black --check .
     - name: Lint with Ruff
       run: ruff check pulse tests
+    
+    # Security scanning steps
+    - name: Run Bandit Security Scan
+      run: |
+        # Run Bandit with appropriate exclusions and skips for false positives
+        bandit -r pulse \
+          --exclude pulse/core/.ipynb_checkpoints \
+          --skip B101,B110,B105,B311,B403,B601 \
+          -f json -o bandit-report.json || true
+        # Also run with standard output for immediate feedback
+        bandit -r pulse \
+          --exclude pulse/core/.ipynb_checkpoints \
+          --skip B101,B110,B105,B311,B403,B601
+      continue-on-error: false
+    
+    # Note: SARIF upload requires bandit[sarif] which may not be available in all environments
+    # For now, we'll rely on JSON reports and manual review
+    
+    - name: Run pip-audit Vulnerability Scan
+      run: |
+        pip-audit --format=json --output=pip-audit-report.json || true
+        # Also run with standard output for immediate feedback
+        pip-audit --format=columns
+      continue-on-error: false
+    
+    - name: Upload Security Scan Artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          pip-audit-report.json
+        retention-days: 30

@@ -67,6 +67,16 @@ black .
 nbqa black .
 ruff check pulse tests
 ```
+
+7) Security scanning
+```bash
+# Run comprehensive security scans
+./scripts/security-scan.sh
+
+# Or run individual tools
+bandit -r pulse --exclude pulse/core/.ipynb_checkpoints --skip B101,B110,B105,B311,B403,B601
+pip-audit --format=columns
+```
  
 ## Installation
 

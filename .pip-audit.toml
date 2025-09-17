@@ -1,0 +1,21 @@
+# pip-audit configuration for vulnerability scanning
+[tool.pip-audit]
+# Output format for CI integration
+format = "json"
+
+# Fail on vulnerabilities of this severity or higher
+# Options: low, medium, high, critical
+vulnerability-severity-threshold = "medium"
+
+# Skip vulnerabilities that don't have fixes available
+# Set to false to report all vulnerabilities
+skip-editable = false
+
+# Cache vulnerability database for faster subsequent runs
+cache-dir = ".pip-audit-cache"
+
+# Exclude specific packages if needed (uncomment and modify as needed)
+# ignore-vulns = ["GHSA-xxxx-xxxx-xxxx"]
+
+# Include dev dependencies in scan
+require-hashes = false

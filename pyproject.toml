@@ -74,6 +74,18 @@ addopts = "-ra -q"
 markers = ["vcr: mark the test to use pytest-vcr for HTTP request recording"]
  testpaths = ["tests"]
 
+[tool.bandit]
+exclude_dirs = ["tests", "examples", "docs", "site", "build", ".venv", "venv", ".ipynb_checkpoints"]
+# Skip specific security checks that are false positives for this codebase:
+# B101: assert_used - used for runtime validation in client code
+# B110: try_except_pass - used for cleanup operations  
+# B105: hardcoded_password_string - these are public OAuth endpoints
+# B311: random - used for sampling, not cryptographic purposes
+# B403: pickle import - used for cache key generation only
+# B601: shell=True (may be needed for subprocess)
+skips = ["B101", "B110", "B105", "B311", "B403", "B601"]
+severity = "medium"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=6.0",
@@ -83,4 +95,6 @@ dev = [
     "nbqa",
     "ruff",
     "pre-commit>=2.9.2",
+    "bandit[toml]>=1.7.0",
+    "pip-audit>=2.6.0",
 ]
