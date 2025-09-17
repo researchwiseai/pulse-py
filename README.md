@@ -1,5 +1,7 @@
 # pulse-sdk
 [![Deploy Docs to GitHub Pages](https://github.com/researchwiseai/pulse-py/actions/workflows/docs.yml/badge.svg)](https://github.com/researchwiseai/pulse-py/actions/workflows/docs.yml)
+[![CI](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml/badge.svg)](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-check%20CI-blue)](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml)
 
 Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
 

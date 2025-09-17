@@ -70,9 +70,50 @@ exclude = [
 
  [tool.pytest.ini_options]
  minversion = "6.0"
-addopts = "-ra -q"
+addopts = "-ra -q --cov=pulse --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=90"
 markers = ["vcr: mark the test to use pytest-vcr for HTTP request recording"]
  testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["pulse"]
+omit = [
+    "tests/*",
+    "examples/*",
+    "docs/*",
+    "site/*",
+    "build/*",
+    "pulse/__pycache__/*",
+    "*/__pycache__/*",
+    "*/migrations/*",
+    "venv/*",
+    ".venv/*"
+]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = false
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod"
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+title = "Pulse SDK Coverage Report"
+
+[tool.coverage.json]
+output = "coverage.json"
 
 [tool.bandit]
 exclude_dirs = ["tests", "examples", "docs", "site", "build", ".venv", "venv", ".ipynb_checkpoints"]
@@ -91,6 +132,7 @@ dev = [
     "pytest>=6.0",
     "pytest-mock",
     "pytest-vcr",
+    "pytest-cov>=4.0.0",
     "black==25.1.0",
     "nbqa",
     "ruff",
