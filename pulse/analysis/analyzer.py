@@ -79,8 +79,15 @@ class Analyzer:
         for process in self.processes:
             key = self._make_cache_key(process) if self._cache is not None else None
             if self.use_cache and self._cache is not None and key in self._cache:
+                from pulse.debug import log_cache_hit
+
+                log_cache_hit(key)
                 wrapped = self._cache[key]
             else:
+                from pulse.debug import log_cache_miss
+
+                if key:
+                    log_cache_miss(key)
                 raw = process.run(self)
                 # Wrap raw response in high-level result based on original process id
                 orig_id = getattr(process, "_orig_id", process.id)

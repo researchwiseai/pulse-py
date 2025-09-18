@@ -102,6 +102,8 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
         )
 
     def _refresh_token(self) -> None:
+        from pulse.debug import log_auth_refresh
+
         data: dict[str, str] = {
             "grant_type": "client_credentials",
             "client_id": self.client_id,
@@ -116,6 +118,9 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
         expires_in = payload.get("expires_in", 3600)
         # Subtract a buffer to account for clock skew
         self._expires_at = time.time() + float(expires_in) - 60.0
+
+        # Log the refresh event
+        log_auth_refresh()
 
 
 class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
@@ -246,6 +251,8 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         return code
 
     def _refresh_token(self) -> None:
+        from pulse.debug import log_auth_refresh
+
         # Build token request payload
         data: dict[str, str] = {
             "grant_type": "authorization_code",
@@ -268,6 +275,9 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         self._refresh_token_value = payload.get("refresh_token")
         expires_in = payload.get("expires_in", 3600)
         self._expires_at = time.time() + float(expires_in) - 60.0
+
+        # Log the refresh event
+        log_auth_refresh()
 
 
 def _get_default_auth() -> AuthorizationCodePKCEAuth:

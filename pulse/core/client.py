@@ -7,6 +7,7 @@ from pulse.core.utils import chunk_texts
 from pulse.core.gzip_client import GzipClient
 from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
 from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth, auto_auth
+from pulse.debug import debug_request, _log_response, log_request_failure
 
 from pulse.config import BASE_URL, DEFAULT_TIMEOUT
 from pulse.core.jobs import Job
@@ -58,7 +59,17 @@ class CoreClient:
             )
 
     def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
-        return retry_request(lambda: self.client.request(method, url, **kwargs))
+        with debug_request(method, url, **kwargs) as timing:
+            try:
+                response = retry_request(
+                    lambda: self.client.request(method, url, **kwargs)
+                )
+                timing.status_code = response.status_code
+                _log_response(response)
+                return response
+            except Exception as e:
+                log_request_failure(e)
+                raise
 
     @classmethod
     def with_client_credentials(
@@ -595,6 +606,17 @@ class CoreClient:
     def close(self) -> None:
         """Close underlying HTTP connection."""
         self.client.close()
+
+    def debug_auth_status(self):
+        """Inspect and return authentication status for debugging."""
+        from pulse.debug import inspect_token
+
+        if hasattr(self.client, "auth") and self.client.auth:
+            return inspect_token(self.client.auth)
+        else:
+            from pulse.debug import TokenInfo
+
+            return TokenInfo(has_token=False)
 
     def get_job_status(self, job_id: str) -> Job:
         """Retrieve the status of a previously submitted job."""
