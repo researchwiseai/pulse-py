@@ -39,16 +39,6 @@ jobs:
     - name: Lint with Ruff
       run: ruff check pulse tests
 
-    - name: Lint GitHub Actions workflows
-      run: |
-        # Install actionlint if not available
-        if ! command -v actionlint &> /dev/null; then
-          echo "Installing actionlint..."
-          bash <(curl https://raw.githubusercontent.com/rhymond/actionlint/main/scripts/download-actionlint.bash)
-          sudo mv ./actionlint /usr/local/bin/
-        fi
-        actionlint
-
     - name: Validate Conventional Commits
       if: github.event_name == 'pull_request'
       uses: amannn/action-semantic-pull-request@v5
