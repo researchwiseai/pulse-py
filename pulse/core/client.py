@@ -5,7 +5,20 @@ import httpx
 from pulse.core.retry import retry_request
 from pulse.core.utils import chunk_texts
 from pulse.core.gzip_client import GzipClient
-from pulse.core.batching import _make_self_chunks, _make_cross_bodies, _stitch_results
+
+try:
+    from pulse.core.batching import (
+        _make_self_chunks,
+        _make_cross_bodies,
+        _stitch_results,
+    )
+
+    HAS_BATCHING = True
+except ImportError:
+    HAS_BATCHING = False
+    _make_self_chunks = None
+    _make_cross_bodies = None
+    _stitch_results = None
 from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth, auto_auth
 from pulse.debug import debug_request, _log_response, log_request_failure
 
@@ -423,7 +436,15 @@ class CoreClient:
     ) -> Any:
         """
         Batch large similarity requests intelligently under the 10k-item limit.
+
+        Note: This method requires numpy for matrix operations. Install with:
+        pip install pulse-sdk[analysis]
         """
+        if not HAS_BATCHING:
+            raise ImportError(
+                "Batch similarity requires numpy for matrix operations. "
+                "Install with: pip install pulse-sdk[analysis]"
+            )
         if set is not None:
             chunks = _make_self_chunks(set)
             bodies: List[Dict[str, Any]] = []

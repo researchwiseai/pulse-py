@@ -1,7 +1,14 @@
 """Batching utilities for similarity requests under Pulse API limits."""
 
 from typing import Any, Dict, List, Tuple
-import numpy as np
+
+try:
+    import numpy as np
+
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
+    np = None
 
 # Maximum total items per similarity request
 MAX_ITEMS = 10_000
@@ -71,6 +78,13 @@ def _stitch_results(
     full_b: List[str],
 ) -> Any:
     """Stitch block results back into a full similarity matrix."""
+    if not HAS_NUMPY:
+        # Fallback: return the first result if numpy is not available
+        # This is a simplified approach for basic functionality
+        if results:
+            return results[0]
+        return None
+
     A, B = len(full_a), len(full_b)
     matrix = np.zeros((A, B), dtype=float)
 

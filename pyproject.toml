@@ -6,42 +6,76 @@
 name = "pulse-sdk"
 version = "0.6.1"
 description = "Idiomatic, type-safe Python client for the Pulse REST API"
-readme = "README.md"
-license = { text = "MIT" }
+readme = { file = "README.md", content-type = "text/markdown" }
+license = "MIT"
 authors = [
-    { name="Researchwise AI", email="dev@researchwiseai.com" }
+    { name = "Researchwise AI", email = "dev@researchwiseai.com" }
 ]
 maintainers = [
-    { name="Researchwise AI", email="dev@researchwiseai.com" }
+    { name = "Researchwise AI", email = "dev@researchwiseai.com" }
 ]
 requires-python = ">=3.8"
 keywords = [
     "ai", "nlp", "text-analysis", "machine-learning", "api-client",
-    "sentiment-analysis", "embeddings", "clustering", "summarization"
+    "sentiment-analysis", "embeddings", "clustering", "summarization",
+    "theme-analysis", "similarity", "data-science", "research"
 ]
 classifiers = [
+    # Development Status
     "Development Status :: 4 - Beta",
+
+    # Intended Audience
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Education",
+
+    # Operating System
     "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+
+    # Programming Language
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+
+    # Topic
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: Linguistic",
+    "Topic :: Text Processing :: General",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Utilities",
+
+    # Framework
+    "Framework :: AsyncIO",
+    "Framework :: Jupyter",
+
+    # Environment
+    "Environment :: Console",
+    "Environment :: Web Environment",
+
+    # Natural Language
+    "Natural Language :: English",
+
+    # Typing
     "Typing :: Typed",
 ]
 # Core dependencies required for basic SDK functionality
 dependencies = [
     "httpx>=0.24.0",           # HTTP client for API requests
-    "pydantic>=2.0",           # Data validation and serialization
+    "pydantic>=2.0,<3.0",      # Data validation and serialization
     "typing-extensions>=4.0",  # Type hints for older Python versions
 ]
+dynamic = []
 
 [project.urls]
 Homepage = "https://github.com/researchwiseai/pulse-py#readme"
@@ -50,7 +84,12 @@ Documentation = "https://researchwiseai.github.io/pulse-py/"
 Changelog = "https://github.com/researchwiseai/pulse-py/blob/main/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/researchwiseai/pulse-py/issues"
 "Security Policy" = "https://github.com/researchwiseai/pulse-py/blob/main/SECURITY.md"
-Funding = "https://github.com/sponsors/researchwiseai"
+"Source Code" = "https://github.com/researchwiseai/pulse-py"
+"Download" = "https://pypi.org/project/pulse-sdk/"
+"Release Notes" = "https://github.com/researchwiseai/pulse-py/releases"
+"Discussions" = "https://github.com/researchwiseai/pulse-py/discussions"
+"Sponsor" = "https://github.com/sponsors/researchwiseai"
+"Twitter" = "https://twitter.com/researchwiseai"
 
 [tool.setuptools.packages.find]
 # Limit package discovery to the library code and avoid picking up
@@ -65,6 +104,18 @@ exclude = [
     "venv*",
     ".venv*",
 ]
+
+[tool.setuptools]
+# Enable automatic package discovery
+zip-safe = false
+include-package-data = true
+
+[tool.setuptools.package-data]
+pulse = ["py.typed"]
+
+[tool.wheel]
+# Universal wheel configuration for pure Python packages
+universal = true
 
  [tool.black]
  line-length = 88
@@ -201,4 +252,7 @@ dev = [
     "pip-audit>=2.6.0",        # Dependency vulnerability scanner
     "mkdocs>=1.4.0",           # Documentation generator
     "mkdocs-material>=8.0.0",  # Material theme for documentation
+    "semver>=3.0.0",           # Semantic versioning validation
+    "build>=0.10.0",           # Build tool for creating distributions
+    "twine>=4.0.0",            # Tool for uploading packages to PyPI
 ]
