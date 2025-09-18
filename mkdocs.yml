@@ -15,6 +15,7 @@ markdown_extensions:
   - tables
 nav:
   - Home: index.md
+  - Quick Start: quickstart.md
   - API Documentation:
     - Core Client: core-client.md
     - Configuration: configuration.md
