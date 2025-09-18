@@ -121,7 +121,10 @@ jobs:
         run: |
           # Verify all signatures were created successfully
           echo "Verifying signatures..."
-          for file in dist/*; do
+          for file in dist/*.whl dist/*.tar.gz; do
+            # Skip if no files match the pattern
+            [[ -e "$file" ]] || continue
+
             if [[ -f "${file}.sig" && -f "${file}.crt" ]]; then
               echo "✓ Signature files exist for $file"
               cosign verify-blob --certificate "${file}.crt" --signature "${file}.sig" \
