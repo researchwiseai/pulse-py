@@ -304,8 +304,8 @@ For enterprise users, our supply chain security features enable:
 
 If you encounter issues with supply chain security verification:
 
-1. Check our [troubleshooting guide](../README.md#troubleshooting)
-2. Review the [security policy](../SECURITY.md)
+1. Check our troubleshooting guide in the main README
+2. Review our security policy
 3. Open an issue on [GitHub](https://github.com/researchwiseai/pulse-py/issues)
 4. For security-related issues, email dev@researchwiseai.com
 
@@ -320,4 +320,4 @@ We're continuously improving our supply chain security:
 
 ---
 
-For more information about our security practices, see our [Security Policy](../SECURITY.md).
+For more information about our security practices, see our Security Policy in the repository root.

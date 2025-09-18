@@ -1,0 +1,1836 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+
+
+
+
+        <link rel="prev" href="../jobs-and-errors/">
+
+
+
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+
+
+
+        <title>Supply Chain Security - Pulse SDK</title>
+
+
+
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+
+
+
+
+
+
+
+
+
+
+
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+
+
+
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+
+
+
+
+
+
+  </head>
+
+
+    <body dir="ltr">
+
+
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+
+
+        <a href="#supply-chain-security" class="md-skip">
+          Skip to content
+        </a>
+
+    </div>
+    <div data-md-component="announce">
+
+    </div>
+
+
+
+
+
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pulse SDK" class="md-header__button md-logo" aria-label="Pulse SDK" data-md-component="logo">
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pulse SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+
+              Supply Chain Security
+
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+
+
+
+
+
+        <label class="md-header__button md-icon" for="__search">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+      <div class="md-header__source">
+        <a href="https://github.com/researchwiseai/pulse-py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+
+  </nav>
+
+</header>
+
+    <div class="md-container" data-md-component="container">
+
+
+
+
+
+
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+
+
+
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pulse SDK" class="md-nav__button md-logo" aria-label="Pulse SDK" data-md-component="logo">
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pulse SDK
+  </label>
+
+    <div class="md-nav__source">
+      <a href="https://github.com/researchwiseai/pulse-py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+
+  <ul class="md-nav__list" data-md-scrollfix>
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Home
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--nested">
+
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+
+
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+    API Documentation
+
+  </span>
+
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../core-client/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Core Client
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Configuration
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../authentication/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Authentication
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../analyzer/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Analyzer & Processes
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../dsl/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    DSL Builder
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../starters/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Starters
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Data Models
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../jobs-and-errors/" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+    Jobs & Errors
+
+  </span>
+
+
+      </a>
+    </li>
+
+
+
+
+          </ul>
+        </nav>
+
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+
+
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+    Security & Compliance
+
+  </span>
+
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Security & Compliance
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--active">
+
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+
+
+
+
+
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+
+
+
+  <span class="md-ellipsis">
+    Supply Chain Security
+
+  </span>
+
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+
+      <a href="./" class="md-nav__link md-nav__link--active">
+
+
+
+  <span class="md-ellipsis">
+    Supply Chain Security
+
+  </span>
+
+
+      </a>
+
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+
+
+
+
+
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#slsa-supply-chain-levels-for-software-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      SLSA (Supply-chain Levels for Software Artifacts)
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="SLSA (Supply-chain Levels for Software Artifacts)">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#what-is-slsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is SLSA?
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#our-slsa-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our SLSA Implementation
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#build-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build Provenance
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#software-bill-of-materials-sbom" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software Bill of Materials (SBOM)
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Software Bill of Materials (SBOM)">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#what-is-an-sbom" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is an SBOM?
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#our-sbom-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our SBOM Implementation
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#sbom-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Files
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#sbom-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Content
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#digital-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Digital Signatures
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Digital Signatures">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#sigstore-and-cosign" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sigstore and Cosign
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#what-we-sign" class="md-nav__link">
+    <span class="md-ellipsis">
+      What We Sign
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#signature-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signature Files
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Verification">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#automated-verification-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Verification Script
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#manual-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Verification
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Manual Verification">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#verify-package-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verify Package Signatures
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#verify-sbom-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verify SBOM Signatures
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#reproducible-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reproducible Builds
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Reproducible Builds">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#what-are-reproducible-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are Reproducible Builds?
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#our-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our Implementation
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#verification-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification Workflow
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#manual-reproducibility-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Reproducibility Verification
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#security-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Monitoring
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Security Monitoring">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#continuous-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous Monitoring
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#incident-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Incident Response
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#compliance-and-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance and Standards
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#integration-with-package-managers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Package Managers
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Integration with Package Managers">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#pypi-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyPI Integration
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#enterprise-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Integration
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#best-practices-for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices for Users
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Best Practices for Users">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#for-individual-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Individual Developers
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#for-organizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Organizations
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#signature-verification-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signature Verification Fails
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#sbom-content-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Content Differences
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#reproducibility-verification-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reproducibility Verification Fails
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Enhancements
+    </span>
+  </a>
+
+</li>
+
+    </ul>
+
+</nav>
+
+    </li>
+
+
+
+
+          </ul>
+        </nav>
+
+    </li>
+
+
+
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+
+
+
+
+
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#slsa-supply-chain-levels-for-software-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      SLSA (Supply-chain Levels for Software Artifacts)
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="SLSA (Supply-chain Levels for Software Artifacts)">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#what-is-slsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is SLSA?
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#our-slsa-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our SLSA Implementation
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#build-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build Provenance
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#software-bill-of-materials-sbom" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software Bill of Materials (SBOM)
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Software Bill of Materials (SBOM)">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#what-is-an-sbom" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is an SBOM?
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#our-sbom-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our SBOM Implementation
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#sbom-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Files
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#sbom-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Content
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#digital-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Digital Signatures
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Digital Signatures">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#sigstore-and-cosign" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sigstore and Cosign
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#what-we-sign" class="md-nav__link">
+    <span class="md-ellipsis">
+      What We Sign
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#signature-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signature Files
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Verification">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#automated-verification-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Verification Script
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#manual-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Verification
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Manual Verification">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#verify-package-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verify Package Signatures
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#verify-sbom-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verify SBOM Signatures
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#reproducible-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reproducible Builds
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Reproducible Builds">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#what-are-reproducible-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are Reproducible Builds?
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#our-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Our Implementation
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#verification-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification Workflow
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#manual-reproducibility-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Reproducibility Verification
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#security-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Monitoring
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Security Monitoring">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#continuous-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous Monitoring
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#incident-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      Incident Response
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#compliance-and-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance and Standards
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#integration-with-package-managers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Package Managers
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Integration with Package Managers">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#pypi-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyPI Integration
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#enterprise-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Integration
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#best-practices-for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices for Users
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Best Practices for Users">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#for-individual-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Individual Developers
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#for-organizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Organizations
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#signature-verification-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signature Verification Fails
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#sbom-content-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Content Differences
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#reproducibility-verification-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reproducibility Verification Fails
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Enhancements
+    </span>
+  </a>
+
+</li>
+
+    </ul>
+
+</nav>
+                  </div>
+                </div>
+              </div>
+
+
+
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+
+
+
+
+
+
+
+
+<h1 id="supply-chain-security">Supply Chain Security<a class="headerlink" href="#supply-chain-security" title="Permanent link">&para;</a></h1>
+<p>The Pulse SDK implements comprehensive supply chain security measures to ensure the integrity, authenticity, and provenance of all releases. This document provides detailed information about our security practices and how to verify them.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Our supply chain security implementation follows industry best practices and standards:</p>
+<ul>
+<li><strong>SLSA Build Level 3</strong> compliance through GitHub's native attestation service</li>
+<li><strong>Software Bill of Materials (SBOM)</strong> generation in multiple formats</li>
+<li><strong>Keyless digital signatures</strong> using Sigstore/Cosign</li>
+<li><strong>Reproducible builds</strong> with automated verification</li>
+<li><strong>Comprehensive provenance</strong> tracking</li>
+</ul>
+<h2 id="slsa-supply-chain-levels-for-software-artifacts">SLSA (Supply-chain Levels for Software Artifacts)<a class="headerlink" href="#slsa-supply-chain-levels-for-software-artifacts" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-slsa">What is SLSA?<a class="headerlink" href="#what-is-slsa" title="Permanent link">&para;</a></h3>
+<p>SLSA is a security framework that helps prevent supply chain attacks by providing a common vocabulary and set of requirements for software supply chain security. Our implementation achieves <strong>SLSA Build Level 3</strong>.</p>
+<h3 id="our-slsa-implementation">Our SLSA Implementation<a class="headerlink" href="#our-slsa-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Source</strong>: All builds are tied to specific Git commits with full history</li>
+<li><strong>Build</strong>: Builds run on GitHub-hosted runners with full isolation</li>
+<li><strong>Provenance</strong>: Complete build provenance is generated and signed</li>
+<li><strong>Common</strong>: All artifacts are signed and verifiable</li>
+</ul>
+<h3 id="build-provenance">Build Provenance<a class="headerlink" href="#build-provenance" title="Permanent link">&para;</a></h3>
+<p>Every release includes a <code>build-provenance.json</code> file containing:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;buildType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/researchwiseai/pulse-py/.github/workflows/publish.yml@refs/heads/main&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;builder&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/actions/runner/github-hosted&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;invocation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;configSource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;git+https://github.com/researchwiseai/pulse-py@&lt;commit-sha&gt;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;digest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;sha1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;commit-sha&gt;&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;entryPoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.github/workflows/publish.yml&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;buildInvocationId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;run-id&gt;-&lt;run-attempt&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;reproducible&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="software-bill-of-materials-sbom">Software Bill of Materials (SBOM)<a class="headerlink" href="#software-bill-of-materials-sbom" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-an-sbom">What is an SBOM?<a class="headerlink" href="#what-is-an-sbom" title="Permanent link">&para;</a></h3>
+<p>An SBOM is a comprehensive inventory of all software components, dependencies, and metadata used in building a software artifact. It provides transparency into what's included in our packages.</p>
+<h3 id="our-sbom-implementation">Our SBOM Implementation<a class="headerlink" href="#our-sbom-implementation" title="Permanent link">&para;</a></h3>
+<p>We generate SBOMs using <a href="https://github.com/anchore/syft">Syft</a> in multiple industry-standard formats:</p>
+<ul>
+<li><strong>SPDX JSON</strong> - Software Package Data Exchange format</li>
+<li><strong>CycloneDX JSON</strong> - OWASP CycloneDX format</li>
+</ul>
+<h3 id="sbom-files">SBOM Files<a class="headerlink" href="#sbom-files" title="Permanent link">&para;</a></h3>
+<p>Each release includes the following SBOM files:</p>
+<ul>
+<li><code>sbom-source.spdx.json</code> - SBOM for the source distribution</li>
+<li><code>sbom-source.cyclonedx.json</code> - CycloneDX format for source</li>
+<li><code>sbom-wheel.spdx.json</code> - SBOM for the wheel distribution</li>
+<li><code>sbom-wheel.cyclonedx.json</code> - CycloneDX format for wheel</li>
+</ul>
+<h3 id="sbom-content">SBOM Content<a class="headerlink" href="#sbom-content" title="Permanent link">&para;</a></h3>
+<p>Our SBOMs include:</p>
+<ul>
+<li>All Python dependencies with exact versions</li>
+<li>License information for each component</li>
+<li>Package relationships and dependency tree</li>
+<li>File checksums and metadata</li>
+<li>Build environment information</li>
+</ul>
+<h2 id="digital-signatures">Digital Signatures<a class="headerlink" href="#digital-signatures" title="Permanent link">&para;</a></h2>
+<h3 id="sigstore-and-cosign">Sigstore and Cosign<a class="headerlink" href="#sigstore-and-cosign" title="Permanent link">&para;</a></h3>
+<p>We use <a href="https://www.sigstore.dev/">Sigstore</a> for keyless signing with <a href="https://github.com/sigstore/cosign">Cosign</a>. This provides:</p>
+<ul>
+<li><strong>Keyless signing</strong> - No long-lived private keys to manage</li>
+<li><strong>Transparency</strong> - All signatures are recorded in public transparency logs</li>
+<li><strong>Identity verification</strong> - Signatures are tied to GitHub OIDC identity</li>
+<li><strong>Certificate-based verification</strong> - Short-lived certificates for verification</li>
+</ul>
+<h3 id="what-we-sign">What We Sign<a class="headerlink" href="#what-we-sign" title="Permanent link">&para;</a></h3>
+<p>Every release includes signatures for:</p>
+<ul>
+<li>Source distribution (<code>.tar.gz</code>)</li>
+<li>Wheel distribution (<code>.whl</code>)</li>
+<li>All SBOM files</li>
+<li>Build provenance information</li>
+</ul>
+<h3 id="signature-files">Signature Files<a class="headerlink" href="#signature-files" title="Permanent link">&para;</a></h3>
+<p>For each signed file, we provide:</p>
+<ul>
+<li><code>.sig</code> file - The digital signature</li>
+<li><code>.crt</code> file - The signing certificate</li>
+</ul>
+<h2 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h2>
+<h3 id="automated-verification-script">Automated Verification Script<a class="headerlink" href="#automated-verification-script" title="Permanent link">&para;</a></h3>
+<p>We provide a comprehensive verification script at <code>scripts/verify-supply-chain.sh</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Download and verify a specific release</span>
+./scripts/verify-supply-chain.sh<span class="w"> </span>v1.0.0
+</code></pre></div>
+
+<p>The script will:</p>
+<ol>
+<li>Download all release artifacts</li>
+<li>Verify digital signatures using Cosign</li>
+<li>Validate SBOM content (if Syft is installed)</li>
+<li>Display a comprehensive verification report</li>
+</ol>
+<h3 id="manual-verification">Manual Verification<a class="headerlink" href="#manual-verification" title="Permanent link">&para;</a></h3>
+<h4 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h4>
+<p>Install Cosign:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Linux</span>
+curl<span class="w"> </span>-O<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64&quot;</span>
+sudo<span class="w"> </span>mv<span class="w"> </span>cosign-linux-amd64<span class="w"> </span>/usr/local/bin/cosign
+sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/cosign
+
+<span class="c1"># macOS with Homebrew</span>
+brew<span class="w"> </span>install<span class="w"> </span>cosign
+</code></pre></div>
+
+<h4 id="verify-package-signatures">Verify Package Signatures<a class="headerlink" href="#verify-package-signatures" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Verify wheel package</span>
+cosign<span class="w"> </span>verify-blob<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate<span class="w"> </span>pulse_sdk-1.0.0-py3-none-any.whl.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--signature<span class="w"> </span>pulse_sdk-1.0.0-py3-none-any.whl.sig<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s2">&quot;https://github.com/researchwiseai/pulse-py/.*&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span><span class="s2">&quot;https://token.actions.githubusercontent.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>pulse_sdk-1.0.0-py3-none-any.whl
+
+<span class="c1"># Verify source distribution</span>
+cosign<span class="w"> </span>verify-blob<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate<span class="w"> </span>pulse-sdk-1.0.0.tar.gz.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--signature<span class="w"> </span>pulse-sdk-1.0.0.tar.gz.sig<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s2">&quot;https://github.com/researchwiseai/pulse-py/.*&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span><span class="s2">&quot;https://token.actions.githubusercontent.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>pulse-sdk-1.0.0.tar.gz
+</code></pre></div>
+
+<h4 id="verify-sbom-signatures">Verify SBOM Signatures<a class="headerlink" href="#verify-sbom-signatures" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>cosign<span class="w"> </span>verify-blob<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate<span class="w"> </span>sbom-wheel.spdx.json.crt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--signature<span class="w"> </span>sbom-wheel.spdx.json.sig<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s2">&quot;https://github.com/researchwiseai/pulse-py/.*&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span><span class="s2">&quot;https://token.actions.githubusercontent.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sbom-wheel.spdx.json
+</code></pre></div>
+
+<h2 id="reproducible-builds">Reproducible Builds<a class="headerlink" href="#reproducible-builds" title="Permanent link">&para;</a></h2>
+<h3 id="what-are-reproducible-builds">What are Reproducible Builds?<a class="headerlink" href="#what-are-reproducible-builds" title="Permanent link">&para;</a></h3>
+<p>Reproducible builds ensure that the same source code always produces identical binary artifacts, making it possible to verify that published binaries match the source code.</p>
+<h3 id="our-implementation">Our Implementation<a class="headerlink" href="#our-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Standardized environment</strong> - Fixed Python version and build tools</li>
+<li><strong>Deterministic timestamps</strong> - Using <code>SOURCE_DATE_EPOCH</code> from Git</li>
+<li><strong>Consistent dependencies</strong> - Pinned build tool versions</li>
+<li><strong>Automated verification</strong> - Separate workflow verifies reproducibility</li>
+</ul>
+<h3 id="verification-workflow">Verification Workflow<a class="headerlink" href="#verification-workflow" title="Permanent link">&para;</a></h3>
+<p>Our reproducible build verification workflow:</p>
+<ol>
+<li>Checks out the exact commit used for the original build</li>
+<li>Sets up an identical build environment</li>
+<li>Rebuilds the packages</li>
+<li>Compares checksums with the original build</li>
+<li>Reports any differences</li>
+</ol>
+<h3 id="manual-reproducibility-verification">Manual Reproducibility Verification<a class="headerlink" href="#manual-reproducibility-verification" title="Permanent link">&para;</a></h3>
+<p>To verify a build locally:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Checkout the release tag</span>
+git<span class="w"> </span>checkout<span class="w"> </span>v1.0.0
+
+<span class="c1"># Set reproducible build environment</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SOURCE_DATE_EPOCH</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>log<span class="w"> </span>-1<span class="w"> </span>--format<span class="o">=</span>%ct<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONHASHSEED</span><span class="o">=</span><span class="m">0</span>
+
+<span class="c1"># Build</span>
+python<span class="w"> </span>-m<span class="w"> </span>build<span class="w"> </span>--sdist<span class="w"> </span>--wheel
+
+<span class="c1"># Compare checksums with published artifacts</span>
+sha256sum<span class="w"> </span>dist/*
+</code></pre></div>
+
+<h2 id="security-monitoring">Security Monitoring<a class="headerlink" href="#security-monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="continuous-monitoring">Continuous Monitoring<a class="headerlink" href="#continuous-monitoring" title="Permanent link">&para;</a></h3>
+<p>Our security monitoring includes:</p>
+<ul>
+<li><strong>Daily dependency scans</strong> - Automated vulnerability scanning</li>
+<li><strong>SBOM analysis</strong> - Regular analysis of dependency changes</li>
+<li><strong>Signature verification</strong> - Automated verification of all releases</li>
+<li><strong>Reproducibility checks</strong> - Regular verification of build reproducibility</li>
+</ul>
+<h3 id="incident-response">Incident Response<a class="headerlink" href="#incident-response" title="Permanent link">&para;</a></h3>
+<p>In case of a security incident:</p>
+<ol>
+<li><strong>Detection</strong> - Automated scanning or external report</li>
+<li><strong>Assessment</strong> - Evaluate impact and severity</li>
+<li><strong>Response</strong> - Patch, rebuild, and re-release if necessary</li>
+<li><strong>Communication</strong> - Notify users through GitHub Security Advisories</li>
+<li><strong>Post-incident</strong> - Review and improve security measures</li>
+</ol>
+<h2 id="compliance-and-standards">Compliance and Standards<a class="headerlink" href="#compliance-and-standards" title="Permanent link">&para;</a></h2>
+<p>Our supply chain security implementation helps ensure compliance with:</p>
+<ul>
+<li><strong>SLSA Framework</strong> - Build Level 3 compliance</li>
+<li><strong>NIST SSDF</strong> - Secure Software Development Framework</li>
+<li><strong>Executive Order 14028</strong> - Software supply chain security requirements</li>
+<li><strong>OWASP SCVS</strong> - Software Component Verification Standard</li>
+</ul>
+<h2 id="integration-with-package-managers">Integration with Package Managers<a class="headerlink" href="#integration-with-package-managers" title="Permanent link">&para;</a></h2>
+<h3 id="pypi-integration">PyPI Integration<a class="headerlink" href="#pypi-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Trusted publishing</strong> - Using OIDC for secure PyPI publishing</li>
+<li><strong>Attestations</strong> - PyPI attestations are automatically generated</li>
+<li><strong>Metadata</strong> - Rich package metadata for better discoverability</li>
+</ul>
+<h3 id="enterprise-integration">Enterprise Integration<a class="headerlink" href="#enterprise-integration" title="Permanent link">&para;</a></h3>
+<p>For enterprise users, our supply chain security features enable:</p>
+<ul>
+<li><strong>Policy enforcement</strong> - Verify signatures before installation</li>
+<li><strong>Dependency tracking</strong> - Use SBOMs for license and vulnerability management</li>
+<li><strong>Audit trails</strong> - Complete provenance for compliance requirements</li>
+</ul>
+<h2 id="best-practices-for-users">Best Practices for Users<a class="headerlink" href="#best-practices-for-users" title="Permanent link">&para;</a></h2>
+<h3 id="for-individual-developers">For Individual Developers<a class="headerlink" href="#for-individual-developers" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Verify signatures</strong> - Use our verification script for critical deployments</li>
+<li><strong>Review SBOMs</strong> - Check dependencies for security and licensing concerns</li>
+<li><strong>Pin versions</strong> - Use exact version pins for reproducible deployments</li>
+</ol>
+<h3 id="for-organizations">For Organizations<a class="headerlink" href="#for-organizations" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Implement verification</strong> - Integrate signature verification into CI/CD</li>
+<li><strong>SBOM analysis</strong> - Use SBOMs for vulnerability and license management</li>
+<li><strong>Policy enforcement</strong> - Require signed packages in production</li>
+<li><strong>Audit compliance</strong> - Use provenance information for compliance reporting</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<h4 id="signature-verification-fails">Signature Verification Fails<a class="headerlink" href="#signature-verification-fails" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Ensure you're using the correct certificate identity and OIDC issuer</li>
+<li>Check that you have the latest version of Cosign</li>
+<li>Verify you're using the correct signature and certificate files</li>
+</ul>
+<h4 id="sbom-content-differences">SBOM Content Differences<a class="headerlink" href="#sbom-content-differences" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Different versions of Syft may produce slightly different SBOMs</li>
+<li>This is normal and doesn't indicate a security issue</li>
+<li>Focus on major component differences, not metadata variations</li>
+</ul>
+<h4 id="reproducibility-verification-fails">Reproducibility Verification Fails<a class="headerlink" href="#reproducibility-verification-fails" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Ensure you're using the exact same Python version and build tools</li>
+<li>Check that <code>SOURCE_DATE_EPOCH</code> is set correctly</li>
+<li>Minor differences in metadata are acceptable</li>
+</ul>
+<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
+<p>If you encounter issues with supply chain security verification:</p>
+<ol>
+<li>Check our troubleshooting guide in the main README</li>
+<li>Review our security policy</li>
+<li>Open an issue on <a href="https://github.com/researchwiseai/pulse-py/issues">GitHub</a></li>
+<li>For security-related issues, email dev@researchwiseai.com</li>
+</ol>
+<h2 id="future-enhancements">Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<p>We're continuously improving our supply chain security:</p>
+<ul>
+<li><strong>Enhanced SBOM analysis</strong> - Automated vulnerability scanning of SBOMs</li>
+<li><strong>Multi-platform signatures</strong> - Support for different architectures</li>
+<li><strong>Integration testing</strong> - Automated testing of verification workflows</li>
+<li><strong>Policy templates</strong> - Pre-built policies for common use cases</li>
+</ul>
+<hr />
+<p>For more information about our security practices, see our Security Policy in the repository root.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </article>
+            </div>
+
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+
+      </main>
+
+        <footer class="md-footer">
+
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+
+
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+
+</div>
+
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+
+
+
+
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "content.code.copy"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+
+
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
+
+
+  </body>
+</html>
