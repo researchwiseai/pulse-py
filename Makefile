@@ -23,10 +23,10 @@ build:
 test:
 	pytest
 
-# Format code using black and nbqa
+# Format code using black and nbqa (only source directories)
 fmt:
-	black .
-	nbqa black .
+	black pulse tests examples scripts
+	nbqa black examples
 
 # Lint code using ruff
 lint:
