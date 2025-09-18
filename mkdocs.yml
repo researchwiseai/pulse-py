@@ -29,5 +29,9 @@ nav:
     - Starters: starters.md
     - Data Models: models.md
     - Jobs & Errors: jobs-and-errors.md
+  - Troubleshooting & Debugging:
+    - Error Recovery Guide: error-recovery.md
+    - Debugging Tools: debugging.md
+    - Dependency Troubleshooting: dependency-troubleshooting.md
   - Security & Compliance:
     - Supply Chain Security: supply-chain-security.md

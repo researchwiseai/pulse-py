@@ -20,6 +20,12 @@ Welcome to the Pulse SDK docs. This section documents the complete public API of
 - Data Models: `models.md`
 - Jobs and Errors: `jobs-and-errors.md`
 
+## 🔧 Troubleshooting and Debugging
+
+- **[Error Recovery Guide](error-recovery.md)** - Comprehensive error handling and recovery strategies
+- **[Debugging Tools](debugging.md)** - Built-in debugging and introspection capabilities
+- **[Dependency Troubleshooting](dependency-troubleshooting.md)** - Resolve installation conflicts
+
 **Learning Path Recommendations:**
 - **Beginners:** Start with [Quick Start](quickstart.md) → [Starters](starters.md) → [Authentication](authentication.md)
 - **Advanced Users:** [Quick Start](quickstart.md) → [Analyzer](analyzer.md) → [DSL Builder](dsl.md)

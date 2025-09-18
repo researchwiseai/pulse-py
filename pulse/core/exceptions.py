@@ -68,6 +68,64 @@ class PulseAPIError(Exception):
         msg = self.message or ""
         return f"Pulse API Error {' '.join(parts)}: {msg}"
 
+    @property
+    def is_transient(self) -> bool:
+        """Return True if this error is likely transient and should be retried."""
+        # Rate limiting and server errors are typically transient
+        if self.status == 429:  # Too Many Requests
+            return True
+        if 500 <= self.status < 600:  # Server errors
+            return True
+        # Token expiry is transient (SDK handles refresh)
+        if self.status == 401 and self.message and "expired" in self.message.lower():
+            return True
+        return False
+
+    @property
+    def is_permanent(self) -> bool:
+        """Return True if this error is permanent and should not be retried."""
+        return not self.is_transient
+
+    @property
+    def error_category(self) -> str:
+        """Return the error category for this exception."""
+        if self.status == 401:
+            return "authentication"
+        elif self.status == 403:
+            return "authorization"
+        elif self.status == 429:
+            return "rate_limiting"
+        elif 400 <= self.status < 500:
+            return "client_error"
+        elif 500 <= self.status < 600:
+            return "server_error"
+        else:
+            return "unknown"
+
+    @property
+    def recovery_hint(self) -> str:
+        """Return a recovery hint for this error."""
+        if self.status == 401:
+            if self.message and "expired" in self.message.lower():
+                return "Token expired - SDK will automatically refresh"
+            return (
+                "Check your PULSE_CLIENT_ID and PULSE_CLIENT_SECRET "
+                "environment variables"
+            )
+        elif self.status == 403:
+            return "Check your account permissions and subscription status"
+        elif self.status == 429:
+            retry_after = self.headers.get("retry-after", "60")
+            return f"Rate limited - wait {retry_after} seconds before retrying"
+        elif self.status == 400:
+            return "Check your request data format and parameters"
+        elif self.status == 422:
+            return "Validate your input data - some fields may be invalid"
+        elif 500 <= self.status < 600:
+            return "Server error - retry with exponential backoff"
+        else:
+            return "Check the error message and API documentation"
+
 
 class TimeoutError(Exception):
     """Error thrown when an HTTP request times out."""
@@ -85,3 +143,92 @@ class NetworkError(Exception):
         super().__init__(f"Network error while requesting {url}: {cause}")
         self.url = url
         self.cause = cause
+
+    @property
+    def is_transient(self) -> bool:
+        """Network errors are typically transient."""
+        return True
+
+    @property
+    def error_category(self) -> str:
+        """Return the error category."""
+        return "network"
+
+    @property
+    def recovery_hint(self) -> str:
+        """Return a recovery hint."""
+        return "Check network connectivity and retry with exponential backoff"
+
+
+# Error severity levels
+class ErrorSeverity:
+    """Error severity classification."""
+
+    TRANSIENT = "transient"
+    PERMANENT = "permanent"
+    UNKNOWN = "unknown"
+
+
+# Error categories
+class ErrorCategory:
+    """Error category classification."""
+
+    NETWORK = "network"
+    TIMEOUT = "timeout"
+    AUTHENTICATION = "authentication"
+    AUTHORIZATION = "authorization"
+    RATE_LIMITING = "rate_limiting"
+    CLIENT_ERROR = "client_error"
+    SERVER_ERROR = "server_error"
+    CONFIGURATION = "configuration"
+    UNKNOWN = "unknown"
+
+
+def classify_error(error: Exception) -> tuple[str, str, str]:
+    """
+    Classify an error and return (category, severity, recovery_hint).
+
+    Args:
+        error: The exception to classify
+
+    Returns:
+        Tuple of (category, severity, recovery_hint)
+    """
+    if isinstance(error, PulseAPIError):
+        category = error.error_category
+        severity = (
+            ErrorSeverity.TRANSIENT if error.is_transient else ErrorSeverity.PERMANENT
+        )
+        hint = error.recovery_hint
+    elif isinstance(error, NetworkError):
+        category = error.error_category
+        severity = ErrorSeverity.TRANSIENT
+        hint = error.recovery_hint
+    elif isinstance(error, TimeoutError):
+        category = ErrorCategory.TIMEOUT
+        severity = ErrorSeverity.TRANSIENT
+        hint = "Increase timeout or break request into smaller chunks"
+    elif isinstance(error, ValueError) and "Client Secret" in str(error):
+        category = ErrorCategory.CONFIGURATION
+        severity = ErrorSeverity.PERMANENT
+        hint = "Set PULSE_CLIENT_SECRET environment variable"
+    else:
+        category = ErrorCategory.UNKNOWN
+        severity = ErrorSeverity.UNKNOWN
+        hint = "Check error message and documentation"
+
+    return category, severity, hint
+
+
+def should_retry_error(error: Exception) -> bool:
+    """
+    Determine if an error should be retried.
+
+    Args:
+        error: The exception to check
+
+    Returns:
+        True if the error should be retried
+    """
+    category, severity, _ = classify_error(error)
+    return severity == ErrorSeverity.TRANSIENT
