@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+# Note: Using a PAT token instead of GITHUB_TOKEN to bypass branch protection rules
+# and organization policies that may prevent GitHub Actions from creating PRs
 permissions:
   contents: write
   pull-requests: write
@@ -22,3 +24,5 @@ jobs:
           # Use configuration files for settings
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
+          # Use a personal access token with repo permissions
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
