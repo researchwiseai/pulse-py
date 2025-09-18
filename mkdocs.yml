@@ -15,7 +15,11 @@ markdown_extensions:
   - tables
 nav:
   - Home: index.md
-  - Quick Start: quickstart.md
+  - Getting Started:
+    - Installation Guide: installation.md
+    - Quick Start: quickstart.md
+    - Dependency Troubleshooting: dependency-troubleshooting.md
+    - Version Compatibility: version-compatibility.md
   - API Documentation:
     - Core Client: core-client.md
     - Configuration: configuration.md

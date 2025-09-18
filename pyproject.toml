@@ -36,18 +36,11 @@ classifiers = [
     "Topic :: Text Processing :: Linguistic",
     "Typing :: Typed",
 ]
+# Core dependencies required for basic SDK functionality
 dependencies = [
-    "httpx",
-    "pydantic>=2.0",
-    "numpy",
-    "pandas",
-    "scikit-learn>=1.4",
-    "diskcache",
-    "tqdm",
-    "typing-extensions",
-    "matplotlib",
-    "textblob",
-    "seaborn"
+    "httpx>=0.24.0",           # HTTP client for API requests
+    "pydantic>=2.0",           # Data validation and serialization
+    "typing-extensions>=4.0",  # Type hints for older Python versions
 ]
 
 [project.urls]
@@ -158,15 +151,54 @@ skips = ["B101", "B110", "B105", "B311", "B403", "B601"]
 severity = "medium"
 
 [project.optional-dependencies]
+# Data science and analysis features
+analysis = [
+    "numpy>=1.21.0",           # Numerical computing for embeddings and vectors
+    "pandas>=1.3.0",           # Data manipulation and DataFrame support
+    "scikit-learn>=1.4",       # Machine learning utilities for clustering
+]
+
+# Visualization and plotting capabilities
+visualization = [
+    "matplotlib>=3.5.0",       # Basic plotting and charts
+    "seaborn>=0.11.0",         # Statistical visualizations and themes
+]
+
+# Text processing and NLP utilities
+nlp = [
+    "textblob>=0.17.0",        # Natural language processing utilities
+]
+
+# Caching and performance optimization
+caching = [
+    "diskcache>=5.4.0",        # On-disk caching for analysis results
+]
+
+# Progress tracking and user experience
+progress = [
+    "tqdm>=4.64.0",            # Progress bars for long-running operations
+]
+
+# Complete installation with all features
+all = [
+    "pulse-sdk[analysis,visualization,nlp,caching,progress]"
+]
+
+# Minimal installation for basic API access only
+minimal = []
+
+# Development and testing dependencies
 dev = [
-    "pytest>=6.0",
-    "pytest-mock",
-    "pytest-vcr",
-    "pytest-cov>=4.0.0",
-    "black==25.1.0",
-    "nbqa",
-    "ruff",
-    "pre-commit>=2.9.2",
-    "bandit[toml]>=1.7.0",
-    "pip-audit>=2.6.0",
+    "pytest>=6.0",             # Testing framework
+    "pytest-mock>=3.6.0",      # Mocking utilities for tests
+    "pytest-vcr>=1.0.0",       # HTTP request recording for tests
+    "pytest-cov>=4.0.0",       # Coverage reporting
+    "black==25.1.0",           # Code formatting
+    "nbqa>=1.6.0",             # Notebook code formatting
+    "ruff>=0.1.0",             # Fast Python linter
+    "pre-commit>=2.9.2",       # Git hooks for code quality
+    "bandit[toml]>=1.7.0",     # Security vulnerability scanner
+    "pip-audit>=2.6.0",        # Dependency vulnerability scanner
+    "mkdocs>=1.4.0",           # Documentation generator
+    "mkdocs-material>=8.0.0",  # Material theme for documentation
 ]

@@ -87,11 +87,40 @@ pip-audit --format=columns
 
 ## Installation
 
-### From PyPI
-Install the latest stable release:
+### Quick Start
+Install with all features (recommended):
 ```bash
-pip install pulse-sdk
+pip install pulse-sdk[all]
 ```
+
+### Installation Options
+
+**Minimal Installation** (API access only):
+```bash
+pip install pulse-sdk[minimal]
+```
+
+**Custom Installation** (choose your features):
+```bash
+# Data science workflow
+pip install pulse-sdk[analysis,visualization,caching]
+
+# Web service integration
+pip install pulse-sdk[minimal,progress]
+
+# Complete NLP pipeline
+pip install pulse-sdk[analysis,nlp,progress]
+```
+
+**Available Feature Sets:**
+- `minimal` - Core API access only (httpx, pydantic)
+- `analysis` - Data science tools (numpy, pandas, scikit-learn)
+- `visualization` - Plotting capabilities (matplotlib, seaborn)
+- `nlp` - Text processing utilities (textblob)
+- `caching` - Performance optimization (diskcache)
+- `progress` - Progress bars (tqdm)
+- `all` - Everything included
+- `dev` - Development tools (testing, formatting, linting)
 
 ### From Source
 Get the repository and install editable with developer dependencies:
@@ -103,6 +132,8 @@ source venv/bin/activate    # on Windows use `venv\\Scripts\\activate`
 pip install -e ".[dev]"        # install pulse-sdk plus dev tools (pytest, black, ruff, etc.)
 pre-commit install           # set up formatting/linting on commit
 ```
+
+> 📖 **Need help choosing?** See our [complete installation guide](https://researchwiseai.github.io/pulse-py/installation/) for detailed explanations, troubleshooting, and version compatibility.
 
 ## Getting Started
 

@@ -62,7 +62,7 @@
   - Implement granular logging categories for different debug levels
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8_
 
-- [ ] 8. Simplify installation and dependency management
+- [-] 8. Simplify installation and dependency management
 
   - Update pyproject.toml with clear optional dependency descriptions
   - Create installation command variations for different use cases

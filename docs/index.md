@@ -4,8 +4,10 @@ Welcome to the Pulse SDK docs. This section documents the complete public API of
 
 ## 🚀 Getting Started
 
-**New to Pulse SDK?** Start here for a 5-minute setup guide:
+**New to Pulse SDK?** Start here:
+- **[Installation Guide](installation.md)** - Comprehensive installation options and troubleshooting
 - **[Quick Start Guide](quickstart.md)** - Get up and running in under 5 minutes
+- **[Dependency Troubleshooting](dependency-troubleshooting.md)** - Resolve installation conflicts
 
 ## 📖 API Documentation
 

@@ -8,14 +8,23 @@ Get up and running with the Pulse SDK in under 5 minutes! This guide will take y
 
 Choose your installation method based on your needs:
 
-**Basic Installation (Recommended for beginners)**
+**Recommended Installation (All features)**
 ```bash
-pip install pulse-sdk
+pip install pulse-sdk[all]
 ```
 
-**Full Installation (All features)**
+**Minimal Installation (API access only)**
 ```bash
-pip install pulse-sdk
+pip install pulse-sdk[minimal]
+```
+
+**Custom Installation (Choose your features)**
+```bash
+# Data science workflow
+pip install pulse-sdk[analysis,visualization,caching]
+
+# Basic API with progress tracking
+pip install pulse-sdk[minimal,progress]
 ```
 
 **Development Installation (Contributors)**
@@ -24,6 +33,8 @@ git clone https://github.com/researchwiseai/pulse-py.git
 cd pulse-py
 pip install -e ".[dev]"
 ```
+
+> 💡 **Need help choosing?** See our [complete installation guide](installation.md) for detailed explanations of each option.
 
 ### Step 2: Test Your Installation (30 seconds)
 
@@ -180,40 +191,50 @@ print(df[['text', 'sentiment', 'confidence']])
 
 ## 🔧 Installation Options
 
-### Core Dependencies
+The Pulse SDK offers flexible installation options to match your specific needs:
 
-The Pulse SDK includes these essential packages:
+### Core Dependencies (Always Included)
+
 - **httpx** - HTTP client for API requests
 - **pydantic** - Data validation and serialization
-- **numpy** - Numerical computing
-- **pandas** - Data manipulation and analysis
-- **scikit-learn** - Machine learning utilities
-- **matplotlib** - Basic plotting
+- **typing-extensions** - Type hints for older Python versions
+
+### Optional Feature Sets
+
+**Analysis Features** (`pulse-sdk[analysis]`)
+- **numpy** - Numerical computing for embeddings
+- **pandas** - Data manipulation and DataFrame support
+- **scikit-learn** - Machine learning utilities for clustering
+
+**Visualization Features** (`pulse-sdk[visualization]`)
+- **matplotlib** - Basic plotting and charts
 - **seaborn** - Statistical visualizations
 
-### Optional Dependencies
+**Additional Features**
+- **NLP** (`pulse-sdk[nlp]`) - TextBlob for text processing
+- **Caching** (`pulse-sdk[caching]`) - Diskcache for performance
+- **Progress** (`pulse-sdk[progress]`) - Progress bars for long operations
 
-All optional dependencies are included by default. If you need a minimal installation:
-
-```bash
-# Minimal core installation (advanced users only)
-pip install pulse-sdk --no-deps
-pip install httpx pydantic numpy pandas
-```
-
-### Development Dependencies
-
-For contributors and advanced users:
+### Installation Commands by Use Case
 
 ```bash
+# Complete experience (recommended)
+pip install pulse-sdk[all]
+
+# Minimal API access only
+pip install pulse-sdk[minimal]
+
+# Data science workflow
+pip install pulse-sdk[analysis,visualization,caching]
+
+# Web service integration
+pip install pulse-sdk[minimal,progress]
+
+# Development and testing
 pip install pulse-sdk[dev]
 ```
 
-Includes:
-- **pytest** - Testing framework
-- **black** - Code formatting
-- **ruff** - Fast linting
-- **pre-commit** - Git hooks for code quality
+> 📖 **Detailed Guide:** See our [complete installation guide](installation.md) for comprehensive options, troubleshooting, and version compatibility information.
 
 ---
 
