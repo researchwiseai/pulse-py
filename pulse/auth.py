@@ -151,10 +151,15 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         self.scope = scope
         # Track whether audience or scope were explicitly provided
         self._provided_audience = audience is not None
-        # Respect PULSE_AUDIENCE when deciding whether to include audience in token request
-        self._provided_env_audience = os.getenv("PULSE_AUDIENCE") is not None
+        # Respect PULSE_AUDIENCE when deciding whether to include audience
+        # Only consider it provided if it's not empty
+        env_audience = os.getenv("PULSE_AUDIENCE")
+        self._provided_env_audience = (
+            env_audience is not None and env_audience.strip() != ""
+        )
         self._provided_scope = scope is not None
-        self._provided_env_scope = os.getenv("PULSE_SCOPE") is not None
+        env_scope = os.getenv("PULSE_SCOPE")
+        self._provided_env_scope = env_scope is not None and env_scope.strip() != ""
         self._refresh_token_value: str | None = None
 
         self.code = code or self._get_code()

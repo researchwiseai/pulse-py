@@ -95,7 +95,7 @@ exclude = [
  [tool.ruff]
  line-length = 88
  target-version = "py38"
- lint.extend-select = ["E501"]
+ extend-select = ["E501"]
 
  [tool.pytest.ini_options]
  minversion = "6.0"

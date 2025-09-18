@@ -34,7 +34,7 @@
   - Create release workflow integration with existing PyPI publishing
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [-] 5. Enhance supply chain security and attestations
+- [x] 5. Enhance supply chain security and attestations
 
   - Configure SLSA attestation generation in publishing workflow
   - Add SBOM (Software Bill of Materials) generation
