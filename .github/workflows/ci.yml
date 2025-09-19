@@ -31,13 +31,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: '3.10'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e .[dev]
+        pip install -r requirements.lock setuptools --no-deps --no-cache-dir
+        pip install -e
         # Install bc for numerical comparisons in shell scripts
         sudo apt-get update && sudo apt-get install -y bc
     - name: Run tests with coverage

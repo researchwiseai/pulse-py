@@ -32,47 +32,54 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -e .[dev]
+            python -m pip install --upgrade pip
+            pip install -r requirements.lock --no-deps --no-cache-dir
+            pip install -e .
 
-    - name: Run Bandit SAST Scan
+    - name: Run Bandit SAST Scan (JSON)
       run: |
-        echo "Running comprehensive Bandit security scan..."
+        echo "Running comprehensive Bandit security scan (JSON)..."
         # Use configuration from pyproject.toml for consistency with CI
         bandit -r pulse \
           --format json \
           --output bandit-report.json \
           --severity-level low \
-          --confidence-level low
+          --confidence-level low \
+          --exit-zero
 
+    - name: Run Bandit SAST Scan (SARIF)
+      run: |
+        echo "Running comprehensive Bandit security scan (SARIF)..."
         # Also generate SARIF format if available
         bandit -r pulse \
           --format sarif \
           --output bandit-report.sarif \
           --severity-level low \
-          --confidence-level low || echo "SARIF format not available"
+          --confidence-level low \
+          --exit-zero
 
         echo "Bandit scan completed"
 
     - name: Run pip-audit Vulnerability Scan
       run: |
+        set +e  # don't abort on first non-zero
         echo "Running comprehensive pip-audit vulnerability scan..."
-        # Scan all dependencies including dev dependencies
         pip-audit --format=json --output=pip-audit-report.json --desc
-        pip-audit --format=columns --desc
-
-        # Also scan requirements files if they exist
-        if [ -f requirements.txt ]; then
-          pip-audit -r requirements.txt --format=json --output=pip-audit-requirements.json
-        fi
-
-        echo "pip-audit scan completed"
+        AUDIT_RC=$?
+        # Always print a human-readable table
+        pip-audit --format=columns --desc || true
+        # Snapshot the exact environment we audited
+        python -V
+        pip -V
+        pip freeze | sort > pip-freeze.txt
+        echo "pip-audit scan completed with code ${AUDIT_RC}"
+        exit ${AUDIT_RC}
 
     # Upload SARIF results to GitHub Security tab
     - name: Upload SARIF results
@@ -90,6 +97,7 @@ jobs:
         path: |
           bandit-report.json
           pip-audit-report.json
+          pip-freeze.txt
         retention-days: 90
 
     - name: Check for Critical Vulnerabilities
