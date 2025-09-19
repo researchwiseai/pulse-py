@@ -41,9 +41,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e .[dev]
 
-    - name: Run Bandit SAST Scan
+    - name: Run Bandit SAST Scan (JSON)
       run: |
-        echo "Running comprehensive Bandit security scan..."
+        echo "Running comprehensive Bandit security scan (JSON)..."
         # Use configuration from pyproject.toml for consistency with CI
         bandit -r pulse \
           --format json \
@@ -51,12 +51,15 @@ jobs:
           --severity-level low \
           --confidence-level low
 
+    - name: Run Bandit SAST Scan (SARIF)
+      run: |
+        echo "Running comprehensive Bandit security scan (SARIF)..."
         # Also generate SARIF format if available
         bandit -r pulse \
           --format sarif \
           --output bandit-report.sarif \
           --severity-level low \
-          --confidence-level low || echo "SARIF format not available"
+          --confidence-level low
 
         echo "Bandit scan completed"
 
