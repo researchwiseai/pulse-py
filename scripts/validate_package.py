@@ -210,7 +210,8 @@ class PackageValidator:
                     )
                     metadata_content = wheel.read(metadata_file).decode("utf-8")
 
-                    # Check for required metadata fields (Author and License are optional in modern format)
+                    # Check for required metadata fields
+                    # (Author and License are optional in modern format)
                     required_metadata = [
                         "Metadata-Version:",
                         "Name:",
@@ -273,7 +274,8 @@ class PackageValidator:
                     unwanted_files = [f for f in files if pattern in f]
                     if unwanted_files:
                         issues.append(
-                            f"Unwanted files found: {pattern} ({len(unwanted_files)} files)"
+                            f"Unwanted files found: {pattern} "
+                            f"({len(unwanted_files)} files)"
                         )
 
         except Exception as e:

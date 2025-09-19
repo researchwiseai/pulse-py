@@ -170,13 +170,17 @@ python_version = "3.8"
             }
 
         # Test import
+        test_script = (
+            "import pulse; from pulse.core.client import CoreClient; "
+            "print(f'✅ Pulse SDK {pulse.__version__} working')"
+        )
         result = self.run_command(
             [
                 "pipenv",
                 "run",
                 "python",
                 "-c",
-                "import pulse; from pulse.core.client import CoreClient; print(f'✅ Pulse SDK {pulse.__version__} working')",
+                test_script,
             ],
             cwd=pipenv_dir,
         )
@@ -228,13 +232,17 @@ python_version = "3.8"
             }
 
         # Test import
+        test_script = (
+            "import pulse; from pulse.core.client import CoreClient; "
+            "print(f'✅ Pulse SDK {pulse.__version__} working')"
+        )
         result = self.run_command(
             [
                 "poetry",
                 "run",
                 "python",
                 "-c",
-                "import pulse; from pulse.core.client import CoreClient; print(f'✅ Pulse SDK {pulse.__version__} working')",
+                test_script,
             ],
             cwd=poetry_dir,
         )
@@ -285,12 +293,16 @@ python_version = "3.8"
             }
 
         # Test import
+        test_script = (
+            "import pulse; from pulse.core.client import CoreClient; "
+            "print(f'✅ Pulse SDK {pulse.__version__} working')"
+        )
         result = self.run_command(
             activate_cmd
             + [
                 "python",
                 "-c",
-                "import pulse; from pulse.core.client import CoreClient; print(f'✅ Pulse SDK {pulse.__version__} working')",
+                test_script,
             ]
         )
 

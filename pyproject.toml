@@ -197,8 +197,10 @@ exclude_dirs = ["tests", "examples", "docs", "site", "build", ".venv", "venv", "
 # B105: hardcoded_password_string - these are public OAuth endpoints
 # B311: random - used for sampling, not cryptographic purposes
 # B403: pickle import - used for cache key generation only
+# B404: subprocess import - used in validation scripts for package testing
 # B601: shell=True (may be needed for subprocess)
-skips = ["B101", "B110", "B105", "B311", "B403", "B601"]
+# B603: subprocess_without_shell_equals_true - used safely in validation scripts
+skips = ["B101", "B110", "B105", "B311", "B403", "B404", "B601", "B603"]
 severity = "medium"
 
 [project.optional-dependencies]
