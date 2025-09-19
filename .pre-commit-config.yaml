@@ -43,3 +43,19 @@ repos:
       - id: conventional-pre-commit
         stages: [commit-msg]
         args: [--strict]
+
+  - repo: local
+    hooks:
+      - id: validate-docs
+        name: Validate Documentation
+        entry: python scripts/run_doctests.py
+        language: system
+        files: ^docs/.*\.md$
+        pass_filenames: false
+
+      - id: validate-quickstart
+        name: Validate Quickstart Guide
+        entry: python scripts/validate_quickstart.py
+        language: system
+        files: ^docs/quickstart\.md$
+        pass_filenames: false

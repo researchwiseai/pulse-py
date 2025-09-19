@@ -1,6 +1,6 @@
 ## Makefile for running tests and managing VCR cassettes
 
-.PHONY: clean build test fmt lint vcr-clean vcr-record
+.PHONY: clean build test fmt lint vcr-clean vcr-record docs-test docs-build docs-serve
 
 # Clean build artifacts and cache files
 clean:
@@ -39,3 +39,20 @@ vcr-clean:
 # Fully re-record all VCR cassettes from scratch
 vcr-record: vcr-clean
 	pytest --vcr-record=all
+
+# Run documentation tests
+docs-test:
+	@echo "Running documentation validation tests..."
+	python scripts/run_doctests.py --verbose
+	python scripts/validate_quickstart.py --verbose
+	python scripts/check_links.py --no-external --verbose
+	python scripts/validate_docs.py --build-docs --verbose
+	@echo "✅ All documentation tests passed"
+
+# Build documentation
+docs-build:
+	mkdocs build
+
+# Serve documentation locally
+docs-serve:
+	mkdocs serve

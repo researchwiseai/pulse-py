@@ -55,6 +55,29 @@ jobs:
     - name: Lint with Ruff
       run: ruff check pulse tests
 
+    # Documentation testing
+    - name: Install documentation dependencies
+      run: |
+        pip install requests markdown mkdocs mkdocs-material
+
+    - name: Run Documentation Tests
+      run: |
+        echo "Running documentation validation..."
+
+        # Run doctest validation on code examples
+        python scripts/run_doctests.py --verbose
+
+        # Validate quickstart guide completeness
+        python scripts/validate_quickstart.py --verbose
+
+        # Check links in documentation (skip external links in CI to avoid flakiness)
+        python scripts/check_links.py --no-external --verbose
+
+        # Validate documentation build
+        python scripts/validate_docs.py --build-docs --verbose
+
+        echo "✅ All documentation tests passed"
+
     # Secret scanning (using truffleHog or similar)
     - name: Run Secret Scanning
       run: |
