@@ -51,7 +51,9 @@ class ThemeGeneration:
         # sample randomly according to fast flag
         sample_size = 200 if fast_flag else 1000
         if len(texts) > sample_size:
-            texts = random.sample(texts, sample_size)
+            texts = random.sample(
+                texts, sample_size
+            )  # nosec B311 - Used for data sampling, not cryptographic purposes
 
         return ctx.client.generate_themes(
             texts,

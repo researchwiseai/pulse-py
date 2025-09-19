@@ -151,6 +151,7 @@ class CoreClient:
             )
 
         # Resolve token_url: argument > environment variable > default
+        # nosec B105 - Auth0 URL, not a password
         default_token_url = "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
         final_token_url = token_url or os.getenv("PULSE_TOKEN_URL") or default_token_url
 
@@ -243,6 +244,7 @@ class CoreClient:
         final_base_url = base_url or os.getenv("PULSE_BASE_URL") or BASE_URL
 
         # Resolve token_url: argument > environment variable > default
+        # nosec B105 - Auth0 URL, not a password
         default_token_url = "https://research-wise-ai-eu.eu.auth0.com/oauth/token"
         final_token_url = token_url or os.getenv("PULSE_TOKEN_URL") or default_token_url
 
@@ -336,7 +338,10 @@ class CoreClient:
             if len(set) > 200:
                 oversized = True
         else:
-            assert set_a is not None and set_b is not None
+            if set_a is None or set_b is None:
+                raise ValueError(
+                    "Both set_a and set_b must be provided when set is not used"
+                )
             body["set_a"] = set_a
             body["set_b"] = set_b
             if len(cast(List[str], set_a)) * len(cast(List[str], set_b)) > 10_000:

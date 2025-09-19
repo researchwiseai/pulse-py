@@ -50,7 +50,7 @@ class _BaseOAuth2Auth(httpx.Auth):
         try:
             token_host = urlparse(self.token_url).netloc
         except Exception:
-            token_host = ""
+            token_host = ""  # nosec B105 - Empty string, not a password
         try:
             audience_host = urlparse(self.audience or "").netloc
         except Exception:
@@ -110,7 +110,7 @@ class ClientCredentialsAuth(_BaseOAuth2Auth):
             "client_secret": self.client_secret,
             "audience": self.audience,
         }
-        resp = httpx.post(self.token_url, data=data)
+        resp = httpx.post(self.token_url, data=data, timeout=30.0)
         resp.raise_for_status()
         payload = resp.json()
         # Expecting standard OAuth2 response with access_token and expires_in
@@ -203,8 +203,11 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         print(auth_url)
         try:
             webbrowser.open(auth_url)
-        except Exception:
-            pass
+        except Exception as e:
+            # Browser opening is optional - continue without it
+            import logging
+
+            logging.getLogger(__name__).debug(f"Could not open browser: {e}")
 
         # Attempt to receive the authorization code via a local HTTP callback
         code: str | None = None
@@ -267,7 +270,7 @@ class AuthorizationCodePKCEAuth(_BaseOAuth2Auth):
         # Include scope if provided via init or environment
         if self._provided_scope or self._provided_env_scope:
             data["scope"] = self.scope  # type: ignore
-        resp = httpx.post(self.token_url, data=data)
+        resp = httpx.post(self.token_url, data=data, timeout=30.0)
         resp.raise_for_status()
         payload = resp.json()
         self._access_token = payload.get("access_token")

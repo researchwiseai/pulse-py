@@ -419,7 +419,9 @@ def inspect_token(auth_obj: Any) -> TokenInfo:
                 if len(token) > 10:
                     token_info.masked_token = f"{token[:4]}...{token[-4:]}"
                 else:
-                    token_info.masked_token = "***MASKED***"
+                    token_info.masked_token = (
+                        "***MASKED***"  # nosec B105 - Masking string, not a password
+                    )
 
         # Check expiration
         if hasattr(auth_obj, "_expires_at"):
@@ -435,10 +437,13 @@ def inspect_token(auth_obj: Any) -> TokenInfo:
         if hasattr(auth_obj, "__class__"):
             class_name = auth_obj.__class__.__name__
             if "ClientCredentials" in class_name:
+                # nosec B105 - Token type identifier, not a password
                 token_info.token_type = "client_credentials"
             elif "PKCE" in class_name:
+                # nosec B105 - Token type identifier, not a password
                 token_info.token_type = "authorization_code_pkce"
             else:
+                # nosec B105 - Token type identifier, not a password
                 token_info.token_type = "unknown"
 
     except Exception as e:

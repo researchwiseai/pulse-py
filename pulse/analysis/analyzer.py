@@ -127,13 +127,19 @@ class Analyzer:
         """Close underlying HTTP client and persistent cache."""
         try:
             self.client.close()
-        except Exception:
-            pass
+        except Exception as e:
+            # Log but don't raise - cleanup should be best effort
+            import logging
+
+            logging.getLogger(__name__).debug(f"Error closing client: {e}")
         if self._cache:
             try:
                 self._cache.close()
-            except Exception:
-                pass
+            except Exception as e:
+                # Log but don't raise - cleanup should be best effort
+                import logging
+
+                logging.getLogger(__name__).debug(f"Error closing cache: {e}")
 
     def __enter__(self):  # type: ignore
         return self
@@ -142,6 +148,7 @@ class Analyzer:
         self.close()
 
     def _make_cache_key(self, process: Process) -> str:
+        # nosec B403 - Used for cache key generation, not deserializing untrusted data
         import pickle
         import hashlib
 
