@@ -13,6 +13,10 @@ permissions:
   # python-coverage-comment-action branch, and for editing existing
   # comments (to avoid publishing multiple comments in the same PR)
   contents: write
+  # Required for uploading SARIF results to GitHub Security tab
+  security-events: write
+  # Required for checking out code and uploading artifacts
+  actions: read
 
 jobs:
   test:
@@ -34,10 +38,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[dev]
+        # Install bc for numerical comparisons in shell scripts
+        sudo apt-get update && sudo apt-get install -y bc
     - name: Run tests with coverage
       run: |
-        # Run tests with coverage, but allow VCR cassette failures in CI
-        pytest -q --disable-warnings --vcr-record=none --cov=pulse --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=80 || true
+        # Run tests with coverage, enforcing 90% threshold
+        pytest -q --disable-warnings --vcr-record=none --cov=pulse --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=90
         # Always run import tests to ensure basic functionality
         pytest tests/test_imports.py -v --no-cov
     - name: Black version
@@ -48,6 +54,25 @@ jobs:
       run: nbqa black --check .
     - name: Lint with Ruff
       run: ruff check pulse tests
+
+    # Secret scanning (using truffleHog or similar)
+    - name: Run Secret Scanning
+      run: |
+        echo "Running secret scanning..."
+        # Use git to check for potential secrets in the current commit
+        # This is a basic implementation - in production you might use truffleHog or similar
+        if git log --oneline -1 | grep -iE "(password|secret|key|token|api)" && [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+          echo "⚠️  Potential secrets detected in commit message"
+          echo "Please review commit messages for sensitive information"
+        fi
+
+        # Check for common secret patterns in code (basic implementation)
+        if grep -r -E "(password|secret|key|token)\s*=\s*['\"][^'\"]{8,}" pulse/ --exclude-dir=__pycache__ || true; then
+          echo "⚠️  Potential hardcoded secrets detected in code"
+          echo "Please review code for hardcoded credentials"
+        fi
+
+        echo "✅ Secret scanning completed"
 
     - name: Validate Conventional Commits
       if: github.event_name == 'pull_request'
@@ -80,26 +105,71 @@ jobs:
     # Security scanning steps
     - name: Run Bandit Security Scan
       run: |
-        # Run Bandit with appropriate exclusions and skips for false positives
+        echo "Running Bandit SAST security scan..."
+        # Run Bandit with configuration from pyproject.toml
         bandit -r pulse \
-          --exclude pulse/core/.ipynb_checkpoints \
-          --skip B101,B110,B105,B311,B403,B601 \
-          -f json -o bandit-report.json || true
-        # Also run with standard output for immediate feedback
-        bandit -r pulse \
-          --exclude pulse/core/.ipynb_checkpoints \
-          --skip B101,B110,B105,B311,B403,B601
+          --format json \
+          --output bandit-report.json \
+          --severity-level medium \
+          --confidence-level medium
+        echo "✅ Bandit scan completed successfully"
       continue-on-error: false
-
-    # Note: SARIF upload requires bandit[sarif] which may not be available in all environments
-    # For now, we'll rely on JSON reports and manual review
 
     - name: Run pip-audit Vulnerability Scan
       run: |
-        pip-audit --format=json --output=pip-audit-report.json || true
-        # Also run with standard output for immediate feedback
+        echo "Running pip-audit dependency vulnerability scan..."
+        # Run pip-audit with JSON output for processing
+        pip-audit --format=json --output=pip-audit-report.json
+        # Also run with columns format for immediate feedback
         pip-audit --format=columns
+        echo "✅ pip-audit scan completed successfully"
       continue-on-error: false
+
+    - name: Check Security Scan Results
+      run: |
+        echo "Analyzing security scan results..."
+
+        # Check Bandit results for high/medium severity issues
+        if [ -f bandit-report.json ]; then
+          HIGH_ISSUES=$(python -c "
+        import json
+        with open('bandit-report.json') as f:
+            data = json.load(f)
+            high_issues = [r for r in data.get('results', []) if r.get('issue_severity') in ['HIGH', 'MEDIUM']]
+            print(len(high_issues))
+        ")
+          if [ "$HIGH_ISSUES" -gt 0 ]; then
+            echo "❌ Found $HIGH_ISSUES high/medium severity security issues"
+            echo "Please review the Bandit report and fix security issues"
+            exit 1
+          else
+            echo "✅ No high/medium severity security issues found"
+          fi
+        fi
+
+        # Check pip-audit results for critical/high vulnerabilities
+        if [ -f pip-audit-report.json ]; then
+          CRITICAL_VULNS=$(python -c "
+        import json
+        with open('pip-audit-report.json') as f:
+            data = json.load(f)
+            critical_vulns = []
+            for vuln in data.get('vulnerabilities', []):
+                for alias in vuln.get('aliases', []):
+                    if alias.get('severity', '').upper() in ['HIGH', 'CRITICAL']:
+                        critical_vulns.append(alias)
+            print(len(critical_vulns))
+        ")
+          if [ "$CRITICAL_VULNS" -gt 0 ]; then
+            echo "❌ Found $CRITICAL_VULNS critical/high severity vulnerabilities"
+            echo "Please review the vulnerability report and update dependencies"
+            exit 1
+          else
+            echo "✅ No critical/high severity vulnerabilities found"
+          fi
+        fi
+
+        echo "✅ All security checks passed"
 
     - name: Upload Coverage Reports
       if: always()
@@ -117,14 +187,59 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ github.token }}
         MINIMUM_GREEN: 90
-        MINIMUM_ORANGE: 80
+        MINIMUM_ORANGE: 85
 
     - name: Upload Security Scan Artifacts
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: security-reports
+        name: security-reports-${{ github.run_number }}
         path: |
           bandit-report.json
           pip-audit-report.json
-        retention-days: 30
+        retention-days: 90
+
+    # Final validation step
+    - name: Validate All Quality Gates
+      run: |
+        echo "🔍 Validating all quality gates..."
+
+        # Check if coverage reports exist
+        if [ ! -f coverage.json ]; then
+          echo "❌ Coverage report missing"
+          exit 1
+        fi
+
+        # Check if security reports exist
+        if [ ! -f bandit-report.json ]; then
+          echo "❌ Bandit security report missing"
+          exit 1
+        fi
+
+        if [ ! -f pip-audit-report.json ]; then
+          echo "❌ pip-audit vulnerability report missing"
+          exit 1
+        fi
+
+        # Extract coverage percentage
+        COVERAGE=$(python -c "
+        import json
+        with open('coverage.json') as f:
+            data = json.load(f)
+            print(f\"{data['totals']['percent_covered']:.1f}\")
+        ")
+
+        echo "📊 Current test coverage: ${COVERAGE}%"
+
+        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+          echo "❌ Coverage below 90% threshold"
+          exit 1
+        fi
+
+        echo "✅ All quality gates passed!"
+        echo "  - Code formatting: ✅"
+        echo "  - Linting: ✅"
+        echo "  - Security scanning: ✅"
+        echo "  - Vulnerability scanning: ✅"
+        echo "  - Test coverage: ${COVERAGE}% ✅"
+        echo "  - Conventional commits: ✅"

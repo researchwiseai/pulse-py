@@ -8,8 +8,12 @@ on:
   # Allow manual triggering
   workflow_dispatch:
 
-  # Run on pushes to main branch
+  # Run on pushes to main branch (comprehensive scan)
   push:
+    branches: [main]
+
+  # Run on pull requests (quick scan)
+  pull_request:
     branches: [main]
 
 jobs:
@@ -39,22 +43,44 @@ jobs:
 
     - name: Run Bandit SAST Scan
       run: |
-        echo "Running Bandit security scan..."
+        echo "Running comprehensive Bandit security scan..."
+        # Use configuration from pyproject.toml for consistency with CI
         bandit -r pulse \
-          --exclude pulse/core/.ipynb_checkpoints \
-          --skip B101,B110,B105,B311,B403,B601 \
-          -f json -o bandit-report.json
+          --format json \
+          --output bandit-report.json \
+          --severity-level low \
+          --confidence-level low
+
+        # Also generate SARIF format if available
+        bandit -r pulse \
+          --format sarif \
+          --output bandit-report.sarif \
+          --severity-level low \
+          --confidence-level low || echo "SARIF format not available"
+
         echo "Bandit scan completed"
 
     - name: Run pip-audit Vulnerability Scan
       run: |
-        echo "Running pip-audit vulnerability scan..."
-        pip-audit --format=json --output=pip-audit-report.json
-        pip-audit --format=columns
+        echo "Running comprehensive pip-audit vulnerability scan..."
+        # Scan all dependencies including dev dependencies
+        pip-audit --format=json --output=pip-audit-report.json --desc
+        pip-audit --format=columns --desc
+
+        # Also scan requirements files if they exist
+        if [ -f requirements.txt ]; then
+          pip-audit -r requirements.txt --format=json --output=pip-audit-requirements.json
+        fi
+
         echo "pip-audit scan completed"
 
-    # Note: SARIF upload requires bandit[sarif] which may not be available in all environments
-    # For now, we'll rely on JSON reports and manual review
+    # Upload SARIF results to GitHub Security tab
+    - name: Upload SARIF results
+      if: always() && github.event_name != 'pull_request'
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: bandit-report.sarif
+      continue-on-error: true  # Don't fail if SARIF upload fails
 
     - name: Upload Security Reports
       if: always()
@@ -112,8 +138,57 @@ jobs:
 
         echo "✅ Security scan completed successfully"
 
-    - name: Add security label to workflow
+    # Generate security summary
+    - name: Generate Security Summary
       if: always()
       run: |
-        echo "Security scan workflow completed"
-        # This workflow is tagged with security-related functionality
+        echo "# 🔒 Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [ -f bandit-report.json ]; then
+          TOTAL_ISSUES=$(python -c "
+        import json
+        with open('bandit-report.json') as f:
+            data = json.load(f)
+            print(len(data.get('results', [])))
+        ")
+          HIGH_ISSUES=$(python -c "
+        import json
+        with open('bandit-report.json') as f:
+            data = json.load(f)
+            high_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
+            print(len(high_issues))
+        ")
+          MEDIUM_ISSUES=$(python -c "
+        import json
+        with open('bandit-report.json') as f:
+            data = json.load(f)
+            medium_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'MEDIUM']
+            print(len(medium_issues))
+        ")
+
+          echo "## 🛡️ SAST Scan (Bandit)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Issues**: $TOTAL_ISSUES" >> $GITHUB_STEP_SUMMARY
+          echo "- **High Severity**: $HIGH_ISSUES" >> $GITHUB_STEP_SUMMARY
+          echo "- **Medium Severity**: $MEDIUM_ISSUES" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        if [ -f pip-audit-report.json ]; then
+          TOTAL_VULNS=$(python -c "
+        import json
+        with open('pip-audit-report.json') as f:
+            data = json.load(f)
+            print(len(data.get('vulnerabilities', [])))
+        ")
+
+          echo "## 🔍 Dependency Scan (pip-audit)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Vulnerabilities**: $TOTAL_VULNS" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+
+        echo "## 📊 Scan Details" >> $GITHUB_STEP_SUMMARY
+        echo "- **Scan Date**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+        echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
