@@ -40,6 +40,10 @@ from pulse.core.models import (
     UsageEstimateResponse,
 )
 from pulse.core.exceptions import PulseAPIError
+from pulse.core.validation import (
+    validate_before_request,
+    PulseValidationError,
+)
 
 MAX_EMBEDDINGS = 2000
 MAX_SENTIMENT = 10000
@@ -275,6 +279,14 @@ class CoreClient:
                 waiting for the result when the server responds with HTTP 202.
         """
 
+        # Validate request before sending to API
+        try:
+            validate_before_request(
+                "embeddings", inputs=request.inputs, fast=request.fast
+            )
+        except PulseValidationError as e:
+            raise ValueError(str(e)) from e
+
         # Request body according to OpenAPI spec: inputs
         body = request.model_dump(exclude_none=True)
         fast = bool(request.fast)
@@ -346,44 +358,13 @@ class CoreClient:
                 request.split.model_dump(exclude_none=True) if request.split else None
             )
 
-        # Validate arguments
-        if set is None and (set_a is None or set_b is None):
-            raise ValueError(
-                "You must provide either `set` or both `set_a` and `set_b`."
+        # Validate request before sending to API
+        try:
+            validate_before_request(
+                "similarity", set=set, set_a=set_a, set_b=set_b, fast=fast
             )
-        if set is not None and (set_a is not None or set_b is not None):
-            raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
-
-        # Validate input limits based on new OpenAPI v0.9.0 constraints
-        if set is not None:
-            # Self-similarity limits
-            if fast is True and len(set) > 500:
-                raise ValueError(
-                    "Self-similarity synchronous mode supports maximum 500 texts"
-                )
-            elif fast is False and len(set) > 44721:
-                raise ValueError(
-                    "Self-similarity asynchronous mode supports maximum 44,721 texts"
-                )
-        else:
-            # Cross-similarity limits
-            if set_a is None or set_b is None:
-                raise ValueError(
-                    "Both set_a and set_b must be provided when set is not used"
-                )
-
-            cross_product = len(set_a) * len(set_b)
-            if fast is True and cross_product > 20000:
-                raise ValueError(
-                    "Cross-similarity synchronous mode: "
-                    "|set_a| × |set_b| must be ≤ 20,000"
-                )
-            elif (
-                fast is False and cross_product > 44721 * 44721
-            ):  # Reasonable async limit
-                raise ValueError(
-                    "Cross-similarity asynchronous mode exceeds reasonable limits"
-                )
+        except PulseValidationError as e:
+            raise ValueError(str(e)) from e
 
         body: Dict[str, Any] = {}
         oversized = False
@@ -568,9 +549,17 @@ class CoreClient:
         # Import here to avoid circular imports
         from pulse.core.models import ThemesResponse
 
-        # Validate initial_sets constraint first
-        if initial_sets is not None and initial_sets > 1 and not interactive:
-            raise ValueError("initial_sets > 1 requires interactive=True")
+        # Validate request before sending to API
+        try:
+            validate_before_request(
+                "themes",
+                inputs=texts,
+                fast=fast,
+                initialSets=initial_sets,
+                interactive=interactive,
+            )
+        except PulseValidationError as e:
+            raise ValueError(str(e)) from e
 
         # Build request body according to OpenAPI spec: inputs and theme options
         # For single-text input, return empty themes and assignments without API call
@@ -658,6 +647,12 @@ class CoreClient:
             await_job_result: When False, return a :class:`Job` handle instead of
                 waiting for the result.
         """
+
+        # Validate request before sending to API
+        try:
+            validate_before_request("sentiment", inputs=texts, fast=fast)
+        except PulseValidationError as e:
+            raise ValueError(str(e)) from e
 
         limit = 200 if fast else MAX_SENTIMENT
         if len(texts) > limit:
@@ -830,17 +825,17 @@ class CoreClient:
         if type not in valid_types:
             raise ValueError(f"type must be one of {valid_types}, got: {type}")
 
-        # Validate themes type constraints
-        if type == "themes" and expand_dictionary:
-            raise ValueError("expand_dictionary must be false when type is 'themes'")
-
-        # Validate input limits based on new OpenAPI v0.9.0 constraints
-        if fast is True and len(inputs) > 200:
-            raise ValueError("Synchronous mode (fast=True) supports maximum 200 inputs")
-        elif fast is False and len(inputs) > 5000:
-            raise ValueError(
-                "Asynchronous mode (fast=False) supports maximum 5,000 inputs"
+        # Validate request before sending to API
+        try:
+            validate_before_request(
+                "extractions",
+                inputs=inputs,
+                fast=fast,
+                type=type,
+                expand_dictionary=expand_dictionary,
             )
+        except PulseValidationError as e:
+            raise ValueError(str(e)) from e
 
         if len(dictionary) < 3:
             raise ValueError("dictionary must contain at least 3 terms")
@@ -904,13 +899,11 @@ class CoreClient:
                 f"algorithm must be one of {valid_algorithms}, got: {algorithm}"
             )
 
-        # Validate input limits based on sync/async mode
-        if fast is True and len(inputs) > 500:
-            raise ValueError("Synchronous mode (fast=True) supports maximum 500 inputs")
-        elif fast is False and len(inputs) > 44721:
-            raise ValueError(
-                "Asynchronous mode (fast=False) supports maximum 44,721 inputs"
-            )
+        # Validate request before sending to API
+        try:
+            validate_before_request("clustering", inputs=inputs, fast=fast)
+        except PulseValidationError as e:
+            raise ValueError(str(e)) from e
 
         body: Dict[str, Any] = {"inputs": inputs, "k": k, "algorithm": algorithm}
         if fast is not None:

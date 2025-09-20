@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any, Optional, List, Dict
 
 import httpx
 
@@ -14,6 +14,9 @@ class PulseAPIError(Exception):
         self.status: int = response.status_code
         self.code: Optional[str] = None
         self.message: Optional[str] = None
+        self.errors: Optional[List[Dict[str, Any]]] = None
+        self.meta: Optional[Dict[str, Any]] = None
+
         # Capture relevant headers for diagnostics (esp. AWS API Gateway)
         # Note: httpx.Headers is case-insensitive
         self.headers = dict(response.headers)
@@ -29,6 +32,8 @@ class PulseAPIError(Exception):
         self.aws_error_type: Optional[str] = response.headers.get(
             "x-amzn-errortype"
         ) or response.headers.get("x-amzn-ErrorType")
+
+        # Parse response body
         try:
             body: Any = response.json()
         except ValueError:
@@ -37,6 +42,8 @@ class PulseAPIError(Exception):
         if isinstance(body, dict):
             self.code = body.get("code")
             self.message = body.get("message") or response.reason_phrase
+            self.errors = body.get("errors")
+            self.meta = body.get("meta")
             self.body = body
         else:
             self.body = body
@@ -125,6 +132,76 @@ class PulseAPIError(Exception):
             return "Server error - retry with exponential backoff"
         else:
             return "Check the error message and API documentation"
+
+    @property
+    def field_errors(self) -> List[Dict[str, Any]]:
+        """Return field-level error details if available."""
+        return self.errors or []
+
+    @property
+    def validation_errors(self) -> Dict[str, List[str]]:
+        """
+        Return validation errors grouped by field name.
+
+        Returns:
+            Dictionary mapping field names to lists of error messages
+        """
+        field_errors: Dict[str, List[str]] = {}
+
+        if self.errors:
+            for error in self.errors:
+                field = error.get("field") or "unknown"
+                message = error.get("message", "Validation error")
+
+                if field not in field_errors:
+                    field_errors[field] = []
+                field_errors[field].append(message)
+
+        return field_errors
+
+    def get_field_error_message(self, field: str) -> Optional[str]:
+        """
+        Get the first error message for a specific field.
+
+        Args:
+            field: The field name to get errors for
+
+        Returns:
+            First error message for the field, or None if no errors
+        """
+        validation_errors = self.validation_errors
+        if field in validation_errors and validation_errors[field]:
+            return validation_errors[field][0]
+        return None
+
+    def format_validation_errors(self) -> str:
+        """
+        Format validation errors into a human-readable string.
+
+        Returns:
+            Formatted string of all validation errors
+        """
+        if not self.errors:
+            return self.message or "Unknown error"
+
+        error_lines = []
+        for error in self.errors:
+            field = error.get("field", "unknown")
+            message = error.get("message", "Validation error")
+            path = error.get("path")
+
+            if path:
+                path_str = " -> ".join(str(p) for p in path)
+                error_lines.append(f"{field} ({path_str}): {message}")
+            else:
+                error_lines.append(f"{field}: {message}")
+
+        return "\n".join(error_lines)
+
+    @property
+    def has_field_errors(self) -> bool:
+        """Return True if this error contains field-level validation errors."""
+        return bool(self.errors)
 
 
 class TimeoutError(Exception):
@@ -232,3 +309,71 @@ def should_retry_error(error: Exception) -> bool:
     """
     category, severity, _ = classify_error(error)
     return severity == ErrorSeverity.TRANSIENT
+
+
+def parse_error_response(response: httpx.Response) -> Dict[str, Any]:
+    """
+    Parse an error response and extract structured error information.
+
+    Args:
+        response: The HTTP response containing the error
+
+    Returns:
+        Dictionary containing parsed error information
+    """
+    try:
+        body = response.json()
+    except ValueError:
+        # If JSON parsing fails, return basic error info
+        return {
+            "code": str(response.status_code),
+            "message": response.text or response.reason_phrase or "Unknown error",
+            "errors": None,
+            "meta": None,
+        }
+
+    if isinstance(body, dict):
+        # Try to parse as new ErrorResponse format
+        try:
+            from .models import ErrorResponse
+
+            error_response = ErrorResponse.model_validate(body)
+            return {
+                "code": error_response.code,
+                "message": error_response.message,
+                "errors": [
+                    error.model_dump() for error in (error_response.errors or [])
+                ],
+                "meta": error_response.meta,
+            }
+        except Exception:
+            # Fall back to legacy format
+            return {
+                "code": body.get("code", str(response.status_code)),
+                "message": body.get(
+                    "message", response.reason_phrase or "Unknown error"
+                ),
+                "errors": body.get("errors"),
+                "meta": body.get("meta"),
+            }
+    else:
+        # Non-dict response body
+        return {
+            "code": str(response.status_code),
+            "message": str(body) if body else response.reason_phrase or "Unknown error",
+            "errors": None,
+            "meta": None,
+        }
+
+
+def create_enhanced_api_error(response: httpx.Response) -> PulseAPIError:
+    """
+    Create a PulseAPIError with enhanced error parsing.
+
+    Args:
+        response: The HTTP response containing the error
+
+    Returns:
+        PulseAPIError instance with parsed error information
+    """
+    return PulseAPIError(response)

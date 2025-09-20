@@ -1,6 +1,6 @@
 """Pydantic models for Pulse API responses."""
 
-from typing import Any, List, Optional, Literal, Dict
+from typing import Any, List, Optional, Literal, Dict, Union
 from pydantic import BaseModel, Field, model_validator, ConfigDict
 
 
@@ -507,3 +507,30 @@ class UsageEstimateResponse(BaseModel):
     """Response model for usage estimation."""
 
     usage: Dict[str, Any] = Field(..., description="Estimated usage information")
+
+
+class ErrorDetail(BaseModel):
+    """Detailed error information for field-level validation errors."""
+
+    code: Optional[str] = Field(None, description="Error code")
+    message: str = Field(..., description="Error message")
+    path: Optional[List[Union[str, int]]] = Field(
+        None, description="Path to the field that caused the error"
+    )
+    field: Optional[str] = Field(None, description="Field name that caused the error")
+    location: Optional[Literal["body", "query", "header", "path"]] = Field(
+        None, description="Location of the error in the request"
+    )
+
+
+class ErrorResponse(BaseModel):
+    """Enhanced error response model matching new API structure."""
+
+    code: str = Field(..., description="Error code")
+    message: str = Field(..., description="Error message")
+    errors: Optional[List[ErrorDetail]] = Field(
+        None, description="Detailed field-level error information"
+    )
+    meta: Optional[Dict[str, Any]] = Field(
+        None, description="Additional metadata about the error"
+    )
