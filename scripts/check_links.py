@@ -69,29 +69,51 @@ class LinkChecker:
         lines = content.split("\n")
 
         for line_num, line in enumerate(lines, 1):
+            found_urls = set()  # Track URLs found in this line to avoid duplicates
+
             # Markdown links: [text](url)
             markdown_links = re.findall(r"\[([^\]]*)\]\(([^)]+)\)", line)
             for text, url in markdown_links:
-                links.append((url.strip(), line_num, f"markdown link: [{text}]({url})"))
+                url = url.strip()
+                if url not in found_urls:
+                    links.append((url, line_num, f"markdown link: [{text}]({url})"))
+                    found_urls.add(url)
 
             # Reference links: [text]: url
-            ref_links = re.findall(r"^\[([^\]]+)\]:\s*(.+)$", line)
+            ref_links = re.findall(r"^\s*\[([^\]]+)\]:\s*(.+)$", line)
             for text, url in ref_links:
-                links.append(
-                    (url.strip(), line_num, f"reference link: [{text}]: {url}")
-                )
+                url = url.strip()
+                if url not in found_urls:
+                    links.append((url, line_num, f"reference link: [{text}]: {url}"))
+                    found_urls.add(url)
 
             # HTML links: <a href="url">
             html_links = re.findall(
                 r'<a[^>]+href=["\']([^"\']+)["\']', line, re.IGNORECASE
             )
             for url in html_links:
-                links.append((url.strip(), line_num, f'HTML link: href="{url}"'))
+                url = url.strip()
+                if url not in found_urls:
+                    links.append((url, line_num, f'HTML link: href="{url}"'))
+                    found_urls.add(url)
 
-            # Direct URLs: http(s)://...
-            direct_urls = re.findall(r'https?://[^\s<>"{}|\\^`\[\]]+', line)
+            # Direct URLs: http(s)://... (but not already captured)
+            # Remove already found URLs from the line first
+            temp_line = line
+            for url in found_urls:
+                if url.startswith("http"):
+                    temp_line = (
+                        temp_line.replace(f"({url})", "")
+                        .replace(f'"{url}"', "")
+                        .replace(f"'{url}'", "")
+                    )
+
+            direct_urls = re.findall(r'https?://[^\s<>"{}|\\^`\[\]()]+', temp_line)
             for url in direct_urls:
-                links.append((url.strip(), line_num, f"direct URL: {url}"))
+                url = url.strip()
+                if url not in found_urls:
+                    links.append((url, line_num, f"direct URL: {url}"))
+                    found_urls.add(url)
 
         return links
 

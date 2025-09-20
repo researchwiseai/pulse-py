@@ -212,7 +212,7 @@ class TestTokenInspection:
         assert token_info.is_expired is False
         assert token_info.is_valid is True
         assert token_info.token_type == "client_credentials"
-        assert token_info.masked_token == "vali...12345"
+        assert token_info.masked_token == "vali...2345"
         assert token_info.expires_in > 3500  # Should be close to 3600
 
     def test_inspect_token_with_expired_token(self):

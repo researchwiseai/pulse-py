@@ -12,7 +12,7 @@ def test_authorization_code_pkce_auth_refresh(monkeypatch):
     # Capture httpx.post calls
     calls = []
 
-    def fake_post(url, data):  # pylint: disable=unused-argument
+    def fake_post(url, data, timeout=None):  # pylint: disable=unused-argument
         calls.append((url, data))
 
         class FakeResponse:
@@ -64,7 +64,7 @@ def test_authorization_code_pkce_auth_flow_and_host_filter(monkeypatch):
     # Stub httpx.post to provide a fixed token
     post_calls = []
 
-    def fake_post(url, data):  # pylint: disable=unused-argument
+    def fake_post(url, data, timeout=None):  # pylint: disable=unused-argument
         post_calls.append((url, data))
 
         class FakeResponse:

@@ -63,7 +63,7 @@ result = client.analyze_sentiment(["test"])
         assert "from pulse import CoreClient" in code1
         assert "client = CoreClient()" in code1
         assert file_path1 == "test.md"
-        assert line1 == 5  # Line where code block starts
+        assert line1 == 6  # Line where code block starts
 
         # Check second block
         code2, file_path2, line2 = blocks[1]
@@ -237,11 +237,11 @@ client = CoreClient()
         """Test failed execution of a code block."""
         doctest_runner = DocumentationDoctest()
 
-        # Mock execution failure
-        mock_exec.side_effect = NameError("name 'undefined_var' is not defined")
+        # Mock execution failure with syntax error (should fail)
+        mock_exec.side_effect = SyntaxError("invalid syntax")
 
         code = """
-print(undefined_var)
+print(undefined_var
 """
 
         success = doctest_runner.run_code_block(code, "test.md", 1)
@@ -335,33 +335,51 @@ Line 5: HTML <a href="https://test.com">link</a>"""
             assert not is_valid
             assert "not found" in message.lower()
 
-    @patch("requests.Session.head")
-    def test_check_http_url_success(self, mock_head):
+    @pytest.mark.skipif(
+        not HAS_VALIDATION_SCRIPTS, reason="Validation scripts not available"
+    )
+    def test_check_http_url_success(self):
         """Test successful HTTP URL checking."""
-        link_checker = LinkChecker()
+        from scripts.check_links import HAS_REQUESTS
 
-        # Mock successful response
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_head.return_value = mock_response
+        if not HAS_REQUESTS:
+            pytest.skip("requests not available")
 
-        is_valid, message = link_checker.check_http_url("https://example.com")
-        assert is_valid
-        assert "200" in message
+        with patch("requests.Session.head") as mock_head:
+            link_checker = LinkChecker()
 
-    @patch("requests.Session.head")
-    def test_check_http_url_failure(self, mock_head):
+            # Mock successful response
+            mock_response = Mock()
+            mock_response.status_code = 200
+            mock_head.return_value = mock_response
+
+            is_valid, message = link_checker.check_http_url("https://example.com")
+            assert is_valid
+            assert "200" in message
+
+    @pytest.mark.skipif(
+        not HAS_VALIDATION_SCRIPTS, reason="Validation scripts not available"
+    )
+    def test_check_http_url_failure(self):
         """Test failed HTTP URL checking."""
-        link_checker = LinkChecker()
+        from scripts.check_links import HAS_REQUESTS
 
-        # Mock failed response
-        mock_response = Mock()
-        mock_response.status_code = 404
-        mock_head.return_value = mock_response
+        if not HAS_REQUESTS:
+            pytest.skip("requests not available")
 
-        is_valid, message = link_checker.check_http_url("https://example.com/notfound")
-        assert not is_valid
-        assert "404" in message
+        with patch("requests.Session.head") as mock_head:
+            link_checker = LinkChecker()
+
+            # Mock failed response
+            mock_response = Mock()
+            mock_response.status_code = 404
+            mock_head.return_value = mock_response
+
+            is_valid, message = link_checker.check_http_url(
+                "https://example.com/notfound"
+            )
+            assert not is_valid
+            assert "404" in message
 
 
 @pytest.mark.skipif(

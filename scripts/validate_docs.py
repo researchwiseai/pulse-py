@@ -161,27 +161,37 @@ class DocumentationValidator:
 
     def extract_links(self, content: str) -> List[str]:
         """Extract all links from markdown content."""
-        links = []
+        links = set()  # Use set to avoid duplicates
 
         # Markdown links: [text](url)
         markdown_links = re.findall(r"\[([^\]]*)\]\(([^)]+)\)", content)
-        links.extend([url for text, url in markdown_links])
+        links.update([url for text, url in markdown_links])
 
         # Reference links: [text]: url
-        ref_links = re.findall(r"^\[([^\]]+)\]:\s*(.+)$", content, re.MULTILINE)
-        links.extend([url for text, url in ref_links])
+        ref_links = re.findall(r"^\s*\[([^\]]+)\]:\s*(.+)$", content, re.MULTILINE)
+        links.update([url.strip() for text, url in ref_links])
 
         # HTML links: <a href="url">
         html_links = re.findall(
             r'<a[^>]+href=["\']([^"\']+)["\']', content, re.IGNORECASE
         )
-        links.extend(html_links)
+        links.update(html_links)
 
-        # Direct URLs: http(s)://...
-        direct_urls = re.findall(r'https?://[^\s<>"{}|\\^`\[\]]+', content)
-        links.extend(direct_urls)
+        # Direct URLs: http(s)://... (but not already captured in markdown/HTML)
+        # Remove already captured URLs from content first
+        temp_content = content
+        for link in list(links):
+            if link.startswith("http"):
+                temp_content = (
+                    temp_content.replace(f"({link})", "")
+                    .replace(f'"{link}"', "")
+                    .replace(f"'{link}'", "")
+                )
 
-        return links
+        direct_urls = re.findall(r'https?://[^\s<>"{}|\\^`\[\]()]+', temp_content)
+        links.update(direct_urls)
+
+        return list(links)
 
     def check_link(self, url: str, base_path: str = None) -> Tuple[bool, str]:
         """Check if a link is valid."""
