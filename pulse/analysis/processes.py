@@ -2,7 +2,6 @@
 
 from typing import Any, Tuple
 from pulse.core.models import Theme as ThemeModel
-from pulse.core.models import SimilarityRequest
 
 try:
     from typing import Protocol
@@ -33,6 +32,8 @@ class ThemeGeneration:
         context: Any = None,
         version: str | None = None,
         prune: int | None = None,
+        interactive: bool | None = None,
+        initial_sets: int | None = None,
         fast: bool | None = None,
         await_job_result: bool = True,
     ):
@@ -41,6 +42,8 @@ class ThemeGeneration:
         self.context = context
         self.version = version
         self.prune = prune
+        self.interactive = interactive
+        self.initial_sets = initial_sets
         self.fast = fast
         self.await_job_result = await_job_result
 
@@ -63,6 +66,8 @@ class ThemeGeneration:
             context=self.context,
             version=self.version,
             prune=self.prune,
+            interactive=self.interactive,
+            initial_sets=self.initial_sets,
             await_job_result=self.await_job_result,
         )
 
@@ -129,12 +134,10 @@ class ThemeAllocation:
         fast_flag = self.fast if self.fast is not None else ctx.fast
 
         resp = ctx.client.compare_similarity(
-            SimilarityRequest(
-                set_a=texts,
-                set_b=sim_texts,
-                fast=fast_flag,
-                flatten=False,
-            )
+            set_a=texts,
+            set_b=sim_texts,
+            fast=fast_flag,
+            flatten=False,
         )
         # normalize similarity matrix from response or raw matrix
         similarity = getattr(resp, "similarity", resp)
@@ -161,6 +164,61 @@ class ThemeAllocation:
         }
 
 
+class SimilarityProcess:
+    """Process: compute similarity between texts with optional splitting."""
+
+    id = "similarity"
+    depends_on: Tuple[str, ...] = ()
+
+    def __init__(
+        self,
+        set_a: list[str] | None = None,
+        set_b: list[str] | None = None,
+        split: dict[str, Any] | None = None,
+        flatten: bool = False,
+        version: str | None = None,
+        fast: bool | None = None,
+        await_job_result: bool = True,
+    ):
+        self.set_a = set_a
+        self.set_b = set_b
+        self.split = split
+        self.flatten = flatten
+        self.version = version
+        self.fast = fast
+        self.await_job_result = await_job_result
+
+    def run(self, ctx: Any) -> Any:
+        """Compute similarity with optional text splitting."""
+        texts = list(ctx.dataset)
+
+        # Use provided sets or default to dataset
+        set_a = self.set_a or texts
+        set_b = self.set_b
+
+        if set_b is None:
+            # Self-similarity
+            return ctx.client.compare_similarity(
+                set=set_a,
+                split=self.split,
+                flatten=self.flatten,
+                version=self.version,
+                fast=self.fast or ctx.fast,
+                await_job_result=self.await_job_result,
+            )
+        else:
+            # Cross-similarity
+            return ctx.client.compare_similarity(
+                set_a=set_a,
+                set_b=set_b,
+                split=self.split,
+                flatten=self.flatten,
+                version=self.version,
+                fast=self.fast or ctx.fast,
+                await_job_result=self.await_job_result,
+            )
+
+
 class ThemeExtraction:
     """Process: extract elements matching themes from input strings."""
 
@@ -170,70 +228,94 @@ class ThemeExtraction:
     def __init__(
         self,
         themes: list[str] | None = None,
+        dictionary: list[str] | None = None,
+        type: str = "named-entities",
+        expand_dictionary: bool = False,
+        expand_dictionary_limit: int | None = None,
         version: str | None = None,
         fast: bool | None = None,
-        dictionary: dict[str, list[str]] | None = None,
-        expand_dictionary: bool | None = None,
+        await_job_result: bool = True,
+        # Deprecated parameters for backward compatibility
         use_ner: bool | None = None,
         use_llm: bool | None = None,
         threshold: float | None = None,
     ):
         self.themes = themes
+        self.dictionary = dictionary
+        self.type = type
+        self.expand_dictionary = expand_dictionary
+        self.expand_dictionary_limit = expand_dictionary_limit
         self.version = version
         self.fast = fast
-        self.dictionary = dictionary
-        self.expand_dictionary = expand_dictionary
+        self.await_job_result = await_job_result
+        # Deprecated parameters
         self.use_ner = use_ner
         self.use_llm = use_llm
         self.threshold = threshold
 
     def run(self, ctx: Any) -> Any:
         texts = list(ctx.dataset)
-        # Determine themes list (static or from another process)
-        if self.themes is not None:
-            used_themes = list(self.themes)
+
+        # Determine dictionary - use provided dictionary or themes
+        if self.dictionary is not None:
+            used_dictionary = list(self.dictionary)
+        elif self.themes is not None:
+            used_dictionary = list(self.themes)
         else:
+            # Get themes from previous process
             alias = getattr(self, "_themes_from_alias", "theme_generation")
             prev = ctx.results.get(alias)
             if prev is not None:
-                used_themes = prev.themes
+                used_dictionary = prev.themes
             else:
                 # fallback to named source
                 src = getattr(ctx, "sources", {})
                 if alias in src:
-                    used_themes = list(src[alias])
+                    used_dictionary = list(src[alias])
                 else:
                     raise RuntimeError(f"{alias} result not available for extraction")
-        self.themes = used_themes
-        self.themes = used_themes
+
         return ctx.client.extract_elements(
             inputs=texts,
-            themes=used_themes,
-            version=self.version,
-            dictionary=self.dictionary,
+            dictionary=used_dictionary,
+            type=self.type,
             expand_dictionary=self.expand_dictionary,
+            expand_dictionary_limit=self.expand_dictionary_limit,
+            version=self.version,
+            fast=self.fast or ctx.fast,
+            await_job_result=self.await_job_result,
+            # Pass deprecated parameters for backward compatibility
             use_ner=self.use_ner,
             use_llm=self.use_llm,
             threshold=self.threshold,
-            fast=self.fast or ctx.fast,
         )
 
 
 class Cluster:
-    """Process: compute similarity matrix for clustering."""
+    """Process: cluster texts using various algorithms."""
 
     id = "cluster"
     depends_on: Tuple[str, ...] = ()
 
-    def __init__(self, fast: bool | None = None):
+    def __init__(
+        self,
+        k: int = 2,
+        algorithm: str = "kmeans",
+        fast: bool | None = None,
+        await_job_result: bool = True,
+    ):
+        self.k = k
+        self.algorithm = algorithm
         self.fast = fast
+        self.await_job_result = await_job_result
 
     def run(self, ctx: Any) -> Any:
-        """Compute similarity matrix for clustering (cached for later use)."""
+        """Cluster texts using the specified algorithm."""
         texts = list(ctx.dataset)
-        # request full matrix (flatten=False for NxN)
-        resp = ctx.client.compare_similarity(
-            SimilarityRequest(set=texts, fast=self.fast or ctx.fast, flatten=False)
+        return ctx.client.cluster_texts(
+            inputs=texts,
+            k=self.k,
+            algorithm=self.algorithm,
+            fast=self.fast or ctx.fast,
+            await_job_result=self.await_job_result,
         )
-        # resp.similarity is List[List[float]]
-        return resp.similarity

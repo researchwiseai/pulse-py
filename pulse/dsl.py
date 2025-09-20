@@ -11,6 +11,7 @@ from pulse.analysis.processes import (
     ThemeAllocation,
     ThemeExtraction,
     SentimentProcess,
+    SimilarityProcess,
     Cluster,
 )
 from pulse.analysis.analyzer import Analyzer
@@ -109,6 +110,8 @@ class Workflow:
         context: Any = None,
         version: str | None = None,
         prune: int | None = None,
+        interactive: bool | None = None,
+        initial_sets: int | None = None,
         fast: bool | None = None,
         source: str | None = None,
         name: str | None = None,
@@ -120,6 +123,8 @@ class Workflow:
             context=context,
             version=version,
             prune=prune,
+            interactive=interactive,
+            initial_sets=initial_sets,
             fast=fast,
         )
         self._add_process(process, name=name)
@@ -210,15 +215,23 @@ class Workflow:
         self,
         *,
         themes: list[str] | None = None,
+        dictionary: list[str] | None = None,
+        type: str = "named-entities",
+        expand_dictionary: bool = False,
+        expand_dictionary_limit: int | None = None,
         version: str | None = None,
         fast: bool | None = None,
         inputs: str | None = None,
         themes_from: str | None = None,
         name: str | None = None,
     ) -> "Workflow":
-        """Add a theme extraction step with explicit input wiring."""
+        """Add a theme extraction step with type control and explicit input wiring."""
         process = ThemeExtraction(
             themes=themes,
+            dictionary=dictionary,
+            type=type,
+            expand_dictionary=expand_dictionary,
+            expand_dictionary_limit=expand_dictionary_limit,
             version=version,
             fast=fast,
         )
@@ -277,16 +290,50 @@ class Workflow:
         setattr(process, "_inputs", [alias])
         return self
 
-    def cluster(
+    def similarity(
         self,
         *,
-        k: int = 2,
+        set_a: list[str] | None = None,
+        set_b: list[str] | None = None,
+        split: dict[str, Any] | None = None,
+        flatten: bool = False,
+        version: str | None = None,
         source: str | None = None,
         fast: bool | None = None,
         name: str | None = None,
     ) -> "Workflow":
-        """Add a clustering step with optional source override."""
-        process = Cluster(fast=fast)
+        """Add a similarity computation step with text splitting support."""
+        process = SimilarityProcess(
+            set_a=set_a,
+            set_b=set_b,
+            split=split,
+            flatten=flatten,
+            version=version,
+            fast=fast,
+        )
+        self._add_process(process, name=name)
+        # determine input source
+        alias = source or "dataset"
+        if (
+            alias != "dataset"
+            and alias not in self._sources
+            and alias not in [p.id for p in self._processes]
+        ):
+            raise ValueError(f"Unknown source for similarity: '{alias}'")
+        setattr(process, "_inputs", [alias])
+        return self
+
+    def cluster(
+        self,
+        *,
+        k: int = 2,
+        algorithm: str = "kmeans",
+        source: str | None = None,
+        fast: bool | None = None,
+        name: str | None = None,
+    ) -> "Workflow":
+        """Add a clustering step with algorithm selection."""
+        process = Cluster(k=k, algorithm=algorithm, fast=fast)
         self._add_process(process, name=name)
         # determine input source for clustering
         alias = source or "dataset"
@@ -470,6 +517,10 @@ class Workflow:
                     process.threshold,
                     similarity=raw.get("similarity"),
                 )
+            elif orig == "similarity":
+                # For similarity, just store the raw response
+                wrapped = raw
+                sources[process.id] = raw
             elif orig == "cluster":
                 wrapped = ClusterResult(raw, ctx.dataset.tolist())
             elif orig == "theme_extraction":
