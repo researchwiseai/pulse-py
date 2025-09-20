@@ -21,6 +21,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: staging
     env:
       # Pulse client credentials from GitHub Secrets
       PULSE_CLIENT_ID: ${{ secrets.PULSE_CLIENT_ID }}
