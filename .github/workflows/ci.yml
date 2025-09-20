@@ -28,7 +28,7 @@ jobs:
       PULSE_CLIENT_SECRET: ${{ secrets.PULSE_CLIENT_SECRET }}
       # Optional: override token URL and audience if needed
       PULSE_TOKEN_URL: ${{ secrets.PULSE_TOKEN_URL }}
-      PULSE_AUDIENCE: ${{ secrets.PULSE_AUDIENCE }}
+      PULSE_ENV: "staging"
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python

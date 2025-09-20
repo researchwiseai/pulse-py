@@ -7,7 +7,7 @@ interactions:
       accept-encoding:
       - gzip, deflate
       authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTc4NDIzNDMsImV4cCI6MTc1NzkyODc0MywiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.W5PVotGlpdbYdIhUG3gUtMoLVuHIcS6wjHK0rRAhYQlP2kZ_r_QFLkoT2KEfb1eIWBk4kgQ32gWQQhE739vTECbAkNV6v1RVJR0Y8S8smWcWW9mJ10LSC3Umf1XGN6-pfLGGO5OIohp3qjZY86F4jkd_Q73rjVQr_p8y_uXE53ozm-1XnEvFhQrQBrImNEYpb46StzqT_uLDEcoQ0FMspydrqoKRKxT3t3wv4i12nRbHgi-vsQZcx4w7Zu6f7EKO51SdXUF13hlu_pU66SP1rSxH8JK9sarmYMvLMBhrIn4qlM_Moobd93kJojjwzH4pZBKn-FD1NHfXXvcYLBxX3g
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMTQsImV4cCI6MTc1ODQ4MzUxNCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.hhE6MlY3noLX5AZiv_rckh8zc8Uxc3f-y9EuPNT1IMG8drBN8exCGAfXAEMeA2QMwe5deDcOtOPoE0R6oxpKFPvrGnMcHWAhK3JufiR2ATB437hmUEbY-Y5sCdjZknsxGYD4_xS7BbkJsxdUhbAyS377g9Oefb4qlh5X1ChL_Rfr2R1Ub5vaw1RluL0nFy6tIPCdqvtBOf1ptoyQbsvTqqMwylrbFfu_rWjFAylc9tjPunHpaoWIoA09p5GBOVsEROfDJY1YEu5QfCWMLJ5GAvN6Dsg41BV0R_M801FXFfQW2IlZDnYuLrRzZurwlS6dHvSScmenffRHGmI9JyFy1g
       connection:
       - keep-alive
       content-length:
@@ -25,7 +25,7 @@ interactions:
       string: '{"code":"service_unavailable","message":"missing price for model gpt-5"}'
     headers:
       Apigw-Requestid:
-      - Q4rDxgiXjoEEPoA=
+      - RN1eKiTdjoEEMdQ=
       Connection:
       - keep-alive
       Content-Length:
@@ -33,7 +33,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 14 Sep 2025 09:32:34 GMT
+      - Sat, 20 Sep 2025 19:38:41 GMT
     status:
       code: 400
       message: Bad Request

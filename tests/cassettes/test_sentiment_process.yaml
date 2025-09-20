@@ -22,7 +22,7 @@ interactions:
       accept-encoding:
       - gzip, deflate
       authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTc4NDIzMzIsImV4cCI6MTc1NzkyODczMiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.IvPujo2VTiXXQ5z3jDNxLi4aS_mXjkVRcB3pfpnCgQRdodMxcp146SYui1KrPmFAofRXbDIgHHLU4rJVZe9bWGQ4z88kqHFiZVUwBwS9-c1s0N80A5VWaD3_M5qUnvQqBfgXhDwOt4Eln6nX7X1ypxhpSalKMlkonUGTEH1V18No59AC47tR4ovWMDIKmn0pzHKt4L_jTwD3IbxrnCVYgcu7OAZhNufG5LqknMQMrHYXPmxqwNUAJI_Pmh3ZJWYDy9UspTeWcHq59VpsqxkfNfyM-KrlZFEL12HpAtSEZcdh6tXrWnU6fqE5KocmfqvQq9CC3VEYmIUTfdsa56-2Cw
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMDAsImV4cCI6MTc1ODQ4MzUwMCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.YtleFYqZprHsJ-83Cjw_JYZf0q1NLUs8Sut4CskKZjmI-j9fuloOIZkH8vVXME5dy_TRYqeqq0PLwVZi35GQILHM6GHY7LMobINowOXdgjNHWF7FBqXHp_L5-krwtyFxMBCGQqTBP4r0WV7R-N1vk7UoA_NCbvLhyx_kezafGqT9q9vrcdT6KIyvSsQeuPkgVjsCnv45-uc6p4AhoZtRX8yBqZYJzFQrwRlfOKm9vGO7gH8x5vVNbzfqGvSxiBRrsyYAb3IlSagZrbRuohyH5mRbti-TFr90GtM1VLsS876dMN3EApJqVxsW63EIdKiKUQ7lBNvgamFi8cCejU0_EA
       connection:
       - keep-alive
       content-length:
@@ -40,7 +40,7 @@ interactions:
       string: '{"results":[{"sentiment":"positive","confidence":0.92},{"sentiment":"positive","confidence":0.7},{"sentiment":"mixed","confidence":0.55},{"sentiment":"negative","confidence":0.85},{"sentiment":"positive","confidence":0.9},{"sentiment":"positive","confidence":0.88},{"sentiment":"negative","confidence":0.8},{"sentiment":"positive","confidence":0.93},{"sentiment":"positive","confidence":0.95},{"sentiment":"negative","confidence":0.82},{"sentiment":"positive","confidence":0.88},{"sentiment":"negative","confidence":0.86},{"sentiment":"positive","confidence":0.92},{"sentiment":"negative","confidence":0.77},{"sentiment":"positive","confidence":0.94},{"sentiment":"mixed","confidence":0.65},{"sentiment":"positive","confidence":0.89},{"sentiment":"mixed","confidence":0.75},{"sentiment":"positive","confidence":0.9},{"sentiment":"mixed","confidence":0.7}],"requestId":"160b5d433e42439638bb42056d56ec793a0bfabd","usage":{"records":[{"feature":"sentiment","quantity":1}],"total":1}}'
     headers:
       Apigw-Requestid:
-      - Q4rCLhXgDoEEP8Q=
+      - RN1cvgPwDoEEMUw=
       Connection:
       - keep-alive
       Content-Length:
@@ -48,7 +48,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 14 Sep 2025 09:32:23 GMT
+      - Sat, 20 Sep 2025 19:38:33 GMT
     status:
       code: 200
       message: OK

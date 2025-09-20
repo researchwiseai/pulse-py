@@ -178,5 +178,3 @@ class TestAuthenticationEdgeCases:
             except (KeyError, PulseAPIError, Exception):
                 # Exception is acceptable for malformed responses
                 pass
-
-

@@ -21,23 +21,23 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
     headers:
       CF-Cache-Status:
       - DYNAMIC
       CF-Ray:
-      - 97e8596bfd681dcb-MAN
+      - 9823c8eba9f263f6-LHR
       Cache-Control:
       - no-store
       Connection:
@@ -47,18 +47,18 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sat, 13 Sep 2025 14:31:37 GMT
+      - Sat, 20 Sep 2025 19:38:44 GMT
       Pragma:
       - no-cache
       Server:
       - cloudflare
       Set-Cookie:
-      - did=s%3Av0%3Abd997f79-a98b-495e-8169-89786aca8aef.bDFC4RSayHY4f57ER%2FrsEqjXBayF9MXOx8F1Hadzm8M;
-        Path=/; Expires=Sun, 13 Sep 2026 20:31:37 GMT; HttpOnly; Secure; SameSite=None
-      - did_compat=s%3Av0%3Abd997f79-a98b-495e-8169-89786aca8aef.bDFC4RSayHY4f57ER%2FrsEqjXBayF9MXOx8F1Hadzm8M;
-        Path=/; Expires=Sun, 13 Sep 2026 20:31:37 GMT; HttpOnly; Secure
-      - __cf_bm=QNUsTjOfjAjTmdGHOdzIRaqR9abFJTuh85DzIAs3hYg-1757773897-1.0.1.1-EQOA4ZeHf4KaDrrGhCMbE8KS.lpJ1DheSdvyOc_nSbrDBw0zgY46YBFm4kZyy8n2;
-        path=/; expires=Sat, 13-Sep-25 15:01:37 GMT; domain=.eu.auth0.com; HttpOnly;
+      - did=s%3Av0%3A77f577c8-f7e4-4423-b2ec-5f045e5ec72d.p4lO39SczcLdSDwxn8oBH1SIsrlXMZzATo5OYJqQ4wY;
+        Path=/; Expires=Mon, 21 Sep 2026 01:38:44 GMT; HttpOnly; Secure; SameSite=None
+      - did_compat=s%3Av0%3A77f577c8-f7e4-4423-b2ec-5f045e5ec72d.p4lO39SczcLdSDwxn8oBH1SIsrlXMZzATo5OYJqQ4wY;
+        Path=/; Expires=Mon, 21 Sep 2026 01:38:44 GMT; HttpOnly; Secure
+      - __cf_bm=_bfuLsLIu52guy7y8r0j5y5go4n3ijz5d86VGzKesfk-1758397124-1.0.1.1-bK6inzqgPVz20n8HKYikN7JhL8y2uqLldoXZrqGRW_u_o8Spo02syPIU14eTn87e;
+        path=/; expires=Sat, 20-Sep-25 20:08:44 GMT; domain=.eu.auth0.com; HttpOnly;
         Secure; SameSite=None
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
@@ -69,7 +69,7 @@ interactions:
       X-Auth0-L:
       - '0.046'
       X-Auth0-RequestId:
-      - bcfa857a0de62aca3c54
+      - 317235885a02e9bfd6b8
       X-Content-Type-Options:
       - nosniff
       X-RateLimit-Limit:
@@ -77,10 +77,49 @@ interactions:
       X-RateLimit-Remaining:
       - '99'
       X-RateLimit-Reset:
-      - '1757773899'
+      - '1758397126'
       alt-svc:
       - h3=":443"; ma=86400
     status:
       code: 200
       message: OK
+- request:
+    body: '{"set_a":["everything was very tasty","it was a little too noisy"],"set_b":["Food
+      Quality","Service","Environment"],"flatten":false,"fast":false}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMjQsImV4cCI6MTc1ODQ4MzUyNCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.mbhNXLyr_4_1GbC_0lsO8bcNYQL9BXeCYAufoqe1z0v3YDR97Aotrl7D8ZlTv5WrTcrRrK22-v6MG60I9--dh62k01QHwMzAbHyzJD1_oWj1_bsDkgmC8Pyn3YV5pKkREY_zluM9LLWyThVC9RbTyGkjySM1dDZuNvXhguc_PRcWZyUOg1Pu6Qxw3L0_W2faOQaVGLYvWrBwgDJaSDqMFp2Pt_OIit2pW-p-b37WcZD6ou23SoJ13BUDoUR1AQrjUWOyp0bs1Gvq-yo3Lzugj3D891xRMy9XIwidYfHXRDgo19nmh-m-pCvA6e7wn3JQSfukl06oDzV85RNfyKEY6A
+      connection:
+      - keep-alive
+      content-length:
+      - '145'
+      content-type:
+      - application/json
+      host:
+      - staging.pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://staging.pulse.researchwiseai.com/v1/similarity
+  response:
+    body:
+      string: '{"job_id":"eeb4733f-eae2-45af-81e6-083381c55c8b"}'
+    headers:
+      Apigw-Requestid:
+      - RN1eyhjLjoEEMuw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '49'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 20 Sep 2025 19:38:44 GMT
+    status:
+      code: 202
+      message: Accepted
 version: 1
