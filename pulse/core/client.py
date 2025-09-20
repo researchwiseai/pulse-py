@@ -1,6 +1,6 @@
 """CoreClient for interacting with the Pulse API synchronously."""
 
-from typing import Any, Dict, List, Union, Optional, Mapping, cast
+from typing import Any, Dict, List, Union, Optional, cast
 import httpx
 from pulse.core.retry import retry_request
 from pulse.core.utils import chunk_texts
@@ -30,12 +30,14 @@ from pulse.core.models import (
     SimilarityRequest,
     SimilarityResponse,
     ThemesResponse,
+    ThemeSetsResponse,
     SentimentResponse,
     SentimentResult,
     JobSubmissionResponse,
     ExtractionsResponse,
     ClusteringResponse,
     SummariesResponse,
+    UsageEstimateResponse,
 )
 from pulse.core.exceptions import PulseAPIError
 
@@ -303,27 +305,48 @@ class CoreClient:
 
     def compare_similarity(
         self,
-        request: SimilarityRequest,
+        request: Optional[SimilarityRequest] = None,
         *,
+        set: Optional[List[str]] = None,
+        set_a: Optional[List[str]] = None,
+        set_b: Optional[List[str]] = None,
+        fast: Optional[bool] = None,
+        flatten: bool = False,
+        version: Optional[str] = None,
+        split: Optional[Dict[str, Any]] = None,
         await_job_result: bool = True,
     ) -> Union[SimilarityResponse, Job]:
         """Compute cosine similarity between strings.
 
-        Exactly one of ``set`` (self-similarity) or the pair ``set_a``/``set_b``
-        (cross-similarity) must be provided in the ``request``. Optional
-        ``version`` and ``split`` values are forwarded to the API. When
-        ``await_job_result`` is ``False`` the asynchronous job handle is
-        returned instead of waiting for completion.
-        """
-        # validate arguments
-        set = request.set
-        set_a = request.set_a
-        set_b = request.set_b
-        fast = request.fast
-        flatten = request.flatten
-        version = request.version
-        split = request.split
+        Args:
+            request: SimilarityRequest object (deprecated, use individual parameters).
+            set: Input texts for self-similarity computation.
+            set_a: First set of texts for cross-similarity computation.
+            set_b: Second set of texts for cross-similarity computation.
+            fast: Use synchronous (True) or asynchronous (False) mode.
+            flatten: Return flattened results instead of matrix format.
+            version: Optional model version for reproducible output.
+            split: Text splitting configuration for fine-grained analysis.
+            await_job_result: When False, return a Job handle instead of waiting.
 
+        Note:
+            Exactly one of `set` (self-similarity) or the pair `set_a`/`set_b`
+            (cross-similarity) must be provided. Optional `version` and `split`
+            values are forwarded to the API.
+        """
+        # Handle backward compatibility with SimilarityRequest
+        if request is not None:
+            set = request.set
+            set_a = request.set_a
+            set_b = request.set_b
+            fast = request.fast
+            flatten = request.flatten
+            version = request.version
+            split = (
+                request.split.model_dump(exclude_none=True) if request.split else None
+            )
+
+        # Validate arguments
         if set is None and (set_a is None or set_b is None):
             raise ValueError(
                 "You must provide either `set` or both `set_a` and `set_b`."
@@ -331,24 +354,53 @@ class CoreClient:
         if set is not None and (set_a is not None or set_b is not None):
             raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
 
-        body: Dict[str, Any] = {}
-        oversized = False
+        # Validate input limits based on new OpenAPI v0.9.0 constraints
         if set is not None:
-            body["set"] = set
-            if len(set) > 200:
-                oversized = True
+            # Self-similarity limits
+            if fast is True and len(set) > 500:
+                raise ValueError(
+                    "Self-similarity synchronous mode supports maximum 500 texts"
+                )
+            elif fast is False and len(set) > 44721:
+                raise ValueError(
+                    "Self-similarity asynchronous mode supports maximum 44,721 texts"
+                )
         else:
+            # Cross-similarity limits
             if set_a is None or set_b is None:
                 raise ValueError(
                     "Both set_a and set_b must be provided when set is not used"
                 )
+
+            cross_product = len(set_a) * len(set_b)
+            if fast is True and cross_product > 20000:
+                raise ValueError(
+                    "Cross-similarity synchronous mode: "
+                    "|set_a| × |set_b| must be ≤ 20,000"
+                )
+            elif (
+                fast is False and cross_product > 44721 * 44721
+            ):  # Reasonable async limit
+                raise ValueError(
+                    "Cross-similarity asynchronous mode exceeds reasonable limits"
+                )
+
+        body: Dict[str, Any] = {}
+        oversized = False
+
+        if set is not None:
+            body["set"] = set
+            # Use new limits for oversized detection
+            if len(set) > 500:
+                oversized = True
+        else:
             body["set_a"] = set_a
             body["set_b"] = set_b
-            if len(cast(List[str], set_a)) * len(cast(List[str], set_b)) > 10_000:
+            if len(cast(List[str], set_a)) * len(cast(List[str], set_b)) > 20_000:
                 oversized = True
 
-        if oversized and not fast:
-            # If not fast and total size exceeds 10k, use batch similarity
+        if oversized and fast is not False:
+            # If not explicitly async and oversized, use batch similarity
             return self.batch_similarity(
                 set=set,
                 set_a=set_a,
@@ -363,18 +415,10 @@ class CoreClient:
         if version is not None:
             body["version"] = version
         if split is not None:
-            body["split"] = (
-                split.model_dump(exclude_none=True)
-                if hasattr(split, "model_dump")
-                else split
-            )
+            body["split"] = split
 
-        if fast:
-            # API expects a JSON boolean for fast
-            body["fast"] = True
-        else:
-            # If not fast, set to False
-            body["fast"] = False
+        if fast is not None:
+            body["fast"] = fast
 
         response = self._request("post", "/similarity", json=body)
 
@@ -492,15 +536,17 @@ class CoreClient:
     def generate_themes(
         self,
         texts: list[str],
-        min_themes: int = 2,
-        max_themes: int = 50,
+        min_themes: Optional[int] = None,
+        max_themes: Optional[int] = None,
         fast: bool = True,
         *,
-        context: Any | None = None,
-        version: str | None = None,
-        prune: int | None = None,
+        context: Optional[str] = None,
+        version: Optional[str] = None,
+        prune: Optional[int] = None,
+        interactive: Optional[bool] = None,
+        initial_sets: Optional[int] = None,
         await_job_result: bool = True,
-    ) -> Union[ThemesResponse, Job]:
+    ) -> Union["ThemesResponse", "ThemeSetsResponse", Job]:
         """Cluster texts into latent themes.
 
         Args:
@@ -510,16 +556,28 @@ class CoreClient:
             fast: Use synchronous (True) or asynchronous (False) mode.
             context: Optional context string guiding theme generation.
             version: Optional model version for reproducible output.
+                When version="2025-09-01", returns ThemeSetsResponse.
             prune: Optionally prune the specified number of
                 lowest-frequency themes.
+            interactive: Enable interactive theme generation mode.
+            initial_sets: Number of initial theme sets
+                (requires interactive=True if > 1).
             await_job_result: When False, return a :class:`Job` handle
                 instead of waiting.
         """
+        # Import here to avoid circular imports
+        from pulse.core.models import ThemesResponse
+
+        # Validate initial_sets constraint first
+        if initial_sets is not None and initial_sets > 1 and not interactive:
+            raise ValueError("initial_sets > 1 requires interactive=True")
+
         # Build request body according to OpenAPI spec: inputs and theme options
         # For single-text input, return empty themes and assignments without API call
         if len(texts) < 2:
             # No-op placeholder for single input
             return ThemesResponse(themes=[], requestId=None)
+
         body: Dict[str, Any] = {}
         # Optionally include theme count bounds
         if min_themes is not None:
@@ -532,6 +590,10 @@ class CoreClient:
             body["version"] = version
         if prune is not None:
             body["prune"] = prune
+        if interactive is not None:
+            body["interactive"] = interactive
+        if initial_sets is not None:
+            body["initialSets"] = initial_sets
         # Fast flag for sync vs async
         if fast:
             # API expects a JSON boolean for fast
@@ -563,9 +625,21 @@ class CoreClient:
             if not await_job_result:
                 return job
             result = job.wait()
-            return ThemesResponse.model_validate(result)
+            return self._parse_themes_response(result)
         # Synchronous response
-        return ThemesResponse.model_validate(data)
+        return self._parse_themes_response(data)
+
+    def _parse_themes_response(
+        self, response_data: Dict[str, Any]
+    ) -> Union["ThemesResponse", "ThemeSetsResponse"]:
+        """Parse themes response based on structure to determine response type."""
+        # Import here to avoid circular imports
+        from pulse.core.models import ThemesResponse, ThemeSetsResponse
+
+        if "themeSets" in response_data:
+            return ThemeSetsResponse.model_validate(response_data)
+        else:
+            return ThemesResponse.model_validate(response_data)
 
     def analyze_sentiment(
         self,
@@ -629,6 +703,54 @@ class CoreClient:
             return SentimentResponse.model_validate(result)
         return SentimentResponse.model_validate(data)
 
+    def estimate_usage(
+        self,
+        feature: str,
+        inputs: list[str],
+    ) -> "UsageEstimateResponse":
+        """Estimate credit usage for a feature without authentication.
+
+        Args:
+            feature: Feature to estimate usage for. Options: "embeddings",
+                "sentiment", "themes", "extractions", "summaries",
+                "clustering", "similarity".
+            inputs: Input texts for estimation.
+
+        Returns:
+            UsageEstimateResponse with estimated usage information.
+        """
+        # Import here to avoid circular imports
+        from pulse.core.models import UsageEstimateResponse
+
+        # Validate feature parameter
+        valid_features = [
+            "embeddings",
+            "sentiment",
+            "themes",
+            "extractions",
+            "summaries",
+            "clustering",
+            "similarity",
+        ]
+        if feature not in valid_features:
+            raise ValueError(f"feature must be one of {valid_features}, got: {feature}")
+
+        body: Dict[str, Any] = {"feature": feature, "inputs": inputs}
+
+        # Create a temporary client without authentication for this endpoint
+        temp_client = httpx.Client(base_url=self.base_url, timeout=self.timeout)
+
+        try:
+            response = temp_client.request("post", "/usage/estimate", json=body)
+
+            if response.status_code != 200:
+                raise PulseAPIError(response)
+
+            data = response.json()
+            return UsageEstimateResponse.model_validate(data)
+        finally:
+            temp_client.close()
+
     def close(self) -> None:
         """Close underlying HTTP connection."""
         self.client.close()
@@ -661,48 +783,81 @@ class CoreClient:
 
     def extract_elements(
         self,
-        texts: list[str],
-        categories: list[str],
+        inputs: list[str],
+        dictionary: list[str],
         *,
-        dictionary: Mapping[str, list[str]] | None = None,
-        expand_dictionary: bool | None = None,
-        use_ner: bool | None = None,
-        use_llm: bool | None = None,
-        threshold: float | None = None,
-        fast: bool | None = None,
+        type: str = "named-entities",
+        expand_dictionary: bool = False,
+        expand_dictionary_limit: Optional[int] = None,
+        version: Optional[str] = None,
+        fast: Optional[bool] = None,
         await_job_result: bool = True,
+        # Deprecated parameters for backward compatibility
+        texts: Optional[list[str]] = None,
+        categories: Optional[list[str]] = None,
+        use_ner: Optional[bool] = None,
+        use_llm: Optional[bool] = None,
+        threshold: Optional[float] = None,
     ) -> Union[ExtractionsResponse, Job]:
-        """Extract elements matching categories from input texts.
+        """Extract elements matching dictionary terms from input texts.
 
         Args:
-            texts: Input strings to analyze.
-            categories: List of category labels to extract.
-            dictionary: Optional mapping of category to search terms.
+            inputs: Input strings to analyze.
+            dictionary: List of terms to extract from texts.
+            type: Extraction type. Options: "named-entities", "themes".
+                Defaults to "named-entities".
             expand_dictionary: Expand dictionary entries with synonyms.
-            use_ner: Enable named-entity recognition extraction.
-            use_llm: Enable LLM-powered extraction.
-            threshold: Score threshold for extraction results.
+            expand_dictionary_limit: Limit for dictionary expansions.
+            version: Optional model version for reproducible output.
             fast: Use synchronous (True) or asynchronous (False) mode.
-            await_job_result: When ``False``, return a :class:`Job` handle
-                instead of waiting for results.
+            await_job_result: When False, return a Job handle instead of waiting.
+
+            # Deprecated parameters (for backward compatibility):
+            texts: Deprecated, use 'inputs' instead.
+            categories: Deprecated, use 'dictionary' instead.
+            use_ner: Deprecated parameter (no longer used).
+            use_llm: Deprecated parameter (no longer used).
+            threshold: Deprecated parameter (no longer used).
         """
+        # Handle backward compatibility
+        if texts is not None:
+            inputs = texts
+        if categories is not None:
+            dictionary = categories
 
-        if len(texts) > 200:
-            raise ValueError("'texts' cannot exceed 200 items")
-        if len(categories) > 50:
-            raise ValueError("'categories' cannot exceed 50 items")
+        # Validate type parameter
+        valid_types = ["named-entities", "themes"]
+        if type not in valid_types:
+            raise ValueError(f"type must be one of {valid_types}, got: {type}")
 
-        body: Dict[str, Any] = {"texts": texts, "categories": categories}
-        if dictionary is not None:
-            body["dictionary"] = dictionary
-        if expand_dictionary is not None:
-            body["expand_dictionary"] = expand_dictionary
-        if use_ner is not None:
-            body["use_ner"] = use_ner
-        if use_llm is not None:
-            body["use_llm"] = use_llm
-        if threshold is not None:
-            body["threshold"] = threshold
+        # Validate themes type constraints
+        if type == "themes" and expand_dictionary:
+            raise ValueError("expand_dictionary must be false when type is 'themes'")
+
+        # Validate input limits based on new OpenAPI v0.9.0 constraints
+        if fast is True and len(inputs) > 200:
+            raise ValueError("Synchronous mode (fast=True) supports maximum 200 inputs")
+        elif fast is False and len(inputs) > 5000:
+            raise ValueError(
+                "Asynchronous mode (fast=False) supports maximum 5,000 inputs"
+            )
+
+        if len(dictionary) < 3:
+            raise ValueError("dictionary must contain at least 3 terms")
+        if len(dictionary) > 200:
+            raise ValueError("dictionary cannot exceed 200 terms")
+
+        body: Dict[str, Any] = {
+            "inputs": inputs,
+            "dictionary": dictionary,
+            "type": type,
+            "expand_dictionary": expand_dictionary,
+        }
+
+        if expand_dictionary_limit is not None:
+            body["expand_dictionary_limit"] = expand_dictionary_limit
+        if version is not None:
+            body["version"] = version
         if fast is not None:
             body["fast"] = fast
 
@@ -727,8 +882,8 @@ class CoreClient:
         inputs: list[str],
         *,
         k: int,
-        algorithm: str | None = None,
-        fast: bool | None = None,
+        algorithm: str = "kmeans",
+        fast: Optional[bool] = None,
         await_job_result: bool = True,
     ) -> Union[ClusteringResponse, Job]:
         """Cluster texts into groups using embeddings.
@@ -736,16 +891,28 @@ class CoreClient:
         Args:
             inputs: Input strings to cluster.
             k: Desired number of clusters.
-            algorithm: Optional clustering algorithm (``kmeans``, ``skmeans``,
-                ``agglomerative``, ``hdbscan``).
+            algorithm: Clustering algorithm. Options: "kmeans", "skmeans",
+                "agglomerative", "hdbscan". Defaults to "kmeans".
             fast: Use synchronous (True) or asynchronous (False) mode.
             await_job_result: When False, return a :class:`Job` handle
                 instead of waiting.
         """
+        # Validate algorithm
+        valid_algorithms = ["kmeans", "skmeans", "agglomerative", "hdbscan"]
+        if algorithm not in valid_algorithms:
+            raise ValueError(
+                f"algorithm must be one of {valid_algorithms}, got: {algorithm}"
+            )
 
-        body: Dict[str, Any] = {"inputs": inputs, "k": k}
-        if algorithm is not None:
-            body["algorithm"] = algorithm
+        # Validate input limits based on sync/async mode
+        if fast is True and len(inputs) > 500:
+            raise ValueError("Synchronous mode (fast=True) supports maximum 500 inputs")
+        elif fast is False and len(inputs) > 44721:
+            raise ValueError(
+                "Asynchronous mode (fast=False) supports maximum 44,721 inputs"
+            )
+
+        body: Dict[str, Any] = {"inputs": inputs, "k": k, "algorithm": algorithm}
         if fast is not None:
             body["fast"] = fast
 
