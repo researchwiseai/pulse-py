@@ -8,7 +8,14 @@ class UsageRecord(BaseModel):
     """Single usage record for a feature."""
 
     feature: str = Field(..., description="Name of the feature")
-    units: int = Field(..., description="Units consumed for the feature")
+    quantity: int = Field(..., description="Quantity consumed for the feature")
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    @property
+    def units(self) -> int:
+        """Backward compatibility property for units field."""
+        return self.quantity
 
 
 class UsageReport(BaseModel):
@@ -153,17 +160,29 @@ class SimilarityResponse(UsageModel):
 class UnitAgg(BaseModel):
     """Unit and aggregation options for text splitting."""
 
-    unit: Literal["sentence", "newline"]
-    agg: Literal["mean", "max"] = Field("mean")
+    unit: Literal["sentence", "newline", "word"] = Field(
+        ..., description="Text splitting unit"
+    )
+    agg: Literal["mean", "max", "top2", "top3"] = Field(
+        "mean", description="Aggregation method"
+    )
+    window_size: int = Field(
+        1, ge=1, description="Window size for sliding window processing"
+    )
+    stride_size: int = Field(
+        1, ge=1, description="Stride size for sliding window processing"
+    )
 
 
 class Split(BaseModel):
     """Split configuration for similarity requests."""
 
-    unit: Optional[Literal["sentence", "newline"]] = None
-    agg: Optional[Literal["mean", "max"]] = None
-    set_a: Optional[UnitAgg] = Field(None, alias="set_a")
-    set_b: Optional[UnitAgg] = Field(None, alias="set_b")
+    set_a: Optional[UnitAgg] = Field(
+        None, description="Splitting configuration for set_a"
+    )
+    set_b: Optional[UnitAgg] = Field(
+        None, description="Splitting configuration for set_b"
+    )
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -171,13 +190,21 @@ class Split(BaseModel):
 class SimilarityRequest(BaseModel):
     """Request model for computing similarities."""
 
-    set: Optional[List[str]] = Field(None, min_length=2)
-    set_a: Optional[List[str]] = Field(None, alias="set_a")
-    set_b: Optional[List[str]] = Field(None, alias="set_b")
-    fast: Optional[bool] = None
-    flatten: bool = False
-    version: Optional[str] = None
-    split: Optional[Split] = None
+    set: Optional[List[str]] = Field(
+        None, min_length=2, max_length=44721, description="Self-similarity input texts"
+    )
+    set_a: Optional[List[str]] = Field(
+        None, min_length=1, max_length=2000000000, description="Cross-similarity set A"
+    )
+    set_b: Optional[List[str]] = Field(
+        None, min_length=1, max_length=2000000000, description="Cross-similarity set B"
+    )
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
+    flatten: bool = Field(False, description="Return flattened results")
+    version: Optional[str] = Field(None, description="API version")
+    split: Optional[Split] = Field(None, description="Text splitting configuration")
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -188,6 +215,37 @@ class SimilarityRequest(BaseModel):
         if data.set is not None and (data.set_a is not None or data.set_b is not None):
             raise ValueError("Cannot provide both `set` and `set_a`/`set_b`.")
         return data
+
+
+class ThemesRequest(BaseModel):
+    """Request model for theme generation."""
+
+    inputs: List[str] = Field(
+        ..., min_length=2, max_length=500, description="Input texts"
+    )
+    minThemes: Optional[int] = Field(None, ge=1, description="Minimum number of themes")
+    maxThemes: Optional[int] = Field(
+        None, le=50, description="Maximum number of themes"
+    )
+    context: Optional[str] = Field(
+        None, description="Context to steer theme generation"
+    )
+    version: Optional[str] = Field(None, description="API version")
+    prune: Optional[int] = Field(None, ge=0, le=25, description="Pruning threshold")
+    interactive: Optional[bool] = Field(None, description="Enable interactive mode")
+    initialSets: Optional[int] = Field(
+        None, ge=1, le=3, description="Number of initial theme sets"
+    )
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
+
+    @model_validator(mode="after")
+    def validate_initial_sets(self) -> "ThemesRequest":
+        """Validate that initialSets > 1 requires interactive=true."""
+        if self.initialSets and self.initialSets > 1 and not self.interactive:
+            raise ValueError("initialSets > 1 requires interactive=true")
+        return self
 
 
 class Theme(BaseModel):
@@ -205,6 +263,15 @@ class ThemesResponse(UsageModel):
     """Response model for thematic clustering."""
 
     themes: List[Theme] = Field(..., description="List of cluster metadata objects")
+    requestId: Optional[str] = Field(None, description="Unique request identifier")
+
+
+class ThemeSetsResponse(UsageModel):
+    """Response model for themes with multiple theme sets (version 2025-09-01)."""
+
+    themeSets: List[List[Theme]] = Field(
+        ..., max_length=3, description="List of theme sets"
+    )
     requestId: Optional[str] = Field(None, description="Unique request identifier")
 
 
@@ -250,35 +317,73 @@ class SentimentResponse(UsageModel):
 class ExtractionsRequest(BaseModel):
     """Request model for text element extraction."""
 
-    texts: List[str] = Field(..., min_length=1, description="Input texts")
-    categories: List[str] = Field(
-        ..., min_length=1, description="Categories to extract elements for"
+    inputs: List[str] = Field(
+        ..., min_length=1, max_length=5000, description="Input texts"
     )
-    dictionary: Optional[dict[str, List[str]]] = Field(
-        None, description="Optional mapping of category to search terms"
+    dictionary: List[str] = Field(
+        ..., min_length=3, max_length=200, description="Dictionary terms to extract"
     )
-    expand_dictionary: Optional[bool] = Field(
-        None, description="Expand dictionary entries with synonyms"
+    type: Literal["named-entities", "themes"] = Field(
+        "named-entities", description="Extraction type"
     )
-    use_ner: Optional[bool] = Field(None, description="Enable named-entity recognition")
-    use_llm: Optional[bool] = Field(None, description="Enable LLM powered extraction")
-    threshold: Optional[float] = Field(
-        None, description="Score threshold for extraction"
+    expand_dictionary: bool = Field(
+        False, description="Expand dictionary entries with synonyms"
     )
+    expand_dictionary_limit: Optional[int] = Field(
+        None, description="Limit for dictionary expansions"
+    )
+    version: Optional[str] = Field(None, description="API version")
+    fast: Optional[bool] = Field(
+        None, description="Synchronous (True) or asynchronous (False)"
+    )
+    # Deprecated fields maintained for backward compatibility
+    category: Optional[str] = Field(None, description="Deprecated: use type instead")
+    texts: Optional[List[str]] = Field(
+        None, description="Deprecated: use inputs instead"
+    )
+    categories: Optional[List[str]] = Field(
+        None, description="Deprecated: use dictionary instead"
+    )
+    use_ner: Optional[bool] = Field(None, description="Deprecated field")
+    use_llm: Optional[bool] = Field(None, description="Deprecated field")
+    threshold: Optional[float] = Field(None, description="Deprecated field")
 
     model_config = ConfigDict(populate_by_name=True)
 
+    @model_validator(mode="after")
+    def validate_themes_constraints(self) -> "ExtractionsRequest":
+        """Validate that expand_dictionary=false when type='themes'."""
+        if self.type == "themes" and self.expand_dictionary:
+            raise ValueError("expand_dictionary must be false when type is 'themes'")
+        return self
+
     @model_validator(mode="before")
     def _normalize_legacy(cls, values: dict) -> dict:
-        if "inputs" in values and "texts" not in values:
-            values["texts"] = values.pop("inputs")
-        if "themes" in values and "categories" not in values:
-            values["categories"] = values.pop("themes")
-        # drop deprecated fields from older API versions
-        values.pop("version", None)
-        values.pop("fast", None)
-        if isinstance(values.get("dictionary"), bool):
+        # Handle legacy field mappings
+        if "texts" in values and "inputs" not in values:
+            values["inputs"] = values.pop("texts")
+        if "themes" in values and "dictionary" not in values:
+            values["dictionary"] = values.pop("themes")
+        if "categories" in values and "dictionary" not in values:
+            values["dictionary"] = values.pop("categories")
+
+        # Handle legacy dictionary format
+        if isinstance(values.get("dictionary"), dict):
+            # Convert dict format to list format
+            dict_terms = values.get("dictionary", {})
+            if dict_terms:
+                # Flatten all terms from the dictionary
+                all_terms = []
+                for term_list in dict_terms.values():
+                    all_terms.extend(term_list)
+                values["dictionary"] = all_terms
+        elif isinstance(values.get("dictionary"), bool):
             values.pop("dictionary")
+
+        # Remove deprecated fields that are no longer used
+        for deprecated_field in ["use_ner", "use_llm", "threshold"]:
+            values.pop(deprecated_field, None)
+
         return values
 
 
@@ -297,31 +402,37 @@ class ExtractionsResponse(UsageModel):
 class JobSubmissionResponse(BaseModel):
     """Initial response model for async job submission (202 Accepted)."""
 
-    jobId: str = Field(..., description="Unique job identifier")
+    jobId: str = Field(..., alias="job_id", description="Unique job identifier")
+
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class JobStatusResponse(BaseModel):
     """Polling response model for job status endpoint."""
 
-    jobId: str = Field(..., description="Unique job identifier")
-    jobStatus: Literal["pending", "completed", "error", "failed"] = Field(
-        ..., description="Current job status"
+    jobId: str = Field(..., alias="job_id", description="Unique job identifier")
+    jobStatus: Literal["pending", "queued", "completed", "error", "failed"] = Field(
+        ..., alias="job_status", description="Current job status"
     )
     resultUrl: Optional[str] = Field(
-        None, description="URL to fetch job result upon completion"
+        None, alias="result_url", description="URL to fetch job result upon completion"
     )
     message: Optional[str] = Field(
         None, description="Error message if jobStatus is error or failed"
     )
 
+    model_config = ConfigDict(populate_by_name=True)
+
 
 class ClusteringRequest(BaseModel):
     """Request model for text clustering."""
 
-    inputs: List[str] = Field(..., min_length=2, description="Input texts")
+    inputs: List[str] = Field(
+        ..., min_length=2, max_length=44721, description="Input texts"
+    )
     k: int = Field(..., ge=1, le=50, description="Number of clusters")
-    algorithm: Optional[Literal["kmeans", "skmeans", "agglomerative", "hdbscan"]] = (
-        Field(None, description="Clustering algorithm")
+    algorithm: Literal["kmeans", "skmeans", "agglomerative", "hdbscan"] = Field(
+        "kmeans", description="Clustering algorithm"
     )
     fast: Optional[bool] = Field(
         None, description="Synchronous (True) or asynchronous (False)"
@@ -373,3 +484,26 @@ class SummariesResponse(UsageModel):
 
     summary: str = Field(..., description="Generated summary text")
     requestId: Optional[str] = Field(None, description="Unique request identifier")
+
+
+class UsageEstimateRequest(BaseModel):
+    """Request model for usage estimation."""
+
+    feature: Literal[
+        "embeddings",
+        "sentiment",
+        "themes",
+        "extractions",
+        "summaries",
+        "clustering",
+        "similarity",
+    ] = Field(..., description="Feature to estimate usage for")
+    inputs: List[str] = Field(
+        ..., min_length=1, description="Input texts for estimation"
+    )
+
+
+class UsageEstimateResponse(BaseModel):
+    """Response model for usage estimation."""
+
+    usage: Dict[str, Any] = Field(..., description="Estimated usage information")

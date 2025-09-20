@@ -9,7 +9,7 @@ class Job(BaseModel):
     """Represents an asynchronous job in Pulse API."""
 
     id: str = Field(alias="jobId")
-    status: Literal["pending", "completed", "error", "failed"] = Field(
+    status: Literal["pending", "queued", "completed", "error", "failed"] = Field(
         alias="jobStatus"
     )
     message: Optional[str] = Field(default=None, alias="message")
@@ -57,7 +57,7 @@ class Job(BaseModel):
         start = time.time()
         while True:
             job = self.refresh()
-            if job.status == "pending":
+            if job.status in ("pending", "queued"):
                 pass
             elif job.status == "completed":
                 if job.result_url:
