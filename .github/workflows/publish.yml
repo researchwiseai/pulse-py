@@ -55,6 +55,161 @@ jobs:
           # Generate Apache 2.0 compliance artifacts
           python scripts/generate_compliance_artifacts.py
 
+      - name: Pre-release validation checks
+        run: |
+          echo "🔍 Running pre-release validation checks..."
+
+          # Validate required compliance documents exist in repository (Requirement 2.3, 4.5)
+          echo "📋 Validating compliance documents..."
+          required_docs=(
+            "COMPLIANCE.md"
+            "SECURITY.md"
+            "LICENSE"
+            "NOTICE"
+            "THIRD-PARTY-ATTRIBUTIONS.md"
+            "CHANGELOG.md"
+          )
+
+          missing_docs=()
+          for doc in "${required_docs[@]}"; do
+            if [[ ! -f "$doc" ]]; then
+              missing_docs+=("$doc")
+            else
+              echo "✓ Found required document: $doc"
+            fi
+          done
+
+          if [[ ${#missing_docs[@]} -gt 0 ]]; then
+            echo "❌ Missing required compliance documents:"
+            printf '  - %s\n' "${missing_docs[@]}"
+            exit 1
+          fi
+          echo "✅ All required compliance documents found"
+
+          # Validate SBOM format (CycloneDX compliance) (Requirement 4.5, 5.1)
+          echo "🔐 Validating SBOM format..."
+          if [[ ! -f "sbom.cyclonedx.json" ]]; then
+            echo "❌ SBOM file 'sbom.cyclonedx.json' not found"
+            exit 1
+          fi
+
+          # Validate JSON structure and CycloneDX format
+          python3 -c "
+          import json
+          import sys
+
+          try:
+              with open('sbom.cyclonedx.json', 'r') as f:
+                  sbom = json.load(f)
+
+              # Validate required CycloneDX fields
+              required_fields = ['bomFormat', 'specVersion', 'metadata']
+              missing_fields = [field for field in required_fields if field not in sbom]
+
+              if missing_fields:
+                  print(f'❌ SBOM missing required CycloneDX fields: {missing_fields}')
+                  sys.exit(1)
+
+              if sbom.get('bomFormat') != 'CycloneDX':
+                  print(f'❌ SBOM bomFormat must be \"CycloneDX\", got: {sbom.get(\"bomFormat\")}')
+                  sys.exit(1)
+
+              print('✓ SBOM has valid CycloneDX format')
+              print(f'✓ SBOM version: {sbom.get(\"specVersion\")}')
+
+              # Check for components
+              components = sbom.get('components', [])
+              print(f'✓ SBOM contains {len(components)} components')
+
+          except json.JSONDecodeError as e:
+              print(f'❌ SBOM is not valid JSON: {e}')
+              sys.exit(1)
+          except Exception as e:
+              print(f'❌ SBOM validation failed: {e}')
+              sys.exit(1)
+          "
+          echo "✅ SBOM format validation passed"
+
+          # Validate distribution files exist (Requirement 2.3, 5.1)
+          echo "📦 Validating distribution files..."
+          wheel_files=(dist/*.whl)
+          sdist_files=(dist/*.tar.gz)
+
+          if [[ ! -e "${wheel_files[0]}" ]]; then
+            echo "❌ No wheel (.whl) files found in dist/"
+            exit 1
+          fi
+
+          if [[ ! -e "${sdist_files[0]}" ]]; then
+            echo "❌ No source distribution (.tar.gz) files found in dist/"
+            exit 1
+          fi
+
+          echo "✓ Found wheel files: ${wheel_files[*]##*/}"
+          echo "✓ Found sdist files: ${sdist_files[*]##*/}"
+
+          # Validate signature files exist for distributions only (Requirement 2.3, 5.1)
+          echo "🔏 Validating signature files for distributions..."
+          missing_sigs=()
+
+          for file in dist/*.whl dist/*.tar.gz; do
+            [[ -e "$file" ]] || continue
+            filename=$(basename "$file")
+
+            sig_file="signatures/${filename}.sig"
+            crt_file="signatures/${filename}.crt"
+
+            if [[ ! -f "$sig_file" ]]; then
+              missing_sigs+=("$sig_file")
+            else
+              echo "✓ Found signature: $sig_file"
+            fi
+
+            if [[ ! -f "$crt_file" ]]; then
+              missing_sigs+=("$crt_file")
+            else
+              echo "✓ Found certificate: $crt_file"
+            fi
+          done
+
+          if [[ ${#missing_sigs[@]} -gt 0 ]]; then
+            echo "❌ Missing signature files for distributions:"
+            printf '  - %s\n' "${missing_sigs[@]}"
+            exit 1
+          fi
+          echo "✅ All required signature files found for distributions"
+
+          # Validate total artifact count (Requirement 4.5)
+          echo "📊 Validating release asset count..."
+          total_assets=0
+
+          # Count distribution files
+          dist_count=$(ls -1 dist/*.whl dist/*.tar.gz 2>/dev/null | wc -l)
+          total_assets=$((total_assets + dist_count))
+
+          # Count signature files (should be 2 per distribution: .sig and .crt)
+          sig_count=$(ls -1 signatures/*.sig signatures/*.crt 2>/dev/null | wc -l)
+          total_assets=$((total_assets + sig_count))
+
+          # Count SBOM and provenance files
+          [[ -f "sbom.cyclonedx.json" ]] && total_assets=$((total_assets + 1))
+          [[ -f "build-provenance.json" ]] && total_assets=$((total_assets + 1))
+
+          echo "📈 Asset count breakdown:"
+          echo "  - Distribution files: $dist_count"
+          echo "  - Signature files: $sig_count"
+          echo "  - SBOM files: 1"
+          echo "  - Provenance files: 1"
+          echo "  - Total assets: $total_assets"
+
+          if [[ $total_assets -ge 10 ]]; then
+            echo "❌ Total release assets ($total_assets) exceeds limit of 10"
+            exit 1
+          fi
+          echo "✅ Release asset count ($total_assets) is within limit (<10)"
+
+          echo "🎉 All pre-release validation checks passed!"
+
       - name: Generate build provenance
         run: |
           # Create build provenance information

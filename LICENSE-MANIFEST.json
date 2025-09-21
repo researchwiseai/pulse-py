@@ -2,12 +2,12 @@
   "compliance_artifacts": [
     {
       "hashes": {
-        "md5": "8ed59122a0f62f7921d84cc5365169f4",
-        "sha1": "b83896124735d019db9e882f7bb47b23d5e855e3",
-        "sha256": "5f240e450978fbf2e9632f3eca48f9ba6782386da733538f934f8cabff77633e"
+        "md5": "3a50a722de787ce7d665cae138a31ae6",
+        "sha1": "5afa6b299fe5a01d5e43b10c2b46d3adbfda3713",
+        "sha256": "6fc57bbe4d61e21030325c749af7cb856f81b591033cf664468b92182f9c28ed"
       },
       "path": "scripts/generate_compliance_artifacts.py",
-      "size_bytes": 11507,
+      "size_bytes": 8957,
       "type": "compliance_tool"
     },
     {
@@ -31,7 +31,7 @@
       "type": "vulnerability_scan"
     }
   ],
-  "generated_at": "2025-09-21T12:02:29.415876+00:00",
+  "generated_at": "2025-09-21T15:32:12.428268+00:00",
   "generator": "pulse-sdk-compliance-generator",
   "license_files": [
     {
@@ -47,53 +47,53 @@
     },
     {
       "hashes": {
-        "md5": "1cbe3bcad3b8f5fada04a3aeb9a09f9d",
-        "sha1": "01e17a12192236aa1c982f0d7c09fb4f1ff65e1b",
-        "sha256": "e2d8e37293d1249bdec68e8968edef1771e454661ff9274b16555948cb58e21c"
+        "md5": "64f91ed8d3b02f313698a15319291b0a",
+        "sha1": "5ec9819395d4e8d31184b2497cc9a9c57ba25398",
+        "sha256": "f76d5b94463effb4c912665665909398fcac8af1f3cb16d5e5e9ffe5151ee4d0"
       },
       "path": "NOTICE",
       "purpose": "Attribution notices and third-party acknowledgments",
       "required": true,
-      "size_bytes": 1134
+      "size_bytes": 1133
     },
     {
       "hashes": {
-        "md5": "27114bdc85f9681a2f02e5922103420f",
-        "sha1": "855cef0981d72be5a77882ec2e3ca930d4c0273f",
-        "sha256": "99bab4853f892a2087e3d2ad1f6501ca5e7dc7350be4dfd145f8533ed243e05e"
+        "md5": "09aee3b365e6354bae050d51e3ceac63",
+        "sha1": "cca637b416575b86cec6826a39874c05ee1d539f",
+        "sha256": "bd80a15133c47491a5cef9d71c54f6027e32079626cf6b617ea3b8bba43a4607"
       },
       "path": "LICENSES/Apache-2.0.txt",
       "purpose": "Full Apache 2.0 license text",
       "required": false,
-      "size_bytes": 10293
+      "size_bytes": 10294
     },
     {
       "hashes": {
-        "md5": "c204f2c234cd12dd61f55cb32f6ed18c",
-        "sha1": "62e496b8fca95fd82b218810a6d0c10124df3bb6",
-        "sha256": "4482534d73727a3cc6172326c741824e410f1cda2a5d89bf3f1d2c6d5c3e52a4"
+        "md5": "a487a9c9972d6835f759bb62157c4370",
+        "sha1": "d04caa7f137b20c6135fc2edd0d75a1a9b960657",
+        "sha256": "bef55f139a8e88946ce71ea038b26122e601cd4dbb63152fc1cefff1f99df893"
       },
       "path": "LICENSES/SPDX-LICENSE-INFO.md",
       "purpose": "SPDX license information and compatibility matrix",
       "required": false,
-      "size_bytes": 9004
+      "size_bytes": 8986
     },
     {
       "hashes": {
-        "md5": "fd413732f36d8e2e1443622acf9e3391",
-        "sha1": "d6ad9021501d1490b71286d341ebd35df8bc67fd",
-        "sha256": "7da690dc05db7f8e19735a50eca8e908bce1ac54f87281127d1cc20b0dc284a8"
+        "md5": "d8973d25f252ba0e60b0511e8ca59a61",
+        "sha1": "631532495a42bac99a996efac593e9d17c3b9e94",
+        "sha256": "83964c8758437d7a734805f1dc9c0f7eea32abc01113284dc9d215873c9b9ba0"
       },
       "path": "COMPLIANCE.md",
       "purpose": "Compliance guidance and verification instructions",
       "required": false,
-      "size_bytes": 6259
+      "size_bytes": 6250
     }
   ],
   "manifest_version": "1.0",
   "project": {
-    "commit": "5d077b1d418a908fe58d6fc388416f6ff7e2f515",
-    "commit_date": "2025-09-21 12:57:03 +0100",
+    "commit": "c94b186a9e5cddc459720b52dd3fc71242f9b668",
+    "commit_date": "2025-09-21 16:31:57 +0100",
     "copyright": "Copyright 2025 Researchwise AI",
     "homepage": "https://github.com/researchwiseai/pulse-py",
     "license": "Apache-2.0",

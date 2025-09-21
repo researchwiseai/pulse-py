@@ -1,6 +1,10 @@
 # Third-Party Attributions
 
-This file contains the licenses and notices for third-party software included in or used by the Pulse SDK.
+This file contains the licenses and notices for third-party software
+included in or used by the Pulse SDK.
+
+This document is maintained in the repository root and linked from release notes
+to provide compliance information without duplicating files as release assets.
 
 ## Direct Dependencies
 
@@ -60,5 +64,5 @@ python scripts/verify_attributions.py
 ```
 
 ---
-Generated: 2025-09-21T12:02:29.417205+00:00
+Generated: 2025-09-21T15:32:12.429636+00:00
 Generator: pulse-sdk-compliance-generator v1.0
