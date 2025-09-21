@@ -109,22 +109,34 @@ jobs:
           # Create signatures directory to keep them separate from dist/
           mkdir -p signatures
 
-          # Sign only distribution files (wheel and sdist) - SBOM files are intentionally NOT signed
-          # to reduce release asset clutter per streamlined release process requirements
-          for file in dist/*; do
+          # Sign ONLY core distribution files (wheel and sdist) - compliance documents and SBOM files are intentionally NOT signed
+          # to reduce release asset clutter per streamlined release process requirements (Requirements: 1.2, 2.3, 5.2)
+          for file in dist/*.whl dist/*.tar.gz; do
+            # Skip if no files match the pattern
+            [[ -e "$file" ]] || continue
+
             filename=$(basename "$file")
-            echo "Signing $file"
+            echo "Signing core distribution file: $file"
             cosign sign-blob --yes "$file" \
               --output-signature "signatures/${filename}.sig" \
               --output-certificate "signatures/${filename}.crt"
           done
 
+          echo "Distribution signing complete. Only wheel and sdist files are signed."
 
 
-      - name: Verify signatures
+
+      - name: Verify distribution signatures
         run: |
-          # Verify signatures for distribution files only (SBOM signatures are intentionally excluded)
-          echo "Verifying distribution signatures..."
+          # Verify signatures for ONLY core distribution files (wheel and sdist) - compliance documents and SBOM signatures are intentionally excluded
+          # per streamlined release process requirements (Requirements: 1.2, 2.3, 5.2)
+          echo "Verifying core distribution signatures only..."
+
+          # Count expected distribution files
+          dist_count=$(ls -1 dist/*.whl dist/*.tar.gz 2>/dev/null | wc -l)
+          echo "Found $dist_count distribution files to verify"
+
+          verified_count=0
           for file in dist/*.whl dist/*.tar.gz; do
             # Skip if no files match the pattern
             [[ -e "$file" ]] || continue
@@ -134,16 +146,23 @@ jobs:
             crt_file="signatures/${filename}.crt"
 
             if [[ -f "$sig_file" && -f "$crt_file" ]]; then
-              echo "✓ Signature files exist for $file"
+              echo "✓ Verifying signature for core distribution file: $file"
               cosign verify-blob --certificate "$crt_file" --signature "$sig_file" \
                 --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \
                 --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
                 "$file"
+              verified_count=$((verified_count + 1))
             else
-              echo "✗ Missing signature files for $file"
+              echo "✗ Missing signature files for core distribution: $file"
               exit 1
             fi
           done
+
+          echo "Successfully verified $verified_count core distribution signatures"
+          if [[ $verified_count -ne $dist_count ]]; then
+            echo "✗ Signature verification count mismatch: expected $dist_count, verified $verified_count"
+            exit 1
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -189,8 +208,9 @@ jobs:
             - `sbom.cyclonedx.json` - CycloneDX format SBOM covering both source and wheel distributions
 
             ### 🔐 Digital Signatures
-            - All distribution files are signed using Sigstore keyless signing
-            - Signature files (`.sig`) and certificates (`.crt`) are included
+            - Core distribution files (wheel and sdist) are signed using Sigstore keyless signing
+            - Signature files (`.sig`) and certificates (`.crt`) are included for distributions only
+            - Compliance documents and SBOM files are intentionally not signed to reduce release asset clutter
             - Signatures can be verified using: `cosign verify-blob --certificate <file>.crt --signature <file>.sig --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" --certificate-oidc-issuer "https://token.actions.githubusercontent.com" <file>`
 
             ### 🏗️ Build Provenance
@@ -209,11 +229,16 @@ jobs:
             ```bash
             # Download signature files from the release assets, then verify:
 
-            # Verify package signatures
+            # Verify core distribution signatures (wheel and sdist only)
             cosign verify-blob --certificate pulse_sdk-*.whl.crt --signature pulse_sdk-*.whl.sig \\
               --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
               pulse_sdk-*.whl
+
+            cosign verify-blob --certificate pulse_sdk-*.tar.gz.crt --signature pulse_sdk-*.tar.gz.sig \\
+              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
+              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
+              pulse_sdk-*.tar.gz
 
             # Verify license compliance
             python -c "import json; manifest=json.load(open('LICENSE-MANIFEST.json')); print('License:', manifest['project']['license'])"
