@@ -8,8 +8,8 @@ version = "0.4.1"
 description = "Idiomatic, type-safe Python client for the Pulse REST API"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = "MIT"
-authors = [{ name = "Researchwise AI", email = "dev@researchwiseai.com" }]
-maintainers = [{ name = "Researchwise AI", email = "dev@researchwiseai.com" }]
+authors = [{ name = "Researchwise AI", email = "support@researchwiseai.com" }]
+maintainers = [{ name = "Researchwise AI", email = "support@researchwiseai.com" }]
 requires-python = ">=3.8"
 keywords = [
     "ai",
@@ -28,7 +28,7 @@ keywords = [
 ]
 classifiers = [
     # Development Status
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
 
     # Intended Audience
     "Intended Audience :: Developers",
@@ -43,14 +43,12 @@ classifiers = [
     "Operating System :: MacOS",
 
     # Programming Language
-    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3 :: Only",
 
     # Topic
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -86,12 +84,7 @@ Documentation = "https://researchwiseai.github.io/pulse-py/"
 Changelog = "https://github.com/researchwiseai/pulse-py/blob/main/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/researchwiseai/pulse-py/issues"
 "Security Policy" = "https://github.com/researchwiseai/pulse-py/blob/main/SECURITY.md"
-"Source Code" = "https://github.com/researchwiseai/pulse-py"
-"Download" = "https://pypi.org/project/pulse-sdk/"
 "Release Notes" = "https://github.com/researchwiseai/pulse-py/releases"
-"Discussions" = "https://github.com/researchwiseai/pulse-py/discussions"
-"Sponsor" = "https://github.com/sponsors/researchwiseai"
-"Twitter" = "https://twitter.com/researchwiseai"
 
 [tool.setuptools.packages.find]
 # Limit package discovery to the library code and avoid picking up
