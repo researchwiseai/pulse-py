@@ -230,9 +230,10 @@ class TestStreamlinedWorkflowIntegration:
             if not found:
                 missing_links.append(doc)
 
-        assert (
-            not missing_links
-        ), f"Release notes missing links to compliance documents: {', '.join(missing_links)}"
+        assert not missing_links, (
+            f"Release notes missing links to compliance documents: "
+            f"{', '.join(missing_links)}"
+        )
 
     def test_release_notes_contain_required_sections(self, workflow_file: Path):
         """
@@ -342,11 +343,11 @@ class TestStreamlinedWorkflowIntegration:
 
         # Find the artifact upload section
         upload_match = re.search(
-            r"uses: actions/upload-artifact@.*?\n.*?path:\s*\|\s*\n(.*?)(?=\n\s*[a-zA-Z_-]+:|$)",
+            r"uses: actions/upload-artifact@.*?\n.*?path:\s*\|\s*\n"
+            r"(.*?)(?=\n\s*[a-zA-Z_-]+:|$)",
             workflow_content,
             re.DOTALL,
         )
-
         assert upload_match, "Could not find artifact upload configuration"
 
         upload_paths = upload_match.group(1)
@@ -382,9 +383,10 @@ class TestStreamlinedWorkflowIntegration:
             if path in upload_paths:
                 included_excluded.append(path)
 
-        assert (
-            not included_excluded
-        ), f"Artifact upload should not include compliance documents: {', '.join(included_excluded)}"
+        assert not included_excluded, (
+            f"Artifact upload should not include compliance documents: "
+            f"{', '.join(included_excluded)}"
+        )
 
     def test_github_release_configuration(self, workflow_file: Path):
         """
@@ -396,7 +398,8 @@ class TestStreamlinedWorkflowIntegration:
 
         # Find the GitHub release section
         release_match = re.search(
-            r"uses: softprops/action-gh-release@.*?\n.*?files:\s*\|\s*\n(.*?)(?=\n\s*[a-zA-Z_-]+:|$)",
+            r"uses: softprops/action-gh-release@.*?\n.*?files:"
+            r"\s*\|\s*\n(.*?)(?=\n\s*[a-zA-Z_-]+:|$)",
             workflow_content,
             re.DOTALL,
         )
@@ -437,9 +440,10 @@ class TestStreamlinedWorkflowIntegration:
             if file_pattern in release_files:
                 included_excluded.append(file_pattern)
 
-        assert (
-            not included_excluded
-        ), f"GitHub release should not include compliance documents: {', '.join(included_excluded)}"
+        assert not included_excluded, (
+            f"GitHub release should not include compliance documents: "
+            f"{', '.join(included_excluded)}"
+        )
 
     def test_sbom_generation_streamlined(self, workflow_file: Path):
         """
@@ -456,9 +460,10 @@ class TestStreamlinedWorkflowIntegration:
             if "syft" in line and "cyclonedx-json" in line
         ]
 
-        assert (
-            len(sbom_generation_lines) == 1
-        ), f"Should have exactly one SBOM generation command, found {len(sbom_generation_lines)}"
+        assert len(sbom_generation_lines) == 1, (
+            f"Should have exactly one SBOM generation command, "
+            f"found {len(sbom_generation_lines)}"
+        )
 
         sbom_line = sbom_generation_lines[0]
 

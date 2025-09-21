@@ -28,7 +28,6 @@ except ImportError:
     HAS_REQUESTS = False
 
 try:
-
     HAS_MARKDOWN = True
 except ImportError:
     HAS_MARKDOWN = False

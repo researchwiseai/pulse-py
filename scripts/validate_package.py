@@ -414,7 +414,7 @@ except Exception as e:
         print(f"Total validations: {total_validations}")
         print(f"Passed: {passed_validations}")
         print(f"Failed: {total_validations - passed_validations}")
-        print(f"Success rate: {passed_validations/total_validations*100:.1f}%")
+        print(f"Success rate: {passed_validations / total_validations * 100:.1f}%")
 
         print("\nDetailed Results:")
         for name, result in self.results.items():

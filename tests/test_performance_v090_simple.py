@@ -418,9 +418,10 @@ class TestInputValidationPerformance:
 
             # Validation should be fast even for large inputs
             max_time = 0.1  # 100ms should be plenty for validation
-            assert (
-                validation_time < max_time
-            ), f"Validation of {size} inputs for {endpoint} took {validation_time:.3f}s"
+            assert validation_time < max_time, (
+                f"Validation of {size} inputs for {endpoint} took "
+                f"{validation_time:.3f}s"
+            )
 
     def test_json_serialization_performance(self):
         """Test JSON serialization performance with large inputs."""

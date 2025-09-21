@@ -170,7 +170,8 @@ def test_covered_function():
                     coverage_data = json.load(f)
                     coverage_pct = coverage_data["totals"]["percent_covered"]
                     print(
-                        f"   📊 Measured coverage: {coverage_pct:.1f}% (below 90% threshold)"
+                        f"   📊 Measured coverage: {coverage_pct:.1f}% "
+                        f"(below 90% threshold)"
                     )
                     return True
             else:
@@ -178,7 +179,8 @@ def test_covered_function():
                 return True
 
         print(
-            f"   ❌ Coverage threshold enforcement not working properly (exit: {exit_code})"
+            f"   ❌ Coverage threshold enforcement not working properly "
+            f"(exit: {exit_code})"
         )
         print(f"   📋 stderr: {stderr[:200]}")
         return False
@@ -292,7 +294,8 @@ def test_authentication_edge_cases():
             return True
         elif passed_count > 0:
             print(
-                f"   ⚠️ {passed_count} auth tests passed (expected at least 5, but some coverage is good)"
+                f"   ⚠️ {passed_count} auth tests passed "
+                f"(expected at least 5, but some coverage is good)"
             )
             return True
         else:
@@ -340,7 +343,8 @@ def test_installation_scenarios():
 
         if len(found_groups) >= 2:
             print(
-                f"   ✅ Optional dependencies properly configured: {', '.join(found_groups)}"
+                f"   ✅ Optional dependencies properly configured: "
+                f"{', '.join(found_groups)}"
             )
             print(f"   📋 Total optional groups: {len(optional_deps)}")
             return True
@@ -391,7 +395,8 @@ def test_error_recovery_documentation():
 
     if len(comprehensive_docs) >= 2:
         print(
-            f"   ✅ Comprehensive error recovery documentation found: {', '.join(comprehensive_docs)}"
+            f"   ✅ Comprehensive error recovery documentation found: "
+            f"{', '.join(comprehensive_docs)}"
         )
         return True
     else:
@@ -473,7 +478,7 @@ def main():
     print(f"Total Tests: {total}")
     print(f"Passed: {passed}")
     print(f"Failed: {total - passed}")
-    print(f"Success Rate: {(passed/total*100):.1f}%")
+    print(f"Success Rate: {(passed / total * 100):.1f}%")
 
     print("\nDetailed Results:")
     for test_name, result in results:

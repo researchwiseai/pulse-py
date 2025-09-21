@@ -84,7 +84,8 @@ subprocess.call(user_input, shell=True)  # B602: subprocess_popen_with_shell_equ
                                 "Security Scanning - Bandit SAST",
                                 True,
                                 "Bandit successfully detects security vulnerabilities",
-                                f"Found {len(results['results'])} security issues in test file",
+                                f"Found {len(results['results'])} security issues "
+                                f"in test file",
                             )
                     except json.JSONDecodeError:
                         pass
@@ -149,9 +150,11 @@ subprocess.call(user_input, shell=True)  # B602: subprocess_popen_with_shell_equ
                     return ValidationResult(
                         "Coverage Reporting",
                         True,
-                        f"Coverage reporting infrastructure working (measured {total_coverage:.1f}%)",
+                        f"Coverage reporting infrastructure working "
+                        f"(measured {total_coverage:.1f}%)",
                         "Coverage tools properly configured and generating reports. "
-                        "Note: Actual coverage depends on comprehensive test execution.",
+                        "Note: Actual coverage depends on comprehensive test "
+                        "execution.",
                     )
                 else:
                     return ValidationResult(
@@ -202,8 +205,9 @@ subprocess.call(user_input, shell=True)  # B602: subprocess_popen_with_shell_equ
                     return ValidationResult(
                         "Authentication Edge Cases",
                         True,
-                        f"All {test_count} authentication edge case tests passed",
-                        "Covers expired tokens, invalid credentials, network failures, etc.",
+                        f"All {test_count} authentication edge case tests " f"passed",
+                        "Covers expired tokens, invalid credentials, network "
+                        "failures, etc.",
                     )
                 elif test_count > 0:
                     return ValidationResult(
@@ -312,7 +316,8 @@ except Exception as e:
                     "Debugging Tools",
                     False,
                     "Debug tools validation failed",
-                    f"Exit code: {exit_code}, stdout: {stdout[:200]}, stderr: {stderr[:200]}",
+                    f"Exit code: {exit_code}, stdout: {stdout[:200]}, "
+                    f"stderr: {stderr[:200]}",
                 )
         finally:
             test_file.unlink(missing_ok=True)
@@ -364,7 +369,8 @@ except Exception as e:
                 return ValidationResult(
                     "Installation Simplification",
                     True,
-                    f"Optional dependencies properly configured: {', '.join(found_extras)}",
+                    f"Optional dependencies properly configured: "
+                    f"{', '.join(found_extras)}",
                     f"Found {len(optional_deps)} optional dependency groups",
                 )
 
@@ -459,8 +465,9 @@ except Exception as e:
             return ValidationResult(
                 "Documentation Integrity",
                 True,
-                f"Documentation validation passed: {', '.join(passed_validations)}",
-                f"Failed: {', '.join(failed_validations) if failed_validations else 'None'}",
+                f"Documentation validation passed: " f"{', '.join(passed_validations)}",
+                "Failed: "
+                + (", ".join(failed_validations) if failed_validations else "None"),
             )
 
         return ValidationResult(
@@ -515,7 +522,7 @@ except Exception as e:
 - **Total Validations**: {total}
 - **Passed**: {passed}
 - **Failed**: {total - passed}
-- **Success Rate**: {(passed/total*100):.1f}%
+- **Success Rate**: {(passed / total * 100):.1f}%
 
 ## Detailed Results
 
@@ -533,10 +540,16 @@ except Exception as e:
         # Overall assessment
         if passed == total:
             report += "## 🎉 Overall Assessment: READY FOR GA\n"
-            report += "All validation checks passed. The SDK is ready for General Availability.\n"
+            report += (
+                "All validation checks passed. The SDK is ready for "
+                "General Availability.\n"
+            )
         elif passed >= total * 0.8:
             report += "## ⚠️ Overall Assessment: MOSTLY READY\n"
-            report += "Most validation checks passed. Address failing items before GA release.\n"
+            report += (
+                "Most validation checks passed. Address failing items "
+                "before GA release.\n"
+            )
         else:
             report += "## ❌ Overall Assessment: NOT READY\n"
             report += "Significant issues found. Major work needed before GA release.\n"

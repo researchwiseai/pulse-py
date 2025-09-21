@@ -146,7 +146,7 @@ class ThemeAllocationResult:
                     col.append(self._themes[sorted_idx[j]])
                 else:
                     col.append(None)
-            data[f"theme_{j+1}"] = col
+            data[f"theme_{j + 1}"] = col
         return pd.DataFrame(data, index=self._texts)
 
     def bar_chart(self, **kwargs) -> Any:

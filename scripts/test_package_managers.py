@@ -362,7 +362,7 @@ python_version = "3.8"
         print(f"Total tests: {total_tests}")
         print(f"Passed: {passed_tests}")
         print(f"Failed: {total_tests - passed_tests}")
-        print(f"Success rate: {passed_tests/total_tests*100:.1f}%")
+        print(f"Success rate: {passed_tests / total_tests * 100:.1f}%")
 
         print("\nDetailed Results:")
         for name, result in self.results.items():
