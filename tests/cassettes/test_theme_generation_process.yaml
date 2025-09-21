@@ -21,23 +21,23 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAAwAAAP//LJNZr6JAFIT/C8/XCcii3jdBgUbAS0M30C+GTXZZZZvMf584mcdK6lR9
-        OUn9poIoSobhMTZl8qK+qWTVslCJ8nuu2WgDjJmDAbwgH0lAAGXrYQkMoB5b8tH1vEAnG5MrZJ2X
-        1lj7inM28vRRZkFJO/1KVq2NWOMT1sQqnKOtmXQ2bqM9GomC93qNGb2WmVhJZ702p9A+5rqkbbEL
-        PjdZgCrmfpEv2IU9rmAFL2KGNqgitUXuJXsb1ZWBCAJEi0WoVFX4ghvI59z3cAmKJg9USEeqIejr
-        qSSe//b3p5XY/Eo8s/I9rQjUDwvOApsvwj09RSoeoj2a4uL64Wh9z8rvxZU1nXS7O9FiXM4DqDH3
-        eYbhRMz9YnHGhmZDmnPCQv7T6e+Xlrg8rbvmSlz4YWp9d/nP1c7/PG6lxU66WAwuA4YggqzZxwYN
-        GVHAcsqFhQZNhK+2bORP65c/Vonsd6Tt1UHbHVmpmB+aT550x5g6Go72e+SkobyRoga74vR8V80d
-        kFI9Ttgzrny8Phzod0nX0T/6jEnO8ooFdNUQFNU/6EYTArOZ716cFqbqygdZ7Dy1fej8ruzncZUX
-        Q5QUq3PEH66nXXyAO5OZygNqzg9TCic9W5dHmWzBU+mcU3ea+ih2hBtYJ3uwkvdPmeJikF4Tx+/e
-        kdBy56whI/SOq9gRX9tkq59h9bzf6tOk3A+pelz4CZvh9uyUyV5yEfbD6p9DFlR2kJI+hO8mW1W+
-        huGY7xy5P9HKaDBYH+zjQYgNk72eW63Dy+AK7BXEt/yGrEMlmlMa1HJ+jKSkQPTjeqa+qGRp8z4Z
-        HvmL+j4KHE1/Uf928BjXNqG+KTEJ+qSn/vwFAAD//wMAuIWRPyYDAAA=
+        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
     headers:
       CF-Cache-Status:
       - DYNAMIC
       CF-Ray:
-      - 9823c8573c45fd7e-LHR
+      - 9824a18efdd448ca-LHR
       Cache-Control:
       - no-store
       Connection:
@@ -47,18 +47,18 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sat, 20 Sep 2025 19:38:20 GMT
+      - Sat, 20 Sep 2025 22:06:38 GMT
       Pragma:
       - no-cache
       Server:
       - cloudflare
       Set-Cookie:
-      - did=s%3Av0%3A6df2b685-c098-4495-84c4-2ccf6eaf2555.tVz%2F%2BXX5YxjuC30d5j0wrLXUmdu6YhhhvTWwDLqu0xw;
-        Path=/; Expires=Mon, 21 Sep 2026 01:38:20 GMT; HttpOnly; Secure; SameSite=None
-      - did_compat=s%3Av0%3A6df2b685-c098-4495-84c4-2ccf6eaf2555.tVz%2F%2BXX5YxjuC30d5j0wrLXUmdu6YhhhvTWwDLqu0xw;
-        Path=/; Expires=Mon, 21 Sep 2026 01:38:20 GMT; HttpOnly; Secure
-      - __cf_bm=oVHuRkgNLPy5fWGo7atPuOr0DcC3FIFHnYLt.hax16c-1758397100-1.0.1.1-xDf2nxSziQguXZBmcvmT9hkUgXeFt4HF2RwVR3Arl1hdBD8nHvhq0_IXhMTdaAJX;
-        path=/; expires=Sat, 20-Sep-25 20:08:20 GMT; domain=.eu.auth0.com; HttpOnly;
+      - did=s%3Av0%3A50b2f582-efd7-48a5-907c-3f59c8d5ea8c.2XrwB1496GCSORA%2FfZ4gRoWTbx5Cf%2BxspQYsgUchX3c;
+        Path=/; Expires=Mon, 21 Sep 2026 04:06:38 GMT; HttpOnly; Secure; SameSite=None
+      - did_compat=s%3Av0%3A50b2f582-efd7-48a5-907c-3f59c8d5ea8c.2XrwB1496GCSORA%2FfZ4gRoWTbx5Cf%2BxspQYsgUchX3c;
+        Path=/; Expires=Mon, 21 Sep 2026 04:06:38 GMT; HttpOnly; Secure
+      - __cf_bm=y7SoZDVK1TRBwZ5C1Z62Lu8WSEW_czY.QhXWkVo3AtY-1758405998-1.0.1.1-yX4vhDIPlhCScrvpW5TWKQIi4rdQJcONRVvxfpmxAEG8tPtKXuL8KCKs_24lgQCg;
+        path=/; expires=Sat, 20-Sep-25 22:36:38 GMT; domain=.eu.auth0.com; HttpOnly;
         Secure; SameSite=None
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
@@ -67,9 +67,9 @@ interactions:
       Vary:
       - Accept-Encoding, Origin
       X-Auth0-L:
-      - '0.092'
+      - '0.063'
       X-Auth0-RequestId:
-      - 9a26743cdf5d84d5b0c9
+      - 33afbdd01e2013d7a00a
       X-Content-Type-Options:
       - nosniff
       X-RateLimit-Limit:
@@ -77,7 +77,7 @@ interactions:
       X-RateLimit-Remaining:
       - '99'
       X-RateLimit-Reset:
-      - '1758397102'
+      - '1758406000'
       alt-svc:
       - h3=":443"; ma=86400
     status:
@@ -107,7 +107,7 @@ interactions:
       accept-encoding:
       - gzip, deflate
       authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMDAsImV4cCI6MTc1ODQ4MzUwMCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.YtleFYqZprHsJ-83Cjw_JYZf0q1NLUs8Sut4CskKZjmI-j9fuloOIZkH8vVXME5dy_TRYqeqq0PLwVZi35GQILHM6GHY7LMobINowOXdgjNHWF7FBqXHp_L5-krwtyFxMBCGQqTBP4r0WV7R-N1vk7UoA_NCbvLhyx_kezafGqT9q9vrcdT6KIyvSsQeuPkgVjsCnv45-uc6p4AhoZtRX8yBqZYJzFQrwRlfOKm9vGO7gH8x5vVNbzfqGvSxiBRrsyYAb3IlSagZrbRuohyH5mRbti-TFr90GtM1VLsS876dMN3EApJqVxsW63EIdKiKUQ7lBNvgamFi8cCejU0_EA
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDU5OTgsImV4cCI6MTc1ODQ5MjM5OCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.Trwn9kBaPatCBX773labnhMxHE5yKQFdNdZexMN7haseAZEkC5Mr-RwnSxR8beD4a4tPg-zmCIGF_g5f2RVluIKuMjcmfe_-uIQ3IIAGp5XUCAXdlMNpOOPcTDZWlDMdttAG4phTVSqzSrNZ0jR-XyhR4dCcMYMyLW36qQh1WbGtOs1cd6qJldp64L5Qvfs5sinTWzoud9sZUil945PIMG-MHXPfvSs3S0GPhFOoxwzDm9-AwdPb0TQ0PgMJAGTHrACniI2qNR5zj9z8vTRfV9NS5PEJ_cuz5FEgWdB-rIhfZ5q_nGQ6J5rN4ZNKbeGGfnWoZ8QSsYqpLwzRAE-bFw
       connection:
       - keep-alive
       content-length:
@@ -122,38 +122,39 @@ interactions:
     uri: https://staging.pulse.researchwiseai.com/v1/themes
   response:
     body:
-      string: '{"themes":[{"shortLabel":"Fun & Entertainment","label":"Overall enjoyment
-        and entertainment value","description":"Responses reflecting the fun experiences,
-        entertainment quality, and overall enjoyment at the park.","representatives":["Had
-        a blast! The rollercoasters were thrilling and the staff were friendly.","Awesome
-        day out! The kids loved the water park.","A magical experience! Highly recommend
-        for all ages.","My kids had a wonderful time! We''ll definitely return.","A
-        truly unforgettable day at the park. Highly recommended!"]},{"shortLabel":"Cost
-        & Value","label":"Pricing, value for money, and affordability","description":"Responses
-        discussing the perceptions of cost, pricing fairness, and whether the experience
-        offered value for money.","representatives":["A bit pricey, but the rides
-        were worth it. Great family fun!","Great value for the money. Lots of fun
-        for the whole family.","The park was clean and well-kept, but the rides were
-        too short.","The food options were limited and not very tasty.","The park
-        was clean and well-maintained. A pleasant experience."]},{"shortLabel":"Crowd
-        & Management","label":"Crowd levels, lines, and overall management","description":"Responses
-        addressing issues related to crowd density, wait times, and the effectiveness
-        of the park''s management and organization.","representatives":["Long lines,
-        but the shows were entertaining. Would come again.","Too crowded, making it
-        difficult to enjoy the rides.","Spent too much time waiting in line. Needs
-        better queue management.","The park was clean and well-maintained. A pleasant
-        experience.","The staff were helpful and courteous. The park was well-organized."]}],"requestId":"2017abfbd110ea7f54c1b2018c37afb16d387237","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
+      string: '{"themes":[{"shortLabel":"Customer Experience","label":"Overall Satisfaction
+        and Service Quality","description":"Reviews related to visitors'' general
+        feelings about their experience, including staff helpfulness, cleanliness,
+        atmosphere, and overall enjoyment.","representatives":["Had a blast! The rollercoasters
+        were thrilling and the staff were friendly.","Excellent customer service.
+        The staff went above and beyond.","The park was clean and well-maintained.
+        A pleasant experience.","The atmosphere was fantastic. Great music and decorations.","My
+        kids had a wonderful time! We''ll definitely return."]},{"shortLabel":"Value
+        and Cost","label":"Pricing, Affordability, and Perceived Value","description":"Feedback
+        focusing on the cost of tickets, food, and the overall value received for
+        the price paid.","representatives":["A bit pricey, but the rides were worth
+        it. Great family fun!","Long lines, but the shows were entertaining. Would
+        come again.","Disappointing. Many rides were closed, and the food was overpriced.","The
+        food options were limited and not very tasty.","Great value for the money.
+        Lots of fun for the whole family."]},{"shortLabel":"Ride Quality and Availability","label":"Variety,
+        Accessibility, and Experience of Rides","description":"Comments about the
+        number, variety, safety, and accessibility of rides, including issues like
+        ride closures and wait times.","representatives":["Not impressed with the
+        variety of rides. Could be better.","We had a mixed experience. Some rides
+        were great, others were underwhelming.","Long lines, but the shows were entertaining.
+        Would come again.","Spent too much time waiting in line. Needs better queue
+        management.","The rides were fun but limited in variety."]}],"requestId":"2017abfbd110ea7f54c1b2018c37afb16d387237","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
     headers:
       Apigw-Requestid:
-      - RN1bFiFxDoEEMsg=
+      - ROLJRgaNDoEEMeA=
       Connection:
       - keep-alive
       Content-Length:
-      - '1785'
+      - '1846'
       Content-Type:
       - application/json
       Date:
-      - Sat, 20 Sep 2025 19:38:31 GMT
+      - Sat, 20 Sep 2025 22:06:48 GMT
     status:
       code: 200
       message: OK

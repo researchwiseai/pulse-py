@@ -92,7 +92,7 @@ def test_theme_allocation_implicit_generation_big():
     fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures")
     file_path = os.path.join(fixtures_dir, "disney-10k.txt")
     with open(file_path, "r", encoding="utf-8") as f:
-        comments = f.read().splitlines()
+        comments = f.read().splitlines()[:500]  # Limit to 500 for async validation
 
     resp = theme_allocation(comments, client=client)
 

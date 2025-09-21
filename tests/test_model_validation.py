@@ -159,15 +159,14 @@ class TestTheme:
 
     def test_representatives_validation(self):
         """Test representatives field validation."""
-        # Test minimum length
-        with pytest.raises(ValidationError) as exc_info:
-            Theme(
-                shortLabel="Test",
-                label="Test Theme",
-                description="Test description",
-                representatives=["single"],
-            )
-        assert "at least 2" in str(exc_info.value)
+        # Test minimum length (now allows 1-10)
+        theme = Theme(
+            shortLabel="Test",
+            label="Test Theme",
+            description="Test description",
+            representatives=["single"],
+        )
+        assert len(theme.representatives) == 1
 
         # Test maximum length
         with pytest.raises(ValidationError) as exc_info:
@@ -175,9 +174,9 @@ class TestTheme:
                 shortLabel="Test",
                 label="Test Theme",
                 description="Test description",
-                representatives=["rep1", "rep2", "rep3"],
+                representatives=["rep"] * 11,  # Too many
             )
-        assert "at most 2" in str(exc_info.value)
+        assert "at most 10" in str(exc_info.value)
 
 
 class TestThemeSetsResponse:

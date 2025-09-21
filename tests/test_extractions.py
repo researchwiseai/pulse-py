@@ -56,7 +56,7 @@ def make_async_client() -> CoreClient:
 
 def test_extract_elements_sync():
     client = make_sync_client()
-    resp = client.extract_elements(texts=["a"], categories=["b"], fast=True)
+    resp = client.extract_elements(inputs=["a"], dictionary=["b", "c", "d"], fast=True)
     assert isinstance(resp, ExtractionsResponse)
     assert resp.columns[0].category == "b"
     assert resp.matrix[0][0] == "foo"
@@ -66,7 +66,7 @@ def test_extract_elements_async_job(monkeypatch):
     client = make_async_client()
     monkeypatch.setattr(time, "sleep", lambda s: None)
     job = client.extract_elements(
-        texts=["a"], categories=["b"], fast=False, await_job_result=False
+        inputs=["a"], dictionary=["b", "c", "d"], fast=False, await_job_result=False
     )
     assert isinstance(job, Job)
     result = job.wait()
@@ -77,7 +77,7 @@ def test_extract_elements_async_wait(monkeypatch):
     client = make_async_client()
     monkeypatch.setattr(time, "sleep", lambda s: None)
     resp = client.extract_elements(
-        texts=["a"], categories=["b"], fast=False, await_job_result=True
+        inputs=["a"], dictionary=["b", "c", "d"], fast=False, await_job_result=True
     )
     assert isinstance(resp, ExtractionsResponse)
     assert resp.matrix[0][0] == "bar"
@@ -86,6 +86,8 @@ def test_extract_elements_async_wait(monkeypatch):
 def test_extract_elements_limits():
     client = make_sync_client()
     with pytest.raises(ValueError):
-        client.extract_elements(texts=["a"] * 201, categories=["b"])
+        client.extract_elements(
+            inputs=["a"] * 201, dictionary=["b", "c", "d"], fast=True
+        )
     with pytest.raises(ValueError):
-        client.extract_elements(texts=["a"], categories=["b"] * 51)
+        client.extract_elements(inputs=["a"], dictionary=["b"] * 201)

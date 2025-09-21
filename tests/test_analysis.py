@@ -122,9 +122,7 @@ def test_sentiment_process():
 
 @pytest.mark.vcr()
 def test_theme_allocation_with_static_themes():
-    client = CoreClient(
-        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
-    )
+    client = CoreClient(base_url=base_url, auth=auth)
     static_themes = ["Service", "Atmosphere", "Amenities"]
     proc = ThemeAllocation(themes=static_themes, single_label=True, threshold=0.3)
     az = Analyzer(dataset=reviews, processes=[proc], fast=True, client=client)
@@ -146,9 +144,7 @@ def test_theme_allocation_with_static_themes():
 
 @pytest.mark.vcr()
 def test_theme_allocation_with_generator():
-    client = CoreClient(
-        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
-    )
+    client = CoreClient(base_url=base_url, auth=auth)
     gen = ThemeGeneration(min_themes=2, max_themes=3)
     alloc = ThemeAllocation(single_label=False, threshold=0.5)
     az = Analyzer(dataset=reviews, processes=[gen, alloc], fast=True, client=client)
@@ -172,9 +168,7 @@ def test_theme_allocation_with_generator():
 
 @pytest.mark.vcr()
 def test_theme_allocation_implicit_generation():
-    client = CoreClient(
-        base_url="https://dev.core.researchwiseai.com/pulse/v1", auth=auth
-    )
+    client = CoreClient(base_url=base_url, auth=auth)
     alloc = ThemeAllocation()
     az = Analyzer(dataset=reviews, processes=[alloc], fast=True, client=client)
     res = az.run()

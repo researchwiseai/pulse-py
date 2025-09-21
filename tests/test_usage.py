@@ -7,7 +7,9 @@ from pulse.core.models import (
 
 
 def test_usage_helpers():
-    usage = UsageReport(total=2, records=[UsageRecord(feature="embeddings", units=2)])
+    usage = UsageReport(
+        total=2, records=[UsageRecord(feature="embeddings", quantity=2)]
+    )
     resp = EmbeddingsResponse(
         embeddings=[EmbeddingDocument(text="a", vector=[1.0])],
         requestId="r1",

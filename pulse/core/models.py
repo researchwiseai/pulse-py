@@ -255,7 +255,7 @@ class Theme(BaseModel):
     label: str = Field(..., description="Descriptive title of the theme")
     description: str = Field(..., description="One-sentence summary of the theme")
     representatives: List[str] = Field(
-        ..., min_length=2, max_length=2, description="Two representative input strings"
+        ..., min_length=1, max_length=10, description="Representative input strings"
     )
 
 

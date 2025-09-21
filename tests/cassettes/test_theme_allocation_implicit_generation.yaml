@@ -1,5 +1,167 @@
 interactions:
 - request:
+    body: '{"minThemes":2,"maxThemes":50,"fast":true,"inputs":["Had a blast! The rollercoasters
+      were thrilling and the staff were friendly.","A bit pricey, but the rides were
+      worth it. Great family fun!","Long lines, but the shows were entertaining. Would
+      come again.","Disappointing. Many rides were closed, and the food was overpriced.","Awesome
+      day out! The kids loved the water park.","The park was clean and well-maintained.
+      A pleasant experience.","Too crowded, making it difficult to enjoy the rides.","Excellent
+      customer service. The staff went above and beyond.","A magical experience! Highly
+      recommend for all ages.","Not impressed with the variety of rides. Could be
+      better.","The atmosphere was fantastic. Great music and decorations.","Spent
+      too much time waiting in line. Needs better queue management.","My kids had
+      a wonderful time! We''ll definitely return.","The food options were limited
+      and not very tasty.","A truly unforgettable day at the park. Highly recommended!","The
+      park was clean and well-kept, but the rides were too short.","Great value for
+      the money.  Lots of fun for the whole family.","We had a mixed experience. Some
+      rides were great, others were underwhelming.","The staff were helpful and courteous.  The
+      park was well-organized.","The park is beautiful, but the ticket prices are
+      exorbitant."]}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDU5OTgsImV4cCI6MTc1ODQ5MjM5OCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.Trwn9kBaPatCBX773labnhMxHE5yKQFdNdZexMN7haseAZEkC5Mr-RwnSxR8beD4a4tPg-zmCIGF_g5f2RVluIKuMjcmfe_-uIQ3IIAGp5XUCAXdlMNpOOPcTDZWlDMdttAG4phTVSqzSrNZ0jR-XyhR4dCcMYMyLW36qQh1WbGtOs1cd6qJldp64L5Qvfs5sinTWzoud9sZUil945PIMG-MHXPfvSs3S0GPhFOoxwzDm9-AwdPb0TQ0PgMJAGTHrACniI2qNR5zj9z8vTRfV9NS5PEJ_cuz5FEgWdB-rIhfZ5q_nGQ6J5rN4ZNKbeGGfnWoZ8QSsYqpLwzRAE-bFw
+      connection:
+      - keep-alive
+      content-length:
+      - '1320'
+      content-type:
+      - application/json
+      host:
+      - staging.pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://staging.pulse.researchwiseai.com/v1/themes
+  response:
+    body:
+      string: '{"themes":[{"shortLabel":"Exciting Rides","label":"Thrilling and Enjoyable
+        Rides","description":"Feedback related to the excitement, thrill, and overall
+        enjoyment of the rides at the park.","representatives":["Had a blast! The
+        rollercoasters were thrilling and the staff were friendly.","The kids loved
+        the water park.","My kids had a wonderful time! We''ll definitely return.","Great
+        value for the money. Lots of fun for the whole family.","A magical experience!
+        Highly recommend for all ages."]},{"shortLabel":"Cost and Value","label":"Pricing
+        and Value for Money","description":"Feedback concerning the cost of tickets,
+        food, and the perceived value relative to the experience provided.","representatives":["A
+        bit pricey, but the rides were worth it. Great family fun!","The food options
+        were limited and not very tasty.","The park was clean and well-kept, but the
+        rides were too short.","Great value for the money.  Lots of fun for the whole
+        family.","The park is beautiful, but the ticket prices are exorbitant."]},{"shortLabel":"Crowd
+        & Wait Times","label":"Crowds and Queue Management","description":"Feedback
+        related to crowd levels, wait times, and crowd control at the park.","representatives":["Too
+        crowded, making it difficult to enjoy the rides.","Spent too much time waiting
+        in line. Needs better queue management.","Long lines, but the shows were entertaining.
+        Would come again.","The park was crowded during our visit.","Waiting in line
+        was frustrating."]},{"shortLabel":"Cleanliness & Maintenance","label":"Park
+        Cleanliness and Maintenance","description":"Feedback on the cleanliness, upkeep,
+        and overall maintenance of the park facilities and rides.","representatives":["The
+        park was clean and well-maintained. A pleasant experience.","The park was
+        clean and well-kept, but the rides were too short.","The park was neat and
+        tidy.","The facilities were well-maintained.","Overall cleanliness was noted
+        positively."]},{"shortLabel":"Food & Refreshments","label":"Food Options and
+        Quality","description":"Feedback related to food variety, quality, and pricing
+        at dining outlets within the park.","representatives":["The food options were
+        limited and not very tasty.","The food was overpriced.","Variety of food was
+        good.","The dining choices could be better.","The food was delicious."]},{"shortLabel":"Overall
+        Experience","label":"General Satisfaction and Recommendations","description":"Overall
+        impressions of the visit, including satisfaction level, likelihood to return,
+        and recommendations.","representatives":["Disappointing. Many rides were closed,
+        and the food was overpriced.","A wonderful day out! The park exceeded expectations.","We
+        had a mixed experience. Some rides were great, others were underwhelming.","Not
+        impressed with the variety of rides. Could be better.","A magical experience!
+        Highly recommend for all ages."]}],"requestId":"7e275adaf896086ffa4cbe49ff7219f726cd6289","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
+    headers:
+      Apigw-Requestid:
+      - ROLM-inqDoEEMWg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '2973'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 20 Sep 2025 22:07:10 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"set_a":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"set_b":["Had
+      a blast! The rollercoasters were thrilling and the staff were friendly. The
+      kids loved the water park. My kids had a wonderful time! We''ll definitely return.
+      Great value for the money. Lots of fun for the whole family. A magical experience!
+      Highly recommend for all ages.","A bit pricey, but the rides were worth it.
+      Great family fun! The food options were limited and not very tasty. The park
+      was clean and well-kept, but the rides were too short. Great value for the money.  Lots
+      of fun for the whole family. The park is beautiful, but the ticket prices are
+      exorbitant.","Too crowded, making it difficult to enjoy the rides. Spent too
+      much time waiting in line. Needs better queue management. Long lines, but the
+      shows were entertaining. Would come again. The park was crowded during our visit.
+      Waiting in line was frustrating.","The park was clean and well-maintained. A
+      pleasant experience. The park was clean and well-kept, but the rides were too
+      short. The park was neat and tidy. The facilities were well-maintained. Overall
+      cleanliness was noted positively.","The food options were limited and not very
+      tasty. The food was overpriced. Variety of food was good. The dining choices
+      could be better. The food was delicious.","Disappointing. Many rides were closed,
+      and the food was overpriced. A wonderful day out! The park exceeded expectations.
+      We had a mixed experience. Some rides were great, others were underwhelming.
+      Not impressed with the variety of rides. Could be better. A magical experience!
+      Highly recommend for all ages."],"flatten":false,"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDU5OTgsImV4cCI6MTc1ODQ5MjM5OCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.Trwn9kBaPatCBX773labnhMxHE5yKQFdNdZexMN7haseAZEkC5Mr-RwnSxR8beD4a4tPg-zmCIGF_g5f2RVluIKuMjcmfe_-uIQ3IIAGp5XUCAXdlMNpOOPcTDZWlDMdttAG4phTVSqzSrNZ0jR-XyhR4dCcMYMyLW36qQh1WbGtOs1cd6qJldp64L5Qvfs5sinTWzoud9sZUil945PIMG-MHXPfvSs3S0GPhFOoxwzDm9-AwdPb0TQ0PgMJAGTHrACniI2qNR5zj9z8vTRfV9NS5PEJ_cuz5FEgWdB-rIhfZ5q_nGQ6J5rN4ZNKbeGGfnWoZ8QSsYqpLwzRAE-bFw
+      connection:
+      - keep-alive
+      content-length:
+      - '2862'
+      content-type:
+      - application/json
+      host:
+      - staging.pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://staging.pulse.researchwiseai.com/v1/similarity
+  response:
+    body:
+      string: '{"flattened":[0.7755171656608582,0.49127787351608276,0.4747583568096161,0.46060189604759216,0.2358015775680542,0.5428602695465088,0.5698897242546082,0.7988171577453613,0.4333673119544983,0.38043302297592163,0.3090991675853729,0.5603408217430115,0.3982398211956024,0.4357486367225647,0.6752662658691406,0.36080458760261536,0.2887127101421356,0.40473753213882446,0.40712034702301025,0.6011736989021301,0.5439338088035583,0.4039638936519623,0.5234147906303406,0.7109447717666626,0.6317467093467712,0.42712920904159546,0.3578251898288727,0.36347928643226624,0.15365879237651825,0.492475688457489,0.4278082549571991,0.45048344135284424,0.37248334288597107,0.7628616690635681,0.2288125455379486,0.42887651920318604,0.3543289005756378,0.4536636173725128,0.7147060036659241,0.3613137900829315,0.2351226508617401,0.457660973072052,0.34559065103530884,0.2397383153438568,0.21323245763778687,0.2917306125164032,0.25825661420822144,0.2709910273551941,0.5863597393035889,0.34894129633903503,0.3160870373249054,0.2692312002182007,0.1066945493221283,0.5392895340919495,0.35721057653427124,0.48064354062080383,0.478392094373703,0.3932422399520874,0.4163244366645813,0.5737192034721375,0.3206278085708618,0.2743881046772003,0.2562890946865082,0.2308339625597,0.2546045482158661,0.30185508728027344,0.22994393110275269,0.32114073634147644,0.6394638419151306,0.27638891339302063,0.28935444355010986,0.36521369218826294,0.6185550689697266,0.3255123496055603,0.305796355009079,0.28383272886276245,0.1776198297739029,0.36825233697891235,0.1357356756925583,0.34971195459365845,0.2394540011882782,0.2126222550868988,0.7830445170402527,0.2988514304161072,0.5070390105247498,0.39107251167297363,0.34217461943626404,0.3577328324317932,0.10742097347974777,0.5182070136070251,0.4490674138069153,0.688373327255249,0.5545266270637512,0.7901049852371216,0.31603407859802246,0.5446673035621643,0.5863706469535828,0.5372447371482849,0.31186339259147644,0.28765901923179626,0.1950443685054779,0.39673304557800293,0.48030200600624084,0.47989025712013245,0.47356659173965454,0.42020800709724426,0.34746935963630676,0.6493819355964661,0.40212321281433105,0.3687600791454315,0.38685598969459534,0.5448482036590576,0.2489422708749771,0.3347468674182892,0.32741618156433105,0.6577414274215698,0.4339796304702759,0.3874914348125458,0.27287864685058594,0.49359554052352905],"matrix":[[0.7755171656608582,0.49127787351608276,0.4747583568096161,0.46060189604759216,0.2358015775680542,0.5428602695465088],[0.5698897242546082,0.7988171577453613,0.4333673119544983,0.38043302297592163,0.3090991675853729,0.5603408217430115],[0.3982398211956024,0.4357486367225647,0.6752662658691406,0.36080458760261536,0.2887127101421356,0.40473753213882446],[0.40712034702301025,0.6011736989021301,0.5439338088035583,0.4039638936519623,0.5234147906303406,0.7109447717666626],[0.6317467093467712,0.42712920904159546,0.3578251898288727,0.36347928643226624,0.15365879237651825,0.492475688457489],[0.4278082549571991,0.45048344135284424,0.37248334288597107,0.7628616690635681,0.2288125455379486,0.42887651920318604],[0.3543289005756378,0.4536636173725128,0.7147060036659241,0.3613137900829315,0.2351226508617401,0.457660973072052],[0.34559065103530884,0.2397383153438568,0.21323245763778687,0.2917306125164032,0.25825661420822144,0.2709910273551941],[0.5863597393035889,0.34894129633903503,0.3160870373249054,0.2692312002182007,0.1066945493221283,0.5392895340919495],[0.35721057653427124,0.48064354062080383,0.478392094373703,0.3932422399520874,0.4163244366645813,0.5737192034721375],[0.3206278085708618,0.2743881046772003,0.2562890946865082,0.2308339625597,0.2546045482158661,0.30185508728027344],[0.22994393110275269,0.32114073634147644,0.6394638419151306,0.27638891339302063,0.28935444355010986,0.36521369218826294],[0.6185550689697266,0.3255123496055603,0.305796355009079,0.28383272886276245,0.1776198297739029,0.36825233697891235],[0.1357356756925583,0.34971195459365845,0.2394540011882782,0.2126222550868988,0.7830445170402527,0.2988514304161072],[0.5070390105247498,0.39107251167297363,0.34217461943626404,0.3577328324317932,0.10742097347974777,0.5182070136070251],[0.4490674138069153,0.688373327255249,0.5545266270637512,0.7901049852371216,0.31603407859802246,0.5446673035621643],[0.5863706469535828,0.5372447371482849,0.31186339259147644,0.28765901923179626,0.1950443685054779,0.39673304557800293],[0.48030200600624084,0.47989025712013245,0.47356659173965454,0.42020800709724426,0.34746935963630676,0.6493819355964661],[0.40212321281433105,0.3687600791454315,0.38685598969459534,0.5448482036590576,0.2489422708749771,0.3347468674182892],[0.32741618156433105,0.6577414274215698,0.4339796304702759,0.3874914348125458,0.27287864685058594,0.49359554052352905]],"mode":"matrix","n":20,"requestId":"ed266bff-6615-46d2-a12a-9d995dafc4d5","scenario":"cross","usage":{"records":[{"feature":"similarity","quantity":1}],"total":1}}'
+    headers:
+      Apigw-Requestid:
+      - ROLOZj3qDoEEM4w=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '4861'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 20 Sep 2025 22:07:11 GMT
+    status:
+      code: 200
+      message: OK
+- request:
     body: grant_type=client_credentials&client_id=aiIu81CUdkVTeD0aS4GPzTX8n2Q5EDHS&client_secret=FAebFSuWVnHUtV21WKseoKrGrqAaGic8TtoHgEWTHYqOG9aRrEqnnfUL2Z4IbCjD&audience=https%3A%2F%2Fdev.core.researchwiseai.com%2Fpulse%2Fv1
     headers:
       accept:
@@ -21,23 +183,23 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
     headers:
       CF-Cache-Status:
       - DYNAMIC
       CF-Ray:
-      - 9823c902cda671c9-LHR
+      - 9824c21ffb57b461-LHR
       Cache-Control:
       - no-store
       Connection:
@@ -47,18 +209,18 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sat, 20 Sep 2025 19:38:48 GMT
+      - Sat, 20 Sep 2025 22:28:51 GMT
       Pragma:
       - no-cache
       Server:
       - cloudflare
       Set-Cookie:
-      - did=s%3Av0%3Af161c87a-5540-4172-aee2-68ea4ffb9dcb.Q%2BlforExplx5NaPZboG0U5C8IVJXF8kS2QvmMAcZGJo;
-        Path=/; Expires=Mon, 21 Sep 2026 01:38:48 GMT; HttpOnly; Secure; SameSite=None
-      - did_compat=s%3Av0%3Af161c87a-5540-4172-aee2-68ea4ffb9dcb.Q%2BlforExplx5NaPZboG0U5C8IVJXF8kS2QvmMAcZGJo;
-        Path=/; Expires=Mon, 21 Sep 2026 01:38:48 GMT; HttpOnly; Secure
-      - __cf_bm=R5WOOyGw_sdTtpst0yAT.ezs5U5utF89tebnR4h8qV0-1758397128-1.0.1.1-.3FxztXFrwnYQRZNoBVyMujldczbDGbioZqgkLnwh1B9lzIucm0S9AlHjaKOycZ7;
-        path=/; expires=Sat, 20-Sep-25 20:08:48 GMT; domain=.eu.auth0.com; HttpOnly;
+      - did=s%3Av0%3A36be4cf2-05d8-4e24-beb8-47bdf167ccc4.WPO2aaOuevOy9LpT5NuaD%2Fzf%2F4ZqxNatsxXI2qT5l5Q;
+        Path=/; Expires=Mon, 21 Sep 2026 04:28:51 GMT; HttpOnly; Secure; SameSite=None
+      - did_compat=s%3Av0%3A36be4cf2-05d8-4e24-beb8-47bdf167ccc4.WPO2aaOuevOy9LpT5NuaD%2Fzf%2F4ZqxNatsxXI2qT5l5Q;
+        Path=/; Expires=Mon, 21 Sep 2026 04:28:51 GMT; HttpOnly; Secure
+      - __cf_bm=8mp1FbbHecLAesbXyQGrORGsFYjOD6ZXEEBqbdWtieo-1758407331-1.0.1.1-ytKFkIWrb2zrNPqLQlJ5MrmTK9g6EPpsa991ZCz4dwRMjF7YfJZzW1Jm5Rxw9lzf;
+        path=/; expires=Sat, 20-Sep-25 22:58:51 GMT; domain=.eu.auth0.com; HttpOnly;
         Secure; SameSite=None
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
@@ -67,9 +229,9 @@ interactions:
       Vary:
       - Accept-Encoding, Origin
       X-Auth0-L:
-      - '0.041'
+      - '0.089'
       X-Auth0-RequestId:
-      - d7e43cf4054949871807
+      - 14cabc85a6bbbdfeafb9
       X-Content-Type-Options:
       - nosniff
       X-RateLimit-Limit:
@@ -77,7 +239,7 @@ interactions:
       X-RateLimit-Remaining:
       - '99'
       X-RateLimit-Reset:
-      - '1758397130'
+      - '1758407333'
       alt-svc:
       - h3=":443"; ma=86400
     status:
@@ -107,7 +269,7 @@ interactions:
       accept-encoding:
       - gzip, deflate
       authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMjgsImV4cCI6MTc1ODQ4MzUyOCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.JzaAZKAwEZLZ-3t9rWQdnELGMo7FjB3ECZtDIr2z1AK7BLHPx8fWEQDuD5mGUfSFTEuYFLHMYM0zS3Y4bghCQW1lUSdGYA6fmvqGZhCpGvFhYKQWAlkCpX00m2VTEDxqfmVDucGQLqXWAWV4OLTCJ7vGt97XQPkaFoYu7T6T-jE995Pk6G2B5vcKHepsi3SeYqMvTDYEbVbEyRn2uroRnNSZb8Xyc9mukTQPZg19Wke_mCbFgNH9cflheJgJYOGSa1Akn7i4_-gVWq0Y6yOcYgP041lgwvNeWeTss2jH-bO4JN5i24wbqa0D9iQjntt7BFmEm629hrXWc6NpR10sqw
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDczMzEsImV4cCI6MTc1ODQ5MzczMSwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.VmXfSQrMCH2u5_7saY_wS96BsyrQZ9KexMt34gS8LPORVjXpyb4C5OD_UzpN6G_Klu1UdDsGTX6F8VBGrbyyYls7vW74pC7vK3tSp2W49ApKIjkjXAF8ytL-hjVpUxHbc_ZtBcoTYeFWzCtK54-zYdbDBzWmQ3LQZZcp-N-YmgASyrn4SATNHMd7i2Zwy-s9D241-4NJbqNcDa09xsWDynav9UwG3r5AQkuTpqOYNcD071G4RKx_LYPiW9VFZ7NmCe1J67PIYOn1YeQuKhbQkf4xcjOto6wYqZupjSG1gBgEr8LJq73VUg6ZROPNBfUmfiEef4_2xqKcsH4tsFfitg
       connection:
       - keep-alive
       content-length:
@@ -122,48 +284,118 @@ interactions:
     uri: https://staging.pulse.researchwiseai.com/v1/themes
   response:
     body:
-      string: '{"themes":[{"shortLabel":"Thrills and Rides","label":"Enjoyment of
-        Rides and Attractions","description":"Themes related to the quality, variety,
-        and thrill level of rides and attractions at the park.","representatives":["Had
-        a blast! The rollercoasters were thrilling and the staff were friendly.","Not
-        impressed with the variety of rides. Could be better.","The rides were too
-        short, but the park was clean and well-kept.","Some rides were great, others
-        were underwhelming.","The water park was a highlight for the kids."]},{"shortLabel":"Value
-        and Cost","label":"Perceived Value and Pricing","description":"Themes discussing
-        perceptions of pricing, affordability, and value for money at the park.","representatives":["A
-        bit pricey, but the rides were worth it. Great family fun!","Great value for
-        the money. Lots of fun for the whole family.","The park is beautiful, but
-        the ticket prices are exorbitant.","Too crowded, making it difficult to enjoy
-        the rides.","Spent too much time waiting in line. Needs better queue management."]},{"shortLabel":"Crowd
-        and Queues","label":"Crowd Levels and Queue Management","description":"Themes
-        related to the crowd density, waiting times, and how well queues are managed.","representatives":["Too
-        crowded, making it difficult to enjoy the rides.","Spent too much time waiting
-        in line. Needs better queue management.","Long lines, but the shows were entertaining.
-        Would come again.","The park is very busy during peak times.","Wait times
-        were too long, affecting the overall experience."]},{"shortLabel":"Cleanliness
-        and Maintenance","label":"Park Maintenance and Cleanliness","description":"Themes
-        highlighting the park''s cleanliness, upkeep, and overall maintenance.","representatives":["The
+      string: '{"themes":[{"shortLabel":"Thrill & Fun","label":"Thrilling rides and
+        family fun","description":"Experiences related to exciting rides, water parks,
+        and overall fun atmosphere for families and visitors.","representatives":["Had
+        a blast! The rollercoasters were thrilling and the staff were friendly.","Awesome
+        day out! The kids loved the water park.","My kids had a wonderful time! We''ll
+        definitely return.","A magical experience! Highly recommend for all ages.","The
+        atmosphere was fantastic. Great music and decorations."]},{"shortLabel":"Operational
+        Challenges","label":"Issues with queues, ride availability, and crowding","description":"Concerns
+        related to wait times, crowd levels, ride closures, and crowd management.","representatives":["Long
+        lines, but the shows were entertaining. Would come again.","Too crowded, making
+        it difficult to enjoy the rides.","Spent too much time waiting in line. Needs
+        better queue management.","The park was crowded, which affected the experience.","Many
+        rides were closed, which was disappointing."]},{"shortLabel":"Price & Value","label":"Cost
+        considerations and perceived value","description":"The feedback concerning
+        ticket prices, food costs, and whether visitors felt they received good value.","representatives":["A
+        bit pricey, but the rides were worth it. Great family fun!","The food options
+        were limited and not very tasty.","The park was clean and well-maintained.
+        A pleasant experience.","Great value for the money. Lots of fun for the whole
+        family.","The park is beautiful, but the ticket prices are exorbitant."]},{"shortLabel":"Park
+        Quality & Environment","label":"Cleanliness, maintenance, and park ambiance","description":"Comments
+        related to the aesthetics, cleanliness, and general atmosphere of the park.","representatives":["The
         park was clean and well-maintained. A pleasant experience.","The park was
-        clean and well-kept, but the rides were too short.","Overall, the park looked
-        great and was very clean.","Facilities were tidy and maintained high standards.","The
-        environment was tidy, making the visit more enjoyable."]},{"shortLabel":"Customer
-        Service","label":"Staff and Service Quality","description":"Themes concerning
-        the helpfulness, friendliness, and professionalism of staff.","representatives":["Excellent
-        customer service. The staff went above and beyond.","The staff were helpful
-        and courteous. The park was well-organized.","Staff were friendly and eager
-        to assist.","Customer service exceeded expectations.","Helpfulness of staff
-        made the experience enjoyable."]}],"requestId":"7e275adaf896086ffa4cbe49ff7219f726cd6289","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
+        clean and well-kept, but the rides were too short.","The park is beautiful,
+        with great decorations and music.","The environment was inviting and lively.","Cleanliness
+        was maintained throughout the day."]},{"shortLabel":"Food & Amenities","label":"Food
+        options and amenities offered","description":"Feedback related to the variety,
+        quality, and pricing of food and other amenities.","representatives":["The
+        food options were limited and not very tasty.","Food was overpriced and lacked
+        variety.","The dining options available were satisfying.","Amenities were
+        adequate for the needs of the visitors.","Food choices were few but decent."]}],"requestId":"7e275adaf896086ffa4cbe49ff7219f726cd6289","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
     headers:
       Apigw-Requestid:
-      - RN1fXhW1joEEMQA=
+      - ROOZsi51DoEEMxA=
       Connection:
       - keep-alive
       Content-Length:
-      - '2607'
+      - '2624'
       Content-Type:
       - application/json
       Date:
-      - Sat, 20 Sep 2025 19:38:56 GMT
+      - Sat, 20 Sep 2025 22:29:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"set_a":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"set_b":["Had
+      a blast! The rollercoasters were thrilling and the staff were friendly. Awesome
+      day out! The kids loved the water park. My kids had a wonderful time! We''ll
+      definitely return. A magical experience! Highly recommend for all ages. The
+      atmosphere was fantastic. Great music and decorations.","Long lines, but the
+      shows were entertaining. Would come again. Too crowded, making it difficult
+      to enjoy the rides. Spent too much time waiting in line. Needs better queue
+      management. The park was crowded, which affected the experience. Many rides
+      were closed, which was disappointing.","A bit pricey, but the rides were worth
+      it. Great family fun! The food options were limited and not very tasty. The
+      park was clean and well-maintained. A pleasant experience. Great value for the
+      money. Lots of fun for the whole family. The park is beautiful, but the ticket
+      prices are exorbitant.","The park was clean and well-maintained. A pleasant
+      experience. The park was clean and well-kept, but the rides were too short.
+      The park is beautiful, with great decorations and music. The environment was
+      inviting and lively. Cleanliness was maintained throughout the day.","The food
+      options were limited and not very tasty. Food was overpriced and lacked variety.
+      The dining options available were satisfying. Amenities were adequate for the
+      needs of the visitors. Food choices were few but decent."],"flatten":false,"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDczMzEsImV4cCI6MTc1ODQ5MzczMSwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.VmXfSQrMCH2u5_7saY_wS96BsyrQZ9KexMt34gS8LPORVjXpyb4C5OD_UzpN6G_Klu1UdDsGTX6F8VBGrbyyYls7vW74pC7vK3tSp2W49ApKIjkjXAF8ytL-hjVpUxHbc_ZtBcoTYeFWzCtK54-zYdbDBzWmQ3LQZZcp-N-YmgASyrn4SATNHMd7i2Zwy-s9D241-4NJbqNcDa09xsWDynav9UwG3r5AQkuTpqOYNcD071G4RKx_LYPiW9VFZ7NmCe1J67PIYOn1YeQuKhbQkf4xcjOto6wYqZupjSG1gBgEr8LJq73VUg6ZROPNBfUmfiEef4_2xqKcsH4tsFfitg
+      connection:
+      - keep-alive
+      content-length:
+      - '2696'
+      content-type:
+      - application/json
+      host:
+      - staging.pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://staging.pulse.researchwiseai.com/v1/similarity
+  response:
+    body:
+      string: '{"flattened":[0.7839577198028564,0.5003631114959717,0.5189624428749084,0.5160475969314575,0.2613931894302368,0.5140643119812012,0.45668742060661316,0.804771900177002,0.42975056171417236,0.3112868666648865,0.4303370714187622,0.7294899821281433,0.4240712523460388,0.4032556414604187,0.3087880313396454,0.43157675862312317,0.6159324645996094,0.5983216166496277,0.4598408639431,0.5440036654472351,0.6598490476608276,0.3739040493965149,0.45242729783058167,0.39929476380348206,0.17993320524692535,0.4518515467643738,0.3969351053237915,0.5157922506332397,0.7325711846351624,0.30906397104263306,0.38668307662010193,0.6832321882247925,0.44079554080963135,0.4334813952445984,0.2852329611778259,0.36771053075790405,0.23409312963485718,0.2581119239330292,0.29265275597572327,0.2533060908317566,0.5832971930503845,0.33767855167388916,0.3760416805744171,0.35504963994026184,0.11237938702106476,0.3737635016441345,0.5092589259147644,0.46579253673553467,0.4300074577331543,0.41132327914237976,0.5019063353538513,0.27714061737060547,0.28460103273391724,0.38731321692466736,0.2303757518529892,0.26650509238243103,0.6328237652778625,0.29500409960746765,0.30727648735046387,0.3206653296947479,0.5913691520690918,0.3011872470378876,0.33918845653533936,0.31346574425697327,0.18684017658233643,0.1614104062318802,0.2656812369823456,0.3476424217224121,0.2106725126504898,0.7805678844451904,0.5440470576286316,0.35918521881103516,0.4181056022644043,0.41036227345466614,0.14031550288200378,0.4715745747089386,0.5836416482925415,0.6094911098480225,0.7982624173164368,0.3768051266670227,0.4680376648902893,0.31805726885795593,0.5498126149177551,0.3234919607639313,0.202961727976799,0.49678167700767517,0.5099058747291565,0.48296642303466797,0.445595383644104,0.34628763794898987,0.4272605776786804,0.39959123730659485,0.3955710232257843,0.5280276536941528,0.31329843401908875,0.34302109479904175,0.4420606195926666,0.6664313077926636,0.4678495526313782,0.2916189134120941],"matrix":[[0.7839577198028564,0.5003631114959717,0.5189624428749084,0.5160475969314575,0.2613931894302368],[0.5140643119812012,0.45668742060661316,0.804771900177002,0.42975056171417236,0.3112868666648865],[0.4303370714187622,0.7294899821281433,0.4240712523460388,0.4032556414604187,0.3087880313396454],[0.43157675862312317,0.6159324645996094,0.5983216166496277,0.4598408639431,0.5440036654472351],[0.6598490476608276,0.3739040493965149,0.45242729783058167,0.39929476380348206,0.17993320524692535],[0.4518515467643738,0.3969351053237915,0.5157922506332397,0.7325711846351624,0.30906397104263306],[0.38668307662010193,0.6832321882247925,0.44079554080963135,0.4334813952445984,0.2852329611778259],[0.36771053075790405,0.23409312963485718,0.2581119239330292,0.29265275597572327,0.2533060908317566],[0.5832971930503845,0.33767855167388916,0.3760416805744171,0.35504963994026184,0.11237938702106476],[0.3737635016441345,0.5092589259147644,0.46579253673553467,0.4300074577331543,0.41132327914237976],[0.5019063353538513,0.27714061737060547,0.28460103273391724,0.38731321692466736,0.2303757518529892],[0.26650509238243103,0.6328237652778625,0.29500409960746765,0.30727648735046387,0.3206653296947479],[0.5913691520690918,0.3011872470378876,0.33918845653533936,0.31346574425697327,0.18684017658233643],[0.1614104062318802,0.2656812369823456,0.3476424217224121,0.2106725126504898,0.7805678844451904],[0.5440470576286316,0.35918521881103516,0.4181056022644043,0.41036227345466614,0.14031550288200378],[0.4715745747089386,0.5836416482925415,0.6094911098480225,0.7982624173164368,0.3768051266670227],[0.4680376648902893,0.31805726885795593,0.5498126149177551,0.3234919607639313,0.202961727976799],[0.49678167700767517,0.5099058747291565,0.48296642303466797,0.445595383644104,0.34628763794898987],[0.4272605776786804,0.39959123730659485,0.3955710232257843,0.5280276536941528,0.31329843401908875],[0.34302109479904175,0.4420606195926666,0.6664313077926636,0.4678495526313782,0.2916189134120941]],"mode":"matrix","n":20,"requestId":"4700f50e-19de-4837-aaed-9e83bd7370c9","scenario":"cross","usage":{"records":[{"feature":"similarity","quantity":1}],"total":1}}'
+    headers:
+      Apigw-Requestid:
+      - ROObTgGNDoEEMxQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '4089'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 20 Sep 2025 22:29:03 GMT
     status:
       code: 200
       message: OK

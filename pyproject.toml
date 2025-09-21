@@ -139,9 +139,10 @@ universal = true
 
  [tool.pytest.ini_options]
  minversion = "6.0"
-addopts = "-ra -q --cov=pulse --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=90"
+addopts = "-ra -q --cov=pulse --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=90 --timeout=300"
 markers = ["vcr: mark the test to use pytest-vcr for HTTP request recording"]
  testpaths = ["tests"]
+timeout = 300
 
 [tool.coverage.run]
 source = ["pulse"]
@@ -242,6 +243,7 @@ dev = [
     "pytest-mock>=3.6.0",      # Mocking utilities for tests
     "pytest-vcr>=1.0.0",       # HTTP request recording for tests
     "pytest-cov>=4.0.0",       # Coverage reporting
+    "pytest-timeout>=2.0.0",   # Timeout protection for hanging tests
     "black==25.1.0",           # Code formatting
     "nbqa>=1.6.0",             # Notebook code formatting
     "ruff>=0.1.0",             # Fast Python linter

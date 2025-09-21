@@ -3,7 +3,7 @@ import time
 import httpx
 from pulse.core.client import CoreClient
 from pulse.core.jobs import Job
-from pulse.core.models import SimilarityResponse, SimilarityRequest, Split
+from pulse.core.models import SimilarityResponse, SimilarityRequest, Split, UnitAgg
 
 
 def make_sync_client():
@@ -12,7 +12,14 @@ def make_sync_client():
         body = json.loads(request.content.decode())
         assert body["set"] == ["a", "b"]
         assert body["version"] == "v1"
-        assert body["split"] == {"unit": "newline"}
+        assert body["split"] == {
+            "set_a": {
+                "unit": "newline",
+                "agg": "mean",
+                "window_size": 1,
+                "stride_size": 1,
+            }
+        }
         assert body["fast"] is True
         assert body["flatten"] is False
         data = {
@@ -64,7 +71,10 @@ def test_compare_similarity_sync():
     client = make_sync_client()
     resp = client.compare_similarity(
         SimilarityRequest(
-            set=["a", "b"], fast=True, version="v1", split=Split(unit="newline")
+            set=["a", "b"],
+            fast=True,
+            version="v1",
+            split=Split(set_a=UnitAgg(unit="newline")),
         )
     )
     assert isinstance(resp, SimilarityResponse)

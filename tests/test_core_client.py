@@ -135,7 +135,7 @@ def test_error_raises():
         client.create_embeddings(EmbeddingsRequest(inputs=[False], fast=True))
     err = exc.value
     assert err.status == 400
-    assert err.message.startswith("Failed to parse")
+    assert "Expected string, received boolean" in err.message
 
 
 def test_cluster_texts_fast():
@@ -189,7 +189,7 @@ def test_compare_similarity_job():
 
 def test_generate_themes_job():
     client = CoreClient(base_url=base_url, auth=auth)
-    job = client.generate_themes(["a", "b"], await_job_result=False)
+    job = client.generate_themes(["a", "b"], fast=False, await_job_result=False)
     assert hasattr(job, "id")
     result = job.wait()
     assert "themes" in result
@@ -197,7 +197,7 @@ def test_generate_themes_job():
 
 def test_analyze_sentiment_job():
     client = CoreClient(base_url=base_url, auth=auth)
-    job = client.analyze_sentiment(["happy"], await_job_result=False)
+    job = client.analyze_sentiment(["happy"], fast=False, await_job_result=False)
     assert hasattr(job, "id")
     result = job.wait()
     assert "results" in result

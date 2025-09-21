@@ -7,7 +7,7 @@ interactions:
       accept-encoding:
       - gzip, deflate
       authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMTQsImV4cCI6MTc1ODQ4MzUxNCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.hhE6MlY3noLX5AZiv_rckh8zc8Uxc3f-y9EuPNT1IMG8drBN8exCGAfXAEMeA2QMwe5deDcOtOPoE0R6oxpKFPvrGnMcHWAhK3JufiR2ATB437hmUEbY-Y5sCdjZknsxGYD4_xS7BbkJsxdUhbAyS377g9Oefb4qlh5X1ChL_Rfr2R1Ub5vaw1RluL0nFy6tIPCdqvtBOf1ptoyQbsvTqqMwylrbFfu_rWjFAylc9tjPunHpaoWIoA09p5GBOVsEROfDJY1YEu5QfCWMLJ5GAvN6Dsg41BV0R_M801FXFfQW2IlZDnYuLrRzZurwlS6dHvSScmenffRHGmI9JyFy1g
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDYwMzIsImV4cCI6MTc1ODQ5MjQzMiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.pOB1Se0LXCVTvc5f7-DyvVIjlEKFaVOadrgGT0y__XlNWuZ_CRkVgIbuYHfy6A8TsIH4ZYpnDw6P8QY24xRJrJyGOHooySVvaztVAU2tfBGxrC13bl18zvnakhxvS7EG28Pc9kOW_HVvkCa_nqaqfiRRkqpmz5LiFVx8frFb-LFmAFZ7MqcH7ofSZXzWjac0aJGuKwHtxGn2MWfnDdOKBbM0BOFq2iAOsO__8nrGLt9jJZVAdWopZALDqys4u1eVtWtCSvDwZ2Fgq-iK0Opb44frz5Mfqful2Bqjwt3gBmJD4dcLvxQGytfKnIhdQIctfAa7RaTxR2YAUI7xABsXYQ
       connection:
       - keep-alive
       content-length:
@@ -22,18 +22,28 @@ interactions:
     uri: https://staging.pulse.researchwiseai.com/v1/themes
   response:
     body:
-      string: '{"themes":[],"requestId":"16a21145eac2cce9f8620fb530297ea49c8c93f4","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
+      string: '{"themes":[{"shortLabel":"Fruits","label":"Different Types of Fruits","description":"This
+        theme covers various fruits including apples, oranges, bananas, and melons,
+        highlighting the diversity of common edible fruits.","representatives":["I
+        like eating apples and bananas.","Oranges are my favorite citrus fruits.","Melons
+        are very refreshing during summer.","Bananas are easy to carry around.","I
+        enjoy a variety of fruits, especially melons."]},{"shortLabel":"Animals","label":"Various
+        Farm and Animal Species","description":"This theme includes farm animals and
+        other animals such as goats, horses, cows, and pigs, focusing on their presence
+        and relevance in different contexts.","representatives":["The goat was eating
+        grass.","Horses are used for riding and work.","Cows produce milk.","Pigs
+        are intelligent farm animals.","I saw a horse at the farm."]}],"requestId":"16a21145eac2cce9f8620fb530297ea49c8c93f4","usage":{"records":[{"feature":"themes","quantity":1}],"total":1}}'
     headers:
       Apigw-Requestid:
-      - RN1dniZujoEEMFA=
+      - ROLO-i7EjoEEMWg=
       Connection:
       - keep-alive
       Content-Length:
-      - '134'
+      - '981'
       Content-Type:
       - application/json
       Date:
-      - Sat, 20 Sep 2025 19:38:38 GMT
+      - Sat, 20 Sep 2025 22:07:19 GMT
     status:
       code: 200
       message: OK

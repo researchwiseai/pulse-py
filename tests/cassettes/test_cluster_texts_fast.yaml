@@ -1,17 +1,17 @@
 interactions:
 - request:
-    body: '{"inputs":["foo","bar"],"k":2,"fast":true}'
+    body: '{"inputs":["foo","bar"],"k":2,"algorithm":"kmeans","fast":true}'
     headers:
       accept:
       - '*/*'
       accept-encoding:
       - gzip, deflate
       authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTgzOTcxMTQsImV4cCI6MTc1ODQ4MzUxNCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.hhE6MlY3noLX5AZiv_rckh8zc8Uxc3f-y9EuPNT1IMG8drBN8exCGAfXAEMeA2QMwe5deDcOtOPoE0R6oxpKFPvrGnMcHWAhK3JufiR2ATB437hmUEbY-Y5sCdjZknsxGYD4_xS7BbkJsxdUhbAyS377g9Oefb4qlh5X1ChL_Rfr2R1Ub5vaw1RluL0nFy6tIPCdqvtBOf1ptoyQbsvTqqMwylrbFfu_rWjFAylc9tjPunHpaoWIoA09p5GBOVsEROfDJY1YEu5QfCWMLJ5GAvN6Dsg41BV0R_M801FXFfQW2IlZDnYuLrRzZurwlS6dHvSScmenffRHGmI9JyFy1g
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImwxRThteER3TnJoQ2l4TzZfYUhQRCJ9.eyJpc3MiOiJodHRwczovL3dpc2UtZGV2LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhaUl1ODFDVWRrVlRlRDBhUzRHUHpUWDhuMlE1RURIU0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9kZXYuY29yZS5yZXNlYXJjaHdpc2VhaS5jb20vcHVsc2UvdjEiLCJpYXQiOjE3NTg0MDYwMzIsImV4cCI6MTc1ODQ5MjQzMiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiYWlJdTgxQ1Vka1ZUZUQwYVM0R1B6VFg4bjJRNUVESFMifQ.pOB1Se0LXCVTvc5f7-DyvVIjlEKFaVOadrgGT0y__XlNWuZ_CRkVgIbuYHfy6A8TsIH4ZYpnDw6P8QY24xRJrJyGOHooySVvaztVAU2tfBGxrC13bl18zvnakhxvS7EG28Pc9kOW_HVvkCa_nqaqfiRRkqpmz5LiFVx8frFb-LFmAFZ7MqcH7ofSZXzWjac0aJGuKwHtxGn2MWfnDdOKBbM0BOFq2iAOsO__8nrGLt9jJZVAdWopZALDqys4u1eVtWtCSvDwZ2Fgq-iK0Opb44frz5Mfqful2Bqjwt3gBmJD4dcLvxQGytfKnIhdQIctfAa7RaTxR2YAUI7xABsXYQ
       connection:
       - keep-alive
       content-length:
-      - '42'
+      - '63'
       content-type:
       - application/json
       host:
@@ -25,7 +25,7 @@ interactions:
       string: '{"algorithm":"kmeans","clusters":[{"clusterId":0,"items":["bar"]},{"clusterId":1,"items":["foo"]}],"requestId":"eba3316442d0f1697dc61e4c65711f81c4ed8be2","usage":{"records":[{"feature":"clustering","quantity":1}],"total":1}}'
     headers:
       Apigw-Requestid:
-      - RN1d9hwODoEEMBw=
+      - ROLP4hmNDoEEMpg=
       Connection:
       - keep-alive
       Content-Length:
@@ -33,7 +33,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Sat, 20 Sep 2025 19:38:40 GMT
+      - Sat, 20 Sep 2025 22:07:20 GMT
     status:
       code: 200
       message: OK
