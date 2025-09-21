@@ -64,3 +64,28 @@ docs-build:
 # Serve documentation locally
 docs-serve:
 	mkdocs serve
+
+# Show release information and process
+release-info:
+	@echo "🚀 Release Process Information"
+	@echo "=============================="
+	@echo ""
+	@echo "This project uses automated releases via Release Please."
+	@echo "Manual version bumping is NOT needed."
+	@echo ""
+	@echo "📝 To prepare for a release:"
+	@echo "  1. Use conventional commit messages:"
+	@echo "     - feat: for new features (minor version bump)"
+	@echo "     - fix: for bug fixes (patch version bump)"
+	@echo "     - feat!: or fix!: for breaking changes (major version bump)"
+	@echo "     - docs:, refactor:, perf:, etc. for other changes"
+	@echo ""
+	@echo "  2. Push commits to main branch"
+	@echo "  3. Release Please will automatically create a release PR"
+	@echo "  4. Review and merge the release PR to trigger the release"
+	@echo ""
+	@echo "🔍 Current version: $(shell grep -E '^version = ' pyproject.toml | sed -E 's/version = \"([^\"]+)\"/\1/')"
+	@echo "📋 Recent commits:"
+	@git log --oneline -5
+	@echo ""
+	@echo "🔗 For more info: https://github.com/googleapis/release-please"
