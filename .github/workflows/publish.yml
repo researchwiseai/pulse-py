@@ -173,9 +173,6 @@ jobs:
             signatures/
             sbom.cyclonedx.json
             build-provenance.json
-            LICENSE-MANIFEST.json
-            THIRD-PARTY-ATTRIBUTIONS.md
-            COMPLIANCE-CHECKLIST.md
           retention-days: 90
 
       - name: Publish to PyPI via OIDC
@@ -193,56 +190,33 @@ jobs:
             signatures/*
             sbom.cyclonedx.json
             build-provenance.json
-            LICENSE-MANIFEST.json
-            THIRD-PARTY-ATTRIBUTIONS.md
-            COMPLIANCE-CHECKLIST.md
-            LICENSE
-            NOTICE
-            COMPLIANCE.md
           body: |
-            ## Supply Chain Security & Compliance
-
-            This release includes comprehensive supply chain security and Apache 2.0 compliance artifacts:
-
-            ### 📋 Software Bill of Materials (SBOM)
-            - `sbom.cyclonedx.json` - CycloneDX format SBOM covering both source and wheel distributions
-
-            ### 🔐 Digital Signatures
-            - Core distribution files (wheel and sdist) are signed using Sigstore keyless signing
-            - Signature files (`.sig`) and certificates (`.crt`) are included for distributions only
-            - Compliance documents and SBOM files are intentionally not signed to reduce release asset clutter
-            - Signatures can be verified using: `cosign verify-blob --certificate <file>.crt --signature <file>.sig --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" --certificate-oidc-issuer "https://token.actions.githubusercontent.com" <file>`
-
-            ### 🏗️ Build Provenance
-            - `build-provenance.json` - Complete build provenance information
-            - SLSA Build Level 3 compliant attestations via GitHub's native attestation service
-
-            ### ⚖️ Apache 2.0 License Compliance
-            - `LICENSE` - Apache License 2.0 full text
-            - `NOTICE` - Required attribution notices
-            - `COMPLIANCE.md` - Compliance guidance and verification instructions
-            - `LICENSE-MANIFEST.json` - Comprehensive license manifest with file hashes
-            - `THIRD-PARTY-ATTRIBUTIONS.md` - Third-party license attributions
-            - `COMPLIANCE-CHECKLIST.md` - Release compliance verification checklist
-
-            ### ✅ Verification Instructions
+            ## Installation
             ```bash
-            # Download signature files from the release assets, then verify:
-
-            # Verify core distribution signatures (wheel and sdist only)
-            cosign verify-blob --certificate pulse_sdk-*.whl.crt --signature pulse_sdk-*.whl.sig \\
-              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
-              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
-              pulse_sdk-*.whl
-
-            cosign verify-blob --certificate pulse_sdk-*.tar.gz.crt --signature pulse_sdk-*.tar.gz.sig \\
-              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
-              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
-              pulse_sdk-*.tar.gz
-
-            # Verify license compliance
-            python -c "import json; manifest=json.load(open('LICENSE-MANIFEST.json')); print('License:', manifest['project']['license'])"
+            pip install pulse-sdk==${{ github.ref_name }}
             ```
 
-            ### 🏢 Enterprise Compliance
-            This release is fully compliant with Apache License 2.0 requirements and includes all necessary artifacts for enterprise adoption, legal review, and supply chain security verification.
+            ## Compliance & Verification
+
+            ### 📋 Documentation
+            - [Compliance Guide](https://github.com/researchwiseai/pulse-py/blob/main/COMPLIANCE.md)
+            - [Security Policy](https://github.com/researchwiseai/pulse-py/blob/main/SECURITY.md)
+            - [License Information](https://github.com/researchwiseai/pulse-py/blob/main/LICENSE)
+            - [Third-Party Attributions](https://github.com/researchwiseai/pulse-py/blob/main/THIRD-PARTY-ATTRIBUTIONS.md)
+
+            ### 🔐 Supply Chain Security
+            - **SBOM**: `sbom.cyclonedx.json` (CycloneDX format)
+            - **Build Provenance**: `build-provenance.json`
+            - **Signatures**: Available for wheel and source distributions
+
+            ### ✅ Verification
+            ```bash
+            # Verify package signature
+            cosign verify-blob --certificate pulse_sdk-${{ github.ref_name }}-py3-none-any.whl.crt \\
+              --signature pulse_sdk-${{ github.ref_name }}-py3-none-any.whl.sig \\
+              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
+              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
+              pulse_sdk-${{ github.ref_name }}-py3-none-any.whl
+            ```
+
+            For detailed compliance information, see [COMPLIANCE.md](https://github.com/researchwiseai/pulse-py/blob/main/COMPLIANCE.md).
