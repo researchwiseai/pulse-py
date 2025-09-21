@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/researchwiseai/pulse-py/compare/pulse-sdk-v0.4.0...pulse-sdk-v0.4.1) (2025-09-21)
+
+
+### Bug Fixes
+
+* separate signature files from dist directory in publish workflow ([1f34319](https://github.com/researchwiseai/pulse-py/commit/1f34319282ed6928d48a79f76b7ad4fa19a3b41e))
+
 ## [0.4.0](https://github.com/researchwiseai/pulse-py/compare/pulse-sdk-v0.3.3...pulse-sdk-v0.4.0) (2025-09-21)
 
 
