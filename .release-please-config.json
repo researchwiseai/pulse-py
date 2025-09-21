@@ -2,9 +2,9 @@
   "packages": {
     ".": {
       "release-type": "python",
-      "version-file": "pulse/__init__.py",
       "extra-files": [
-        "pyproject.toml"
+        "pyproject.toml",
+        "pulse/__init__.py"
       ],
       "changelog-sections": [
         {"type": "feat", "section": "Features", "hidden": false},
