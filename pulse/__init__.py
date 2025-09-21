@@ -3,6 +3,6 @@
 
 """Pulse Client package."""
 
-__version__ = "0.6.1"
+__version__ = "0.5.0"  # {x-release-please-version}
 
 # Import debug module to ensure auto-initialization
