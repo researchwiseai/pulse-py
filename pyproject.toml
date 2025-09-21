@@ -140,7 +140,7 @@ minversion = "6.0"
 addopts = "-ra -q --cov=pulse --cov-report=html --cov-report=json --cov-report=term-missing --cov-fail-under=60"
 markers = ["vcr: mark the test to use pytest-vcr for HTTP request recording"]
 testpaths = ["tests"]
-timeout = 300
+timeout = 90
 
 [tool.coverage.run]
 source = ["pulse"]
