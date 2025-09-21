@@ -428,14 +428,14 @@ class ComplianceMonitor:
 
 ### Compliance Team
 
-- **Email**: [compliance@researchwise.ai](mailto:compliance@researchwise.ai)
+- **Email**: [compliance@researchwise.ai](mailto:support@researchwiseai.com)
 - **Documentation**: Available upon request for audit purposes
 - **Training**: Compliance training materials available
 
 ### Legal and Privacy
 
-- **Data Protection Officer**: [dpo@researchwise.ai](mailto:dpo@researchwise.ai)
-- **Legal Counsel**: [legal@researchwise.ai](mailto:legal@researchwise.ai)
+- **Data Protection Officer**: [dpo@researchwise.ai](mailto:support@researchwiseai.com)
+- **Legal Counsel**: [legal@researchwise.ai](mailto:support@researchwiseai.com)
 - **Privacy Policy**: [Available on website]
 
 ---

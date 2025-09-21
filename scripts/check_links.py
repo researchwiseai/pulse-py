@@ -132,7 +132,7 @@ class LinkChecker:
             r"<.*>",
             r"\$\{.*\}",
             r"mailto:.*@example\.com",
-            r"mailto:dev@researchwiseai\.com",  # Skip our own email
+            r"mailto:support@researchwiseai\.com",  # Skip our own email
             r"#.*",  # Skip anchor-only links
             r"javascript:",
             r"data:",

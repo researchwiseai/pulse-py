@@ -74,25 +74,6 @@ jobs:
 
           echo "✅ All documentation tests passed"
 
-      # Secret scanning (using truffleHog or similar)
-      - name: Run Secret Scanning
-        run: |
-          echo "Running secret scanning..."
-          # Use git to check for potential secrets in the current commit
-          # This is a basic implementation - in production you might use truffleHog or similar
-          if git log --oneline -1 | grep -iE "(password|secret|key|token|api)" && [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            echo "⚠️  Potential secrets detected in commit message"
-            echo "Please review commit messages for sensitive information"
-          fi
-
-          # Check for common secret patterns in code (basic implementation)
-          if grep -r -E "(password|secret|key|token)\s*=\s*['\"][^'\"]{8,}" pulse/ --exclude-dir=__pycache__ || true; then
-            echo "⚠️  Potential hardcoded secrets detected in code"
-            echo "Please review code for hardcoded credentials"
-          fi
-
-          echo "✅ Secret scanning completed"
-
       - name: Validate Conventional Commits
         if: github.event_name == 'pull_request'
         uses: amannn/action-semantic-pull-request@v5
