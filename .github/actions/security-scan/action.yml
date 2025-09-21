@@ -1,0 +1,168 @@
+name: 'Security Scan'
+description: 'Run comprehensive security scans with Bandit and pip-audit'
+
+inputs:
+  severity-level:
+    description: 'Minimum severity level for Bandit (low, medium, high)'
+    required: false
+    default: 'medium'
+  confidence-level:
+    description: 'Minimum confidence level for Bandit (low, medium, high)'
+    required: false
+    default: 'medium'
+  fail-on-high:
+    description: 'Fail the build on high severity issues'
+    required: false
+    default: 'true'
+  fail-on-critical-vulns:
+    description: 'Fail the build on critical/high vulnerabilities'
+    required: false
+    default: 'true'
+  upload-sarif:
+    description: 'Upload SARIF results to GitHub Security tab'
+    required: false
+    default: 'false'
+
+outputs:
+  bandit-issues:
+    description: 'Number of high/medium severity Bandit issues found'
+    value: ${{ steps.analyze.outputs.bandit-issues }}
+  vulnerabilities:
+    description: 'Number of critical/high vulnerabilities found'
+    value: ${{ steps.analyze.outputs.vulnerabilities }}
+  security-passed:
+    description: 'Whether all security checks passed'
+    value: ${{ steps.analyze.outputs.security-passed }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install security tools
+      shell: bash
+      run: |
+        pip install bandit[toml] pip-audit
+
+    - name: Run Bandit SAST Scan
+      shell: bash
+      run: |
+        echo "Running Bandit security scan..."
+        bandit -r pulse \
+          --format json \
+          --output bandit-report.json \
+          --severity-level ${{ inputs.severity-level }} \
+          --confidence-level ${{ inputs.confidence-level }} \
+          --exit-zero
+
+        # Generate SARIF if requested
+        if [[ "${{ inputs.upload-sarif }}" == "true" ]]; then
+          bandit -r pulse \
+            --format sarif \
+            --output bandit-report.sarif \
+            --severity-level ${{ inputs.severity-level }} \
+            --confidence-level ${{ inputs.confidence-level }} \
+            --exit-zero
+        fi
+
+    - name: Run pip-audit Vulnerability Scan
+      shell: bash
+      run: |
+        echo "Running pip-audit vulnerability scan..."
+        pip-audit --format=json --output=pip-audit-report.json --desc || true
+        pip-audit --format=columns --desc || true
+
+    - name: Analyze Security Results
+      id: analyze
+      shell: bash
+      run: |
+        python3 << 'EOF'
+        import json
+        import os
+        import sys
+
+        def analyze_bandit_results():
+            """Analyze Bandit results and return issue counts."""
+            if not os.path.exists('bandit-report.json'):
+                return 0, 0, 0
+
+            with open('bandit-report.json') as f:
+                data = json.load(f)
+
+            results = data.get('results', [])
+            high_issues = sum(1 for r in results if r.get('issue_severity') == 'HIGH')
+            medium_issues = sum(1 for r in results if r.get('issue_severity') == 'MEDIUM')
+            total_issues = len(results)
+
+            return high_issues, medium_issues, total_issues
+
+        def analyze_pip_audit_results():
+            """Analyze pip-audit results and return vulnerability counts."""
+            if not os.path.exists('pip-audit-report.json'):
+                return 0, 0
+
+            with open('pip-audit-report.json') as f:
+                data = json.load(f)
+
+            critical_vulns = 0
+            high_vulns = 0
+
+            for vuln in data.get('vulnerabilities', []):
+                for alias in vuln.get('aliases', []):
+                    severity = alias.get('severity', '').upper()
+                    if severity == 'CRITICAL':
+                        critical_vulns += 1
+                    elif severity == 'HIGH':
+                        high_vulns += 1
+
+            return critical_vulns, high_vulns
+
+        # Analyze results
+        high_issues, medium_issues, total_bandit_issues = analyze_bandit_results()
+        critical_vulns, high_vulns = analyze_pip_audit_results()
+
+        # Determine if security checks passed
+        fail_on_high = "${{ inputs.fail-on-high }}" == "true"
+        fail_on_critical_vulns = "${{ inputs.fail-on-critical-vulns }}" == "true"
+
+        security_passed = True
+        if fail_on_high and (high_issues > 0 or medium_issues > 0):
+            security_passed = False
+        if fail_on_critical_vulns and (critical_vulns > 0 or high_vulns > 0):
+            security_passed = False
+
+        # Set outputs
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            f.write(f"bandit-issues={high_issues + medium_issues}\n")
+            f.write(f"vulnerabilities={critical_vulns + high_vulns}\n")
+            f.write(f"security-passed={str(security_passed).lower()}\n")
+
+        # Print summary
+        print(f"🔍 Security Scan Results:")
+        print(f"  Bandit Issues: {total_bandit_issues} total ({high_issues} high, {medium_issues} medium)")
+        print(f"  Vulnerabilities: {critical_vulns} critical, {high_vulns} high")
+        print(f"  Security Passed: {security_passed}")
+
+        # Exit with error if security checks failed
+        if not security_passed:
+            print("❌ Security checks failed")
+            sys.exit(1)
+        else:
+            print("✅ Security checks passed")
+        EOF
+
+    - name: Upload SARIF results
+      if: inputs.upload-sarif == 'true' && always()
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: bandit-report.sarif
+      continue-on-error: true
+
+    - name: Upload Security Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-reports-${{ github.run_number }}
+        path: |
+          bandit-report.json
+          bandit-report.sarif
+          pip-audit-report.json
+        retention-days: 90

@@ -42,161 +42,32 @@ jobs:
             pip install -r requirements.lock --no-deps --no-cache-dir
             pip install -e .
 
-    - name: Run Bandit SAST Scan (JSON)
-      run: |
-        echo "Running comprehensive Bandit security scan (JSON)..."
-        # Use configuration from pyproject.toml for consistency with CI
-        bandit -r pulse \
-          --format json \
-          --output bandit-report.json \
-          --severity-level low \
-          --confidence-level low \
-          --exit-zero
-
-    - name: Run Bandit SAST Scan (SARIF)
-      run: |
-        echo "Running comprehensive Bandit security scan (SARIF)..."
-        # Also generate SARIF format if available
-        bandit -r pulse \
-          --format sarif \
-          --output bandit-report.sarif \
-          --severity-level low \
-          --confidence-level low \
-          --exit-zero
-
-        echo "Bandit scan completed"
-
-    - name: Run pip-audit Vulnerability Scan
-      run: |
-        set +e  # don't abort on first non-zero
-        echo "Running comprehensive pip-audit vulnerability scan..."
-        pip-audit --format=json --output=pip-audit-report.json --desc
-        AUDIT_RC=$?
-        # Always print a human-readable table
-        pip-audit --format=columns --desc || true
-        # Snapshot the exact environment we audited
-        python -V
-        pip -V
-        pip freeze | sort > pip-freeze.txt
-        echo "pip-audit scan completed with code ${AUDIT_RC}"
-        exit ${AUDIT_RC}
-
-    # Upload SARIF results to GitHub Security tab
-    - name: Upload SARIF results
-      if: always() && github.event_name != 'pull_request'
-      uses: github/codeql-action/upload-sarif@v3
+    # Comprehensive security scan with lower thresholds for monitoring
+    - name: Run Comprehensive Security Scan
+      uses: ./.github/actions/security-scan
       with:
-        sarif_file: bandit-report.sarif
-      continue-on-error: true  # Don't fail if SARIF upload fails
+        severity-level: 'low'
+        confidence-level: 'low'
+        fail-on-high: 'true'
+        fail-on-critical-vulns: 'true'
+        upload-sarif: 'true'
 
-    - name: Upload Security Reports
-      if: always()
+    # Generate environment snapshot for reproducibility
+    - name: Generate Environment Snapshot
+      run: |
+        python -V > environment-snapshot.txt
+        pip -V >> environment-snapshot.txt
+        pip freeze | sort >> environment-snapshot.txt
+
+    - name: Upload Environment Snapshot
       uses: actions/upload-artifact@v4
       with:
-        name: security-scan-reports-${{ github.run_number }}
-        path: |
-          bandit-report.json
-          pip-audit-report.json
-          pip-freeze.txt
+        name: environment-snapshot-${{ github.run_number }}
+        path: environment-snapshot.txt
         retention-days: 90
 
-    - name: Check for Critical Vulnerabilities
-      run: |
-        echo "Checking for critical vulnerabilities..."
-
-        # Check Bandit results for high severity issues
-        if [ -f bandit-report.json ]; then
-          HIGH_ISSUES=$(python -c "
-        import json
-        with open('bandit-report.json') as f:
-            data = json.load(f)
-            high_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
-            print(len(high_issues))
-        ")
-          if [ "$HIGH_ISSUES" -gt 0 ]; then
-            echo "❌ Found $HIGH_ISSUES high severity security issues in Bandit scan"
-            echo "Please review the security report and fix critical issues"
-            exit 1
-          else
-            echo "✅ No high severity security issues found in Bandit scan"
-          fi
-        fi
-
-        # Check pip-audit results for critical vulnerabilities
-        if [ -f pip-audit-report.json ]; then
-          CRITICAL_VULNS=$(python -c "
-        import json
-        with open('pip-audit-report.json') as f:
-            data = json.load(f)
-            critical_vulns = []
-            for vuln in data.get('vulnerabilities', []):
-                for alias in vuln.get('aliases', []):
-                    if alias.get('severity', '').upper() in ['HIGH', 'CRITICAL']:
-                        critical_vulns.append(alias)
-            print(len(critical_vulns))
-        ")
-          if [ "$CRITICAL_VULNS" -gt 0 ]; then
-            echo "❌ Found $CRITICAL_VULNS critical/high severity vulnerabilities in dependencies"
-            echo "Please review the vulnerability report and update dependencies"
-            exit 1
-          else
-            echo "✅ No critical/high severity vulnerabilities found in dependencies"
-          fi
-        fi
-
-        echo "✅ Security scan completed successfully"
-
-    # Generate security summary
+    # Generate comprehensive security summary using centralized script
     - name: Generate Security Summary
       if: always()
       run: |
-        echo "# 🔒 Security Scan Summary" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-
-        if [ -f bandit-report.json ]; then
-          TOTAL_ISSUES=$(python -c "
-        import json
-        with open('bandit-report.json') as f:
-            data = json.load(f)
-            print(len(data.get('results', [])))
-        ")
-          HIGH_ISSUES=$(python -c "
-        import json
-        with open('bandit-report.json') as f:
-            data = json.load(f)
-            high_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
-            print(len(high_issues))
-        ")
-          MEDIUM_ISSUES=$(python -c "
-        import json
-        with open('bandit-report.json') as f:
-            data = json.load(f)
-            medium_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'MEDIUM']
-            print(len(medium_issues))
-        ")
-
-          echo "## 🛡️ SAST Scan (Bandit)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Total Issues**: $TOTAL_ISSUES" >> $GITHUB_STEP_SUMMARY
-          echo "- **High Severity**: $HIGH_ISSUES" >> $GITHUB_STEP_SUMMARY
-          echo "- **Medium Severity**: $MEDIUM_ISSUES" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-        fi
-
-        if [ -f pip-audit-report.json ]; then
-          TOTAL_VULNS=$(python -c "
-        import json
-        with open('pip-audit-report.json') as f:
-            data = json.load(f)
-            print(len(data.get('vulnerabilities', [])))
-        ")
-
-          echo "## 🔍 Dependency Scan (pip-audit)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Total Vulnerabilities**: $TOTAL_VULNS" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-        fi
-
-        echo "## 📊 Scan Details" >> $GITHUB_STEP_SUMMARY
-        echo "- **Scan Date**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
-        echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        python scripts/security_config.py --summary-only >> $GITHUB_STEP_SUMMARY

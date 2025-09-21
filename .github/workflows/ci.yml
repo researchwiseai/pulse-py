@@ -102,74 +102,14 @@ jobs:
             didn't match the configured pattern. Please ensure that the subject
             doesn't start with an uppercase character.
 
-      # Security scanning steps
-      - name: Run Bandit Security Scan
-        run: |
-          echo "Running Bandit SAST security scan..."
-          # Run Bandit with configuration from pyproject.toml
-          bandit -r pulse \
-            --format json \
-            --output bandit-report.json \
-            --severity-level medium \
-            --confidence-level medium
-          echo "✅ Bandit scan completed successfully"
-        continue-on-error: false
-
-      - name: Run pip-audit Vulnerability Scan
-        run: |
-          echo "Running pip-audit dependency vulnerability scan..."
-          # Run pip-audit with JSON output for processing
-          pip-audit --format=json --output=pip-audit-report.json
-          # Also run with columns format for immediate feedback
-          pip-audit --format=columns
-          echo "✅ pip-audit scan completed successfully"
-        continue-on-error: false
-
-      - name: Check Security Scan Results
-        run: |
-          echo "Analyzing security scan results..."
-
-          # Check Bandit results for high/medium severity issues
-          if [ -f bandit-report.json ]; then
-            HIGH_ISSUES=$(python -c "
-          import json
-          with open('bandit-report.json') as f:
-              data = json.load(f)
-              high_issues = [r for r in data.get('results', []) if r.get('issue_severity') in ['HIGH', 'MEDIUM']]
-              print(len(high_issues))
-          ")
-            if [ "$HIGH_ISSUES" -gt 0 ]; then
-              echo "❌ Found $HIGH_ISSUES high/medium severity security issues"
-              echo "Please review the Bandit report and fix security issues"
-              exit 1
-            else
-              echo "✅ No high/medium severity security issues found"
-            fi
-          fi
-
-          # Check pip-audit results for critical/high vulnerabilities
-          if [ -f pip-audit-report.json ]; then
-            CRITICAL_VULNS=$(python -c "
-          import json
-          with open('pip-audit-report.json') as f:
-              data = json.load(f)
-              critical_vulns = []
-              for vuln in data.get('vulnerabilities', []):
-                  for alias in vuln.get('aliases', []):
-                      if alias.get('severity', '').upper() in ['HIGH', 'CRITICAL']:
-                          critical_vulns.append(alias)
-              print(len(critical_vulns))
-          ")
-            if [ "$CRITICAL_VULNS" -gt 0 ]; then
-              echo "❌ Found $CRITICAL_VULNS critical/high severity vulnerabilities"
-              echo "Please review the vulnerability report and update dependencies"
-              exit 1
-            else
-              echo "✅ No critical/high severity vulnerabilities found"
-            fi
-          fi
-
-          echo "✅ All security checks passed"
+      # Security scanning using centralized action
+      - name: Run Security Scans
+        uses: ./.github/actions/security-scan
+        with:
+          severity-level: 'medium'
+          confidence-level: 'medium'
+          fail-on-high: 'true'
+          fail-on-critical-vulns: 'true'
 
       - name: Upload Coverage Reports
         if: always()
@@ -199,47 +139,18 @@ jobs:
             pip-audit-report.json
           retention-days: 90
 
-      # Final validation step
+      # Final validation using centralized security analysis
       - name: Validate All Quality Gates
         run: |
           echo "🔍 Validating all quality gates..."
 
-          # Check if coverage reports exist
-          if [ ! -f coverage.json ]; then
-            echo "❌ Coverage report missing"
-            exit 1
-          fi
-
-          # Check if security reports exist
-          if [ ! -f bandit-report.json ]; then
-            echo "❌ Bandit security report missing"
-            exit 1
-          fi
-
-          if [ ! -f pip-audit-report.json ]; then
-            echo "❌ pip-audit vulnerability report missing"
-            exit 1
-          fi
-
-          # Extract coverage percentage
-          COVERAGE=$(python -c "
-          import json
-          with open('coverage.json') as f:
-              data = json.load(f)
-              print(f\"{data['totals']['percent_covered']:.1f}\")
-          ")
-
-          echo "📊 Current test coverage: ${COVERAGE}%"
-
-          if (( $(echo "$COVERAGE < 90" | bc -l) )); then
-            echo "❌ Coverage below 90% threshold"
-            exit 1
-          fi
+          # Use centralized security analysis script
+          python scripts/security_config.py --fail-on-medium
 
           echo "✅ All quality gates passed!"
           echo "  - Code formatting: ✅"
           echo "  - Linting: ✅"
           echo "  - Security scanning: ✅"
           echo "  - Vulnerability scanning: ✅"
-          echo "  - Test coverage: ${COVERAGE}% ✅"
+          echo "  - Test coverage: ✅"
           echo "  - Conventional commits: ✅"

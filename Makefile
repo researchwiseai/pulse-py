@@ -32,6 +32,14 @@ fmt:
 lint:
 	ruff check pulse tests
 
+# Run security scans locally
+security:
+	@echo "Running local security scans..."
+	bandit -r pulse --format json --output bandit-report.json --severity-level medium --confidence-level medium
+	pip-audit --format=json --output=pip-audit-report.json --desc
+	python scripts/security_config.py
+	@echo "✅ Security scans completed"
+
 # Remove all recorded VCR cassettes (YAML files)
 vcr-clean:
 	rm -f tests/cassettes/*.yaml
