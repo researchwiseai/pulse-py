@@ -105,10 +105,16 @@ jobs:
 
       - name: Sign distributions with Cosign (keyless)
         run: |
+          # Create signatures directory to keep them separate from dist/
+          mkdir -p signatures
+
           # Sign all distribution files using keyless signing
           for file in dist/*; do
+            filename=$(basename "$file")
             echo "Signing $file"
-            cosign sign-blob --yes "$file" --output-signature "${file}.sig" --output-certificate "${file}.crt"
+            cosign sign-blob --yes "$file" \
+              --output-signature "signatures/${filename}.sig" \
+              --output-certificate "signatures/${filename}.crt"
           done
 
       - name: Sign SBOMs with Cosign (keyless)
@@ -116,7 +122,9 @@ jobs:
           # Sign SBOM files
           for sbom in sbom-*.json; do
             echo "Signing $sbom"
-            cosign sign-blob --yes "$sbom" --output-signature "${sbom}.sig" --output-certificate "${sbom}.crt"
+            cosign sign-blob --yes "$sbom" \
+              --output-signature "signatures/${sbom}.sig" \
+              --output-certificate "signatures/${sbom}.crt"
           done
 
       - name: Verify signatures
@@ -127,9 +135,13 @@ jobs:
             # Skip if no files match the pattern
             [[ -e "$file" ]] || continue
 
-            if [[ -f "${file}.sig" && -f "${file}.crt" ]]; then
+            filename=$(basename "$file")
+            sig_file="signatures/${filename}.sig"
+            crt_file="signatures/${filename}.crt"
+
+            if [[ -f "$sig_file" && -f "$crt_file" ]]; then
               echo "✓ Signature files exist for $file"
-              cosign verify-blob --certificate "${file}.crt" --signature "${file}.sig" \
+              cosign verify-blob --certificate "$crt_file" --signature "$sig_file" \
                 --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \
                 --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
                 "$file"
@@ -145,10 +157,9 @@ jobs:
           name: supply-chain-artifacts
           path: |
             dist/
+            signatures/
             *.spdx.json
             *.cyclonedx.json
-            *.sig
-            *.crt
             build-provenance.json
           retention-days: 90
 
@@ -164,6 +175,7 @@ jobs:
         with:
           files: |
             dist/*
+            signatures/*
             sbom-*.json
             build-provenance.json
           body: |
@@ -188,6 +200,8 @@ jobs:
 
             ### ✅ Verification Instructions
             ```bash
+            # Download signature files from the release assets, then verify:
+
             # Verify package signatures
             cosign verify-blob --certificate pulse_sdk-*.whl.crt --signature pulse_sdk-*.whl.sig \\
               --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\

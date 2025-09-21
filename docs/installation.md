@@ -149,9 +149,9 @@ pip install pulse-sdk[progress]
 - `tqdm` - Progress bars for long-running operations
 
 **Use when:**
-- Processing large datasets
-- Need visual feedback on operation progress
-- Running batch operations
+ - Processing large datasets
+ - Need visual feedback on operation progress
+ - Running batch operations
 
 ### 7. Combined Installations
 
@@ -177,13 +177,13 @@ pip install pulse-sdk[dev]
 ```
 
 **Includes all testing, formatting, and documentation tools:**
-- `pytest` - Testing framework
-- `black` - Code formatting
-- `ruff` - Fast Python linter
-- `pre-commit` - Git hooks for code quality
-- `bandit` - Security vulnerability scanner
-- `pip-audit` - Dependency vulnerability scanner
-- `mkdocs` - Documentation generator
+ - `pytest` - Testing framework
+ - `black` - Code formatting
+ - `ruff` - Fast Python linter
+ - `pre-commit` - Git hooks for code quality
+ - `bandit` - Security vulnerability scanner
+ - `pip-audit` - Dependency vulnerability scanner
+ - `mkdocs` - Documentation generator
 
 ## Installation Commands by Use Case
 
@@ -224,10 +224,6 @@ pip install pulse-sdk[all]
 The Pulse SDK supports Python 3.8 and later:
 
 - **Python 3.8+**: All features supported
-- **Python 3.9+**: Recommended for best performance
-- **Python 3.10+**: Latest type hints and optimizations
-- **Python 3.11+**: Fastest performance
-- **Python 3.12+**: Latest features and improvements
 
 ### Dependency Version Compatibility
 
@@ -245,7 +241,7 @@ The Pulse SDK supports Python 3.8 and later:
 
 The Pulse SDK works with all major Python package managers:
 
-**pip (recommended)**
+**pip**
 ```bash
 pip install pulse-sdk[all]
 ```
@@ -260,14 +256,7 @@ pipenv install pulse-sdk[all]
 poetry add pulse-sdk[all]
 ```
 
-**conda**
-```bash
-# Install from PyPI via pip in conda environment
-conda install pip
-pip install pulse-sdk[all]
-```
-
-**uv (fastest)**
+**uv**
 ```bash
 uv pip install pulse-sdk[all]
 ```
