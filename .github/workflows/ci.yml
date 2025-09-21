@@ -102,7 +102,7 @@ jobs:
             didn't match the configured pattern. Please ensure that the subject
             doesn't start with an uppercase character.
 
-      # Security scanning using centralized action
+      # Security scanning - blocks PRs/pushes with medium+ severity issues
       - name: Run Security Scans
         uses: ./.github/actions/security-scan
         with:
@@ -110,12 +110,13 @@ jobs:
           confidence-level: "medium"
           fail-on-high: "true"
           fail-on-critical-vulns: "true"
+          upload-sarif: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
       - name: Upload Coverage Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports
+          name: coverage-reports-${{ github.run_number }}
           path: |
             htmlcov/
             coverage.json
@@ -128,16 +129,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           MINIMUM_GREEN: 70
           MINIMUM_ORANGE: 60
-
-      - name: Upload Security Scan Artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-security-reports-${{ github.run_number }}
-          path: |
-            bandit-report.json
-            pip-audit-report.json
-          retention-days: 90
 
       # Final validation using centralized security analysis
       - name: Validate All Quality Gates

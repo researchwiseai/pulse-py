@@ -1,19 +1,22 @@
-name: Security Scan
+# Comprehensive security audit workflow
+# Purpose: Weekly security monitoring and trend analysis
+# - Runs comprehensive scans with low thresholds to catch everything
+# - Does not fail builds, only reports findings for monitoring
+# - Uploads SARIF results to GitHub Security tab for tracking
+# - Complements CI security scans which focus on blocking bad code
+
+name: Security Audit
 
 on:
-  # Run security scans on schedule (weekly)
+  # Run comprehensive security scans on schedule (weekly)
   schedule:
-    - cron: '0 2 * * 1'  # Every Monday at 2 AM UTC
+    - cron: "0 2 * * 1" # Every Monday at 2 AM UTC
 
-  # Allow manual triggering
+  # Allow manual triggering for ad-hoc security audits
   workflow_dispatch:
 
-  # Run on pushes to main branch (comprehensive scan)
-  push:
-    branches: [main]
-
 jobs:
-  security-scan:
+  security-audit:
     runs-on: ubuntu-latest
     permissions:
       # Required for uploading SARIF results to GitHub Security tab
@@ -24,46 +27,46 @@ jobs:
       actions: read
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v6
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
 
-    - name: Install dependencies
-      run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.lock --no-deps --no-cache-dir
-            pip install -e .
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.lock --no-deps --no-cache-dir
+          pip install -e .
 
-    # Comprehensive security scan with lower thresholds for monitoring
-    - name: Run Comprehensive Security Scan
-      uses: ./.github/actions/security-scan
-      with:
-        severity-level: 'low'
-        confidence-level: 'low'
-        fail-on-high: 'true'
-        fail-on-critical-vulns: 'true'
-        upload-sarif: 'true'
+      # Comprehensive security audit with low thresholds for monitoring trends
+      - name: Run Comprehensive Security Audit
+        uses: ./.github/actions/security-scan
+        with:
+          severity-level: "low"
+          confidence-level: "low"
+          fail-on-high: "false"  # Don't fail scheduled scans, just report
+          fail-on-critical-vulns: "false"  # Don't fail scheduled scans, just report
+          upload-sarif: "true"
 
-    # Generate environment snapshot for reproducibility
-    - name: Generate Environment Snapshot
-      run: |
-        python -V > environment-snapshot.txt
-        pip -V >> environment-snapshot.txt
-        pip freeze | sort >> environment-snapshot.txt
+      # Generate environment snapshot for reproducibility
+      - name: Generate Environment Snapshot
+        run: |
+          python -V > environment-snapshot.txt
+          pip -V >> environment-snapshot.txt
+          pip freeze | sort >> environment-snapshot.txt
 
-    - name: Upload Environment Snapshot
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-environment-snapshot-${{ github.run_number }}
-        path: environment-snapshot.txt
-        retention-days: 90
+      - name: Upload Environment Snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-environment-snapshot-${{ github.run_number }}
+          path: environment-snapshot.txt
+          retention-days: 90
 
-    # Generate comprehensive security summary using centralized script
-    - name: Generate Security Summary
-      if: always()
-      run: |
-        python scripts/security_config.py --summary-only >> $GITHUB_STEP_SUMMARY
+      # Generate comprehensive security summary using centralized script
+      - name: Generate Security Summary
+        if: always()
+        run: |
+          python scripts/security_config.py --summary-only >> $GITHUB_STEP_SUMMARY
