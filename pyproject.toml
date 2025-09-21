@@ -7,7 +7,7 @@ name = "pulse-sdk"
 version = "0.4.1"
 description = "Idiomatic, type-safe Python client for the Pulse REST API"
 readme = { file = "README.md", content-type = "text/markdown" }
-license = "MIT"
+license = "Apache-2.0"
 authors = [{ name = "Researchwise AI", email = "support@researchwiseai.com" }]
 maintainers = [{ name = "Researchwise AI", email = "support@researchwiseai.com" }]
 requires-python = ">=3.8"
@@ -35,6 +35,9 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: Information Technology",
     "Intended Audience :: Education",
+
+    # License
+    "License :: OSI Approved :: Apache Software License",
 
     # Operating System
     "Operating System :: OS Independent",
