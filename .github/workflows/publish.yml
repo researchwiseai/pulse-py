@@ -43,6 +43,7 @@ jobs:
       - name: Generate single SBOM for all distributions
         run: |
           # Generate single CycloneDX SBOM covering both source and wheel distributions
+          # Note: SBOM is NOT signed to reduce release asset clutter (per streamlined release process)
           syft dist/ -o cyclonedx-json=sbom.cyclonedx.json
 
       - name: Generate compliance artifacts
@@ -108,7 +109,8 @@ jobs:
           # Create signatures directory to keep them separate from dist/
           mkdir -p signatures
 
-          # Sign all distribution files using keyless signing
+          # Sign only distribution files (wheel and sdist) - SBOM files are intentionally NOT signed
+          # to reduce release asset clutter per streamlined release process requirements
           for file in dist/*; do
             filename=$(basename "$file")
             echo "Signing $file"
@@ -121,8 +123,8 @@ jobs:
 
       - name: Verify signatures
         run: |
-          # Verify all signatures were created successfully
-          echo "Verifying signatures..."
+          # Verify signatures for distribution files only (SBOM signatures are intentionally excluded)
+          echo "Verifying distribution signatures..."
           for file in dist/*.whl dist/*.tar.gz; do
             # Skip if no files match the pattern
             [[ -e "$file" ]] || continue
