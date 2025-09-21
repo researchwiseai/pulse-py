@@ -187,6 +187,10 @@ jobs:
           dist_count=$(ls -1 dist/*.whl dist/*.tar.gz 2>/dev/null | wc -l)
           total_assets=$((total_assets + dist_count))
 
+          # Count attestation files (should be 1 per distribution: .attestation)
+          attestation_count=$(ls -1 dist/*.attestation 2>/dev/null | wc -l)
+          total_assets=$((total_assets + attestation_count))
+
           # Count signature files (should be 2 per distribution: .sig and .crt)
           sig_count=$(ls -1 signatures/*.sig signatures/*.crt 2>/dev/null | wc -l)
           total_assets=$((total_assets + sig_count))
@@ -197,6 +201,7 @@ jobs:
 
           echo "📈 Asset count breakdown:"
           echo "  - Distribution files: $dist_count"
+          echo "  - Attestation files: $attestation_count"
           echo "  - Signature files: $sig_count"
           echo "  - SBOM files: 1"
           echo "  - Provenance files: 1"
@@ -323,9 +328,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: supply-chain-artifacts
+          # Streamlined artifact upload: only essential files, no compliance documents or SBOM signatures
+          # Total expected files: 2 distributions + 2 attestations + 4 signatures + 1 SBOM + 1 provenance = 10 files max
+          # Requirements: 1.5, 4.4
           path: |
-            dist/
-            signatures/
+            dist/*.whl
+            dist/*.tar.gz
+            dist/*.attestation
+            signatures/*.sig
+            signatures/*.crt
             sbom.cyclonedx.json
             build-provenance.json
           retention-days: 90
@@ -340,9 +351,14 @@ jobs:
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
+          # Streamlined release assets: only essential files, compliance documents removed per Requirements 1.6, 2.4, 4.4
+          # Total expected files: 2 distributions + 2 attestations + 4 signatures + 1 SBOM + 1 provenance = 10 files max
           files: |
-            dist/*
-            signatures/*
+            dist/*.whl
+            dist/*.tar.gz
+            dist/*.attestation
+            signatures/*.sig
+            signatures/*.crt
             sbom.cyclonedx.json
             build-provenance.json
           body: |
