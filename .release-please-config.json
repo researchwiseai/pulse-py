@@ -1,7 +1,6 @@
 {
   "packages": {
     ".": {
-      "package-name": "pulse-sdk",
       "release-type": "python",
       "version-file": "pulse/__init__.py",
       "extra-files": [

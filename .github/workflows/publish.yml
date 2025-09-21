@@ -1,21 +1,19 @@
 name: Publish to PyPI
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-  workflow_dispatch:
-  # Also trigger when Release Please creates a release
+  # Trigger when Release Please creates a release
   release:
     types: [published]
+  # Allow manual triggering for testing
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment: production
     permissions:
-      contents: read
-      id-token: write
-      attestations: write
+      contents: write  # Required to update GitHub releases
+      id-token: write  # Required for OIDC authentication to PyPI
+      attestations: write  # Required for build attestations
     steps:
       - uses: actions/checkout@v4
         with:
