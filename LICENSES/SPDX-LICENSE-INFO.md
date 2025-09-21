@@ -31,7 +31,7 @@ The Pulse SDK uses the Apache-2.0 license, which is compatible with the followin
 
 ### Compatible Licenses (✅)
 - **Apache-2.0**: Fully compatible
-- **MIT**: Fully compatible (can be combined)
+- **MIT**: Fully compatible
 - **BSD-2-Clause**: Fully compatible
 - **BSD-3-Clause**: Fully compatible
 - **ISC**: Fully compatible
