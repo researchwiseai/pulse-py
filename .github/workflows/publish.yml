@@ -40,17 +40,10 @@ jobs:
       - name: Build distributions
         run: python -m build --sdist --wheel
 
-      - name: Generate SBOM for source distribution
+      - name: Generate single SBOM for all distributions
         run: |
-          # Generate SBOM for the source distribution
-          syft dist/ -o spdx-json=sbom-source.spdx.json
-          syft dist/ -o cyclonedx-json=sbom-source.cyclonedx.json
-
-      - name: Generate SBOM for wheel distribution
-        run: |
-          # Generate SBOM for the wheel distribution
-          syft dist/*.whl -o spdx-json=sbom-wheel.spdx.json
-          syft dist/*.whl -o cyclonedx-json=sbom-wheel.cyclonedx.json
+          # Generate single CycloneDX SBOM covering both source and wheel distributions
+          syft dist/ -o cyclonedx-json=sbom.cyclonedx.json
 
       - name: Generate compliance artifacts
         run: |
@@ -124,15 +117,7 @@ jobs:
               --output-certificate "signatures/${filename}.crt"
           done
 
-      - name: Sign SBOMs with Cosign (keyless)
-        run: |
-          # Sign SBOM files
-          for sbom in sbom-*.json; do
-            echo "Signing $sbom"
-            cosign sign-blob --yes "$sbom" \
-              --output-signature "signatures/${sbom}.sig" \
-              --output-certificate "signatures/${sbom}.crt"
-          done
+
 
       - name: Verify signatures
         run: |
@@ -165,8 +150,7 @@ jobs:
           path: |
             dist/
             signatures/
-            *.spdx.json
-            *.cyclonedx.json
+            sbom.cyclonedx.json
             build-provenance.json
             LICENSE-MANIFEST.json
             THIRD-PARTY-ATTRIBUTIONS.md
@@ -186,7 +170,7 @@ jobs:
           files: |
             dist/*
             signatures/*
-            sbom-*.json
+            sbom.cyclonedx.json
             build-provenance.json
             LICENSE-MANIFEST.json
             THIRD-PARTY-ATTRIBUTIONS.md
@@ -200,10 +184,7 @@ jobs:
             This release includes comprehensive supply chain security and Apache 2.0 compliance artifacts:
 
             ### 📋 Software Bill of Materials (SBOM)
-            - `sbom-source.spdx.json` - SPDX format SBOM for source distribution
-            - `sbom-source.cyclonedx.json` - CycloneDX format SBOM for source distribution
-            - `sbom-wheel.spdx.json` - SPDX format SBOM for wheel distribution
-            - `sbom-wheel.cyclonedx.json` - CycloneDX format SBOM for wheel distribution
+            - `sbom.cyclonedx.json` - CycloneDX format SBOM covering both source and wheel distributions
 
             ### 🔐 Digital Signatures
             - All distribution files are signed using Sigstore keyless signing
@@ -231,12 +212,6 @@ jobs:
               --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
               pulse_sdk-*.whl
-
-            # Verify SBOM integrity
-            cosign verify-blob --certificate sbom-wheel.spdx.json.crt --signature sbom-wheel.spdx.json.sig \\
-              --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
-              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
-              sbom-wheel.spdx.json
 
             # Verify license compliance
             python -c "import json; manifest=json.load(open('LICENSE-MANIFEST.json')); print('License:', manifest['project']['license'])"
