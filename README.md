@@ -1,4 +1,5 @@
 # pulse-sdk
+
 [![Deploy Docs to GitHub Pages](https://github.com/researchwiseai/pulse-py/actions/workflows/docs.yml/badge.svg)](https://github.com/researchwiseai/pulse-py/actions/workflows/docs.yml)
 [![CI](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml/badge.svg)](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-check%20CI-blue)](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml)
@@ -6,6 +7,7 @@
 The official Pulse SDK for Python.
 
 ## Features
+
 - Low‑level CoreClient for direct API calls: embeddings, similarity, themes, clustering, sentiment, summaries, extractions
 - High‑level Analyzer for orchestrating multi‑step workflows with caching
 - Built-in processes: ThemeGeneration, ThemeAllocation, SentimentProcess, Cluster
@@ -22,11 +24,12 @@ The official Pulse SDK for Python.
   - Serve locally: `mkdocs serve` (http://127.0.0.1:8000)
   - Build static site: `mkdocs build`
 
-
 ## Installation
 
 ### Quick Start
+
 Install with all features (recommended):
+
 ```bash
 pip install pulse-sdk[all]
 ```
@@ -34,11 +37,13 @@ pip install pulse-sdk[all]
 ### Installation Options
 
 **Minimal Installation** (API access only):
+
 ```bash
 pip install pulse-sdk[minimal]
 ```
 
 **Custom Installation** (choose your features):
+
 ```bash
 # Data science workflow
 pip install pulse-sdk[analysis,visualization,caching]
@@ -51,6 +56,7 @@ pip install pulse-sdk[analysis,nlp,progress]
 ```
 
 **Available Feature Sets:**
+
 - `minimal` - Core API access only (httpx, pydantic)
 - `analysis` - Data science tools (numpy, pandas, scikit-learn)
 - `visualization` - Plotting capabilities (matplotlib, seaborn)
@@ -61,7 +67,9 @@ pip install pulse-sdk[analysis,nlp,progress]
 - `dev` - Development tools (testing, formatting, linting)
 
 ### From Source
+
 Get the repository and install editable with developer dependencies:
+
 ```bash
 git clone https://github.com/researchwiseai/pulse-py.git
 cd pulse-py
@@ -78,6 +86,7 @@ pre-commit install           # set up formatting/linting on commit
 Once installed, you can quickly try out the core and DSL APIs.
 
 ### CoreClient
+
 ```python
 from pulse.core.client import CoreClient
 
@@ -219,6 +228,7 @@ print(result)
 `Job.result()` is an alias for `wait()` if you prefer a blocking call.
 
 ### Analyzer
+
 ```python
 from pulse.analysis.analyzer import Analyzer
 from pulse.analysis.processes import ThemeGeneration, SentimentProcess
@@ -281,13 +291,16 @@ print(results.sentiment.sentiments)
 - **length** and **preset** – control output style in `generate_summary`.
 
 ## Examples
+
 You can find Jupyter notebooks demonstrating both the high-level and DSL APIs under the `examples/` directory:
+
 ```bash
 jupyter notebook examples/high_level_api.ipynb
 jupyter notebook examples/dsl_api.ipynb
 ```
 
 ## Environment Variables
+
 For authenticated access and test recording/playback, configure the following environment variables:
 
 - `PULSE_CLIENT_ID`: your OAuth2 client ID (e.g., Auth0 client ID).
@@ -299,11 +312,13 @@ For authenticated access and test recording/playback, configure the following en
 - `PULSE_TOKEN_URL` (optional): OAuth2 token endpoint URL.
 
 Default configuration uses production endpoints:
+
 - `PULSE_BASE_URL` = `https://pulse.researchwiseai.com/v1`
 - `PULSE_AUDIENCE` = `https://core.researchwiseai.com/pulse/v1`
 - `PULSE_AUTH_DOMAIN` = `research-wise-ai-eu.eu.auth0.com`
 
 In local development, you can export these variables:
+
 ```bash
 export PULSE_CLIENT_ID="your_client_id"
 export PULSE_CLIENT_SECRET="your_client_secret"
@@ -312,6 +327,7 @@ export PULSE_BASE_URL="https://your-custom-endpoint.com/v1"
 ```
 
 In CI (e.g., GitHub Actions), add these values as repository secrets and reference them in your workflow:
+
 ```yaml
 env:
   PULSE_CLIENT_ID: ${{ secrets.PULSE_CLIENT_ID }}
@@ -322,18 +338,21 @@ env:
 
 Use Python 3.8+ and a virtual environment.
 
-1) Create and activate a virtual environment
+1. Create and activate a virtual environment
+
 ```bash
 python -m venv venv
 source venv/bin/activate   # Windows: venv\\Scripts\\activate
 ```
 
-2) Install dependencies (SDK + dev tools)
+2. Install dependencies (SDK + dev tools)
+
 ```bash
 pip install -e ".[dev]"
 ```
 
-3) Install pre-commit hooks
+3. Install pre-commit hooks
+
 ```bash
 pre-commit install
 pre-commit install --hook-type commit-msg
@@ -341,26 +360,30 @@ pre-commit install --hook-type commit-msg
 pre-commit run --all-files
 ```
 
-4) Run tests
+4. Run tests
+
 ```bash
 make test
 # or
 pytest
 ```
 
-5) Re-record HTTP cassettes when needed
+5. Re-record HTTP cassettes when needed
+
 ```bash
 make vcr-record
 ```
 
-6) Formatting and linting
+6. Formatting and linting
+
 ```bash
 black .
 nbqa black .
 ruff check pulse tests
 ```
 
-7) Security scanning
+7. Security scanning
+
 ```bash
 # Run comprehensive security scans
 ./scripts/security-scan.sh
@@ -373,7 +396,9 @@ pip-audit --format=columns
 ## Development & Contributing
 
 ### Local Dev Setup
+
 Note: For onboarding, see First-Time Setup above.
+
 - Use Python 3.8+.
 - Create and activate a virtual environment, then install dev deps:
   ```bash
@@ -390,6 +415,7 @@ Note: For onboarding, see First-Time Setup above.
   ```
 
 ### Commit Message Format
+
 This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated changelog generation. Please format your commit messages as:
 
 ```
@@ -403,6 +429,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
 **Examples:**
+
 - `feat: add sentiment analysis caching`
 - `fix: handle network timeout in auth flow`
 - `docs: update quick start guide`
@@ -411,12 +438,14 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 See [scripts/conventional-commits-guide.md](scripts/conventional-commits-guide.md) for detailed guidance.
 
 ### Format & Lint
+
 - Format Python: `black .` (configured to line length 88)
 - Format notebooks: `nbqa black .`
 - Lint: `ruff check pulse tests`
 - Note: these commands are also enforced by pre-commit.
 
 ### Tests
+
 - Run tests:
   ```bash
   make test
@@ -433,21 +462,25 @@ See [scripts/conventional-commits-guide.md](scripts/conventional-commits-guide.m
   ```
 
 ### HTTP Cassette Recording (pytest-vcr)
+
 - Re-record all cassettes from scratch:
   ```bash
   make vcr-record
   ```
 
 ### Packaging
+
 ```bash
 python -m build
 ```
 
 ### Notes
+
 - Keep changes backward compatible with existing models and APIs.
 - Avoid committing large datasets or generated notebook outputs.
 
 Feel free to open issues or submit pull requests at the [GitHub repo](https://github.com/researchwiseai/pulse-py).
 
 ## License
+
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
