@@ -3,21 +3,10 @@
 [![CI](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml/badge.svg)](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-check%20CI-blue)](https://github.com/researchwiseai/pulse-py/actions/workflows/ci.yml)
 
-Idiomatic, type-safe Python client for the Researchwise AI Pulse REST API.
-
-## Changelog
-
-Starting with version 0.3.4, changelogs are automatically generated using [Release Please](https://github.com/googleapis/release-please) based on [Conventional Commits](https://www.conventionalcommits.org/). See [CHANGELOG.md](CHANGELOG.md) for the full changelog.
-
-### Recent Changes
-- 0.3.3
-  - Fix: decouple base URL and OAuth audience configuration to avoid unintended coupling between environments.
-- 0.3.2
-  - Improve 401 Unauthorized diagnostics: PulseAPIError now includes AWS API Gateway hints when available (e.g., `www-authenticate`, `x-amzn-errortype`, `apigw-requestid`). This makes it easier to troubleshoot token and audience issues.
+The official Pulse SDK for Python.
 
 ## Features
 - Low‑level CoreClient for direct API calls: embeddings, similarity, themes, clustering, sentiment, summaries, extractions
-- Usage reporting surfaced on all responses (`resp.usage_total`, `resp.usage_records_by_feature()`)
 - High‑level Analyzer for orchestrating multi‑step workflows with caching
 - Built-in processes: ThemeGeneration, ThemeAllocation, SentimentProcess, Cluster
 - Result helpers: pandas DataFrame conversion, summaries, visualizations (bar charts, scatter, dendrogram)
@@ -33,57 +22,6 @@ Starting with version 0.3.4, changelogs are automatically generated using [Relea
   - Serve locally: `mkdocs serve` (http://127.0.0.1:8000)
   - Build static site: `mkdocs build`
 
-## First-Time Setup (Developers)
-
-Use Python 3.8+ and a virtual environment.
-
-1) Create and activate a virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate   # Windows: venv\\Scripts\\activate
-```
-
-2) Install dependencies (SDK + dev tools)
-```bash
-pip install -e ".[dev]"
-```
-
-3) Install pre-commit hooks
-```bash
-pre-commit install
-pre-commit install --hook-type commit-msg
-# optional: run once on all files
-pre-commit run --all-files
-```
-
-4) Run tests
-```bash
-make test
-# or
-pytest
-```
-
-5) Re-record HTTP cassettes when needed
-```bash
-make vcr-record
-```
-
-6) Formatting and linting
-```bash
-black .
-nbqa black .
-ruff check pulse tests
-```
-
-7) Security scanning
-```bash
-# Run comprehensive security scans
-./scripts/security-scan.sh
-
-# Or run individual tools
-bandit -r pulse --exclude pulse/core/.ipynb_checkpoints --skip B101,B110,B105,B311,B403,B601
-pip-audit --format=columns
-```
 
 ## Installation
 
@@ -378,6 +316,58 @@ In CI (e.g., GitHub Actions), add these values as repository secrets and referen
 env:
   PULSE_CLIENT_ID: ${{ secrets.PULSE_CLIENT_ID }}
   PULSE_CLIENT_SECRET: ${{ secrets.PULSE_CLIENT_SECRET }}
+```
+
+## First-Time Setup (Developers)
+
+Use Python 3.8+ and a virtual environment.
+
+1) Create and activate a virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate   # Windows: venv\\Scripts\\activate
+```
+
+2) Install dependencies (SDK + dev tools)
+```bash
+pip install -e ".[dev]"
+```
+
+3) Install pre-commit hooks
+```bash
+pre-commit install
+pre-commit install --hook-type commit-msg
+# optional: run once on all files
+pre-commit run --all-files
+```
+
+4) Run tests
+```bash
+make test
+# or
+pytest
+```
+
+5) Re-record HTTP cassettes when needed
+```bash
+make vcr-record
+```
+
+6) Formatting and linting
+```bash
+black .
+nbqa black .
+ruff check pulse tests
+```
+
+7) Security scanning
+```bash
+# Run comprehensive security scans
+./scripts/security-scan.sh
+
+# Or run individual tools
+bandit -r pulse --exclude pulse/core/.ipynb_checkpoints --skip B101,B110,B105,B311,B403,B601
+pip-audit --format=columns
 ```
 
 ## Development & Contributing
