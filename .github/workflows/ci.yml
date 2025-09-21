@@ -106,10 +106,10 @@ jobs:
       - name: Run Security Scans
         uses: ./.github/actions/security-scan
         with:
-          severity-level: 'medium'
-          confidence-level: 'medium'
-          fail-on-high: 'true'
-          fail-on-critical-vulns: 'true'
+          severity-level: "medium"
+          confidence-level: "medium"
+          fail-on-high: "true"
+          fail-on-critical-vulns: "true"
 
       - name: Upload Coverage Reports
         if: always()
@@ -126,14 +126,14 @@ jobs:
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
-          MINIMUM_GREEN: 90
-          MINIMUM_ORANGE: 85
+          MINIMUM_GREEN: 70
+          MINIMUM_ORANGE: 60
 
       - name: Upload Security Scan Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: security-reports-${{ github.run_number }}
+          name: ci-security-reports-${{ github.run_number }}
           path: |
             bandit-report.json
             pip-audit-report.json

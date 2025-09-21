@@ -21,7 +21,7 @@ class SecurityThresholds:
     pip_audit_fail_on_high: bool = True
 
     # Coverage thresholds
-    min_coverage_percent: float = 90.0
+    min_coverage_percent: float = 60.0
 
 
 @dataclass

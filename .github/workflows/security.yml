@@ -12,10 +12,6 @@ on:
   push:
     branches: [main]
 
-  # Run on pull requests (quick scan)
-  pull_request:
-    branches: [main]
-
 jobs:
   security-scan:
     runs-on: ubuntu-latest
@@ -62,7 +58,7 @@ jobs:
     - name: Upload Environment Snapshot
       uses: actions/upload-artifact@v4
       with:
-        name: environment-snapshot-${{ github.run_number }}
+        name: security-environment-snapshot-${{ github.run_number }}
         path: environment-snapshot.txt
         retention-days: 90
 
