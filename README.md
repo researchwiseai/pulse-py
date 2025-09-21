@@ -110,24 +110,12 @@ from pulse.core.client import CoreClient
 from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth
 
 # Client Credentials flow
-auth = ClientCredentialsAuth(
-    token_url="YOUR_TOKEN_URL",
-    client_id="YOUR_CLIENT_ID",
-    client_secret="YOUR_CLIENT_SECRET",
-    scope="YOUR_SCOPE",  # optional
-)
+auth = ClientCredentialsAuth()  # Automatically reads PULSE_CLIENT_ID and PULSE_CLIENT_SECRET
 client = CoreClient(auth=auth)
 resp = client.create_embeddings(["Hello world", "Goodbye"])  # will include Authorization header
 
-# Authorization Code flow with PKCE
-auth = AuthorizationCodePKCEAuth(
-    token_url="YOUR_TOKEN_URL",
-    client_id="YOUR_CLIENT_ID",
-    code="AUTHORIZATION_CODE",
-    redirect_uri="https://yourapp/callback",
-    code_verifier="YOUR_CODE_VERIFIER",
-    scope="YOUR_SCOPE",  # optional
-)
+# Authorization Code flow with PKCE, interactive login, requries local webserver
+auth = AuthorizationCodePKCEAuth() # Allows user's to login with their RWAI Account
 client = CoreClient(auth=auth)
 resp = client.create_embeddings(["Hello world", "Goodbye"])
 ```
