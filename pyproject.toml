@@ -36,9 +36,6 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Education",
 
-    # License
-    "License :: OSI Approved :: Apache Software License",
-
     # Operating System
     "Operating System :: OS Independent",
     "Operating System :: POSIX",
