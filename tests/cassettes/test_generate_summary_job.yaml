@@ -1,0 +1,2988 @@
+interactions:
+- request:
+    body: '{"inputs":["foo"],"question":"question"}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      content-length:
+      - '40'
+      content-type:
+      - application/json
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://pulse.researchwiseai.com/v1/summaries
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1"}'
+    headers:
+      Apigw-Requestid:
+      - RPhezh4fjoEEMkw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '49'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Sun, 21 Sep 2025 07:56:01 GMT
+    status:
+      code: 202
+      message: Accepted
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe2h3-joEEMGA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:01 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe3h6uDoEEM4Q=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe5gSsjoEEMPg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe7hUcjoEEMpg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe8hfDDoEEMYg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe9jX6joEEMkA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhe_jsvjoEEMVw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfAg8ujoEEMew=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfBj_4DoEEMdg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:02 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfChgaDoEEMvw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfChV6joEEMpg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfDh6qjoEEMGA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfEjPQjoEEMcg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfGjIWjoEEMUQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfHhP7joEEMWQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfIhD8joEEMeA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfJhP4joEEMFw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfKi5AjoEEMyA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:03 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfMixIDoEEMwQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfNiFYjoEEMQQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfPjKcjoEEM8g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfQgghjoEEM5g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfSiKvDoEEMcA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfTjtejoEEMlQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfUiUgjoEEMCQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:04 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfVhLFjoEEMaA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfXi3vjoEEMIA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfYhTpjoEEMWQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfZjMwjoEEM8g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfag4IDoEEMVA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfbi60joEEMNQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfchGijoEEMMA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfdgDcjoEEMuA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfeikFDoEEMYw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:05 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhffhIpjoEEMeA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfgiJcDoEEMQQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfgjjXjoEEMcw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfhiYpjoEEM7A=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfijLijoEEMBg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfkim5DoEEMpQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhflhnZDoEEMoA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfmj2HDoEEMdw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfnhs-DoEEMNA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfohW9DoEEMWQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfpgflDoEEMRg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:06 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfqi9ojoEEMNQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfqhjtDoEEMQw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfrioXjoEEMpQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfsjoUDoEEM_g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfsjhADoEEMWA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfth2cjoEEM0A=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfuggsjoEEMRg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfvjQ9DoEEM8g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfviF6DoEEM4Q=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfwgeHjoEEMPg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfwgmmjoEEMRw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfxirUDoEEMWw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfyjAujoEEMyA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhfzhFrjoEEMMQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:07 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf0hR0DoEEM2w=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf1heXDoEEMRA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf2jjijoEEMLA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf3hSdDoEEM2w=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf4iTgjoEEMyQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf5hSfjoEEMaA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf6iS9DoEEM6w=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf6ibajoEEMUg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf7i4JjoEEMgw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf8j_2DoEEM4w=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf9hOvjoEEMeA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:08 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf9iZVjoEEMzg=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf-gV9DoEEMEw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf-hEnDoEEM8A=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhf_h6OjoEEM0A=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgAj5BjoEEM4g=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgBhNzjoEEMMA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgBgfLDoEEMZA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgDhcejoEEMWQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgDjEVDoEEMyA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgEhjwDoEEM8Q=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgFi6RjoEEMgw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgFitvDoEEMpQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgGgj-joEEMmw=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"pending"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgHhwiDoEEMng=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '68'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:09 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMzQxLCJleHAiOjE3NTg1Mjc3NDEsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.asYAH_pUetQtLpK-AeEP-nW6sfpbPETbRQCgIm3kd_0j33Iw9DgK2lPvLyh7NZSdBL-dRi9qINTtlzb-sE_MD8cDaeO_uErS5TybwhVnPnOnhJBLGkUpWqRNUOTtqH9P9NABXyt8_s7y2aW8CEaSw05pQSbn_ftk0lpZx3X69gqJwqQfZyLDP1q4YZNGOU8unWchRTEdAbIGnQ_xROBudnFoE09Ia-_6aznmBJe8K_qYbIV0XemsPw3HdlMoNS5lyzJzJH-JWIwHmoR3zNbqO9C7Y1VYgbmRxyZw4aVKW9OIYwLZntYJEKiQGIUH6acS50O86tYxoDe9ufINuqsShw
+      connection:
+      - keep-alive
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://pulse.researchwiseai.com/v1/jobs?jobId=ee8e78b3-947a-4850-9c00-f22a044476d1
+  response:
+    body:
+      string: '{"job_id":"ee8e78b3-947a-4850-9c00-f22a044476d1","status":"completed","result_url":"https://rwai-prod-pulse-results.s3.eu-west-1.amazonaws.com/results/ee8e78b3-947a-4850-9c00-f22a044476d1.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIA33Y6QTYAVISLSDJU%2F20250921%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20250921T075610Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCWV1LXdlc3QtMSJGMEQCIBciZuPCMvgVSJ6Djz0ekAio3OTDea1ciaYn35B4vOlWAiALlkXlgZOI9qt2mf4fbJmaCowfLAz%2BSyZ3pSCVRavu8SryAggREAAaDDgxNTU3MDkxODkxMyIMOsxEMl8cbwwVchsHKs8CQS1tu2aWfvpTg%2B4mwwn4w7NWfwHsNfUQMTxtJyoxhVAqzgh%2BzdYnb0zT1Ht4DOGPTNYOkzdv7KESYVa5qYc1LuK1trqb87Npj318ef06aRSDk0YUaIE%2FVtxU0x%2BvIbLYKxzPfTMqNT%2B%2BC8e6Gh6QtXu9QCd5TbBzjb%2F5tXx6meYHmozsHESlq9m%2B%2B8MJNrILEy5CQUC9oSM914usbcRylMEMy7zihDMUBz5VcHA1ubyAhkoPnPfropLRmCdhtP4Oy16ncaTqAtZ6z8ugH8GfFMsxZPwe%2BpKmJos2KCun%2FVtKgmjp%2FkLO5g9P67n574V1TN83yjR4b4ioIJQICJTex5oUemVND6uC5OFZyvuM%2BYU3YPaE3JDh0X6Qu5PwBblx0LcCxjNZZE%2FqgDDDE0j3kiL0Be5JdVto3fJzhX6Nju1DdDL22SP6uWMf9f5ZSlQwit%2B%2BxgY6nwGfKaJb%2BTu4sIB5g7e5URDJIyw0FZFXj7Jn%2FWxv7AzmFzaVI1soqU9jR8%2BEdMaUWY%2F%2F%2BZvb%2FAupfpOu%2BGDLTUl8bEBG4VBFZsJGgb5i3MtU7QMLFSfnyktD1P8D1VHnqLxQKATN4fsvAInLZNi%2Fm3KpC6FV9lD5fC1qDvKGhvDEzS0iE2rVE%2F1VfkjhUk0zGcNxvz1YQQ77aBTEgLh3LNg%3D&X-Amz-Signature=a0e1cc91f382cfd883762a8c2364b5c2a187b5c9605d5e4d7b0f9cac4a9d2e68&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"}'
+    headers:
+      Apigw-Requestid:
+      - RPhgIi0eDoEEMSQ=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1504'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:56:10 GMT
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - rwai-prod-pulse-results.s3.eu-west-1.amazonaws.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://rwai-prod-pulse-results.s3.eu-west-1.amazonaws.com/results/ee8e78b3-947a-4850-9c00-f22a044476d1.json?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIA33Y6QTYAVISLSDJU%2F20250921%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20250921T075610Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCWV1LXdlc3QtMSJGMEQCIBciZuPCMvgVSJ6Djz0ekAio3OTDea1ciaYn35B4vOlWAiALlkXlgZOI9qt2mf4fbJmaCowfLAz%2BSyZ3pSCVRavu8SryAggREAAaDDgxNTU3MDkxODkxMyIMOsxEMl8cbwwVchsHKs8CQS1tu2aWfvpTg%2B4mwwn4w7NWfwHsNfUQMTxtJyoxhVAqzgh%2BzdYnb0zT1Ht4DOGPTNYOkzdv7KESYVa5qYc1LuK1trqb87Npj318ef06aRSDk0YUaIE%2FVtxU0x%2BvIbLYKxzPfTMqNT%2B%2BC8e6Gh6QtXu9QCd5TbBzjb%2F5tXx6meYHmozsHESlq9m%2B%2B8MJNrILEy5CQUC9oSM914usbcRylMEMy7zihDMUBz5VcHA1ubyAhkoPnPfropLRmCdhtP4Oy16ncaTqAtZ6z8ugH8GfFMsxZPwe%2BpKmJos2KCun%2FVtKgmjp%2FkLO5g9P67n574V1TN83yjR4b4ioIJQICJTex5oUemVND6uC5OFZyvuM%2BYU3YPaE3JDh0X6Qu5PwBblx0LcCxjNZZE%2FqgDDDE0j3kiL0Be5JdVto3fJzhX6Nju1DdDL22SP6uWMf9f5ZSlQwit%2B%2BxgY6nwGfKaJb%2BTu4sIB5g7e5URDJIyw0FZFXj7Jn%2FWxv7AzmFzaVI1soqU9jR8%2BEdMaUWY%2F%2F%2BZvb%2FAupfpOu%2BGDLTUl8bEBG4VBFZsJGgb5i3MtU7QMLFSfnyktD1P8D1VHnqLxQKATN4fsvAInLZNi%2Fm3KpC6FV9lD5fC1qDvKGhvDEzS0iE2rVE%2F1VfkjhUk0zGcNxvz1YQQ77aBTEgLh3LNg%3D&X-Amz-Signature=a0e1cc91f382cfd883762a8c2364b5c2a187b5c9605d5e4d7b0f9cac4a9d2e68&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject
+  response:
+    body:
+      string: "{\"summary\":\"The only input provided is \u201Cfoo,\u201D which lacks
+        context or actionable detail. As a result, no substantive conclusions or insights
+        can be drawn. To proceed, please supply the objective, scope, key metrics,
+        timeframe, and any constraints or assumptions. Recommendation: pause decisions
+        until the above details are provided.\",\"usage\":{\"records\":[{\"feature\":\"summaries\",\"quantity\":1}],\"total\":1}}"
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '406'
+      Content-Type:
+      - application/octet-stream
+      Date:
+      - Sun, 21 Sep 2025 07:56:11 GMT
+      ETag:
+      - '"8a6b62ea844495cac31a8a82e484f9e4"'
+      Last-Modified:
+      - Sun, 21 Sep 2025 07:56:10 GMT
+      Server:
+      - AmazonS3
+      x-amz-expiration:
+      - expiry-date="Tue, 23 Sep 2025 00:00:00 GMT", rule-id="expire_results"
+      x-amz-id-2:
+      - gepgVMVoR9U3igN7K8apMKSmoOKS1Z+ZFZHKOZlRdIB3xaNyGrK+tNPnuu0xm6RVUdKEIaiPpYiDe3WlF8wWtA==
+      x-amz-meta-organization-id:
+      - https://research-wise-ai-eu.eu.auth0.com/organizations/v1/org_rRPYg6fsFDXuCYmL
+      x-amz-meta-usage:
+      - '{"records":[{"feature":"summaries","quantity":1}],"total":1}'
+      x-amz-meta-user-id:
+      - https://research-wise-ai-eu.eu.auth0.com/users/v1/NmH4QIb7mYAAGOIqulIM1Vqkes8ipj59@clients
+      x-amz-request-id:
+      - PBJ9JDAPJG6M4787
+      x-amz-server-side-encryption:
+      - aws:kms
+      x-amz-server-side-encryption-aws-kms-key-id:
+      - arn:aws:kms:eu-west-1:815570918913:key/2734de37-f120-4a88-af09-174b7735a9e4
+      x-amz-version-id:
+      - FnIbM_zJJywh1LfUoxxEIlaXx3dGedaH
+    status:
+      code: 200
+      message: OK
+version: 1

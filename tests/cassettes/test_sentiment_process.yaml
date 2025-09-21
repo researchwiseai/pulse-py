@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: '{"inputs":["Had a blast! The rollercoasters were thrilling and the staff
+      were friendly.","A bit pricey, but the rides were worth it. Great family fun!","Long
+      lines, but the shows were entertaining. Would come again.","Disappointing. Many
+      rides were closed, and the food was overpriced.","Awesome day out! The kids
+      loved the water park.","The park was clean and well-maintained. A pleasant experience.","Too
+      crowded, making it difficult to enjoy the rides.","Excellent customer service.
+      The staff went above and beyond.","A magical experience! Highly recommend for
+      all ages.","Not impressed with the variety of rides. Could be better.","The
+      atmosphere was fantastic. Great music and decorations.","Spent too much time
+      waiting in line. Needs better queue management.","My kids had a wonderful time!
+      We''ll definitely return.","The food options were limited and not very tasty.","A
+      truly unforgettable day at the park. Highly recommended!","The park was clean
+      and well-kept, but the rides were too short.","Great value for the money.  Lots
+      of fun for the whole family.","We had a mixed experience. Some rides were great,
+      others were underwhelming.","The staff were helpful and courteous.  The park
+      was well-organized.","The park is beautiful, but the ticket prices are exorbitant."],"fast":true}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFrYW1TX2xnaG9BNVlUSDQ2aEx2dCJ9.eyJpc3MiOiJodHRwczovL3Jlc2VhcmNoLXdpc2UtYWktZXUuZXUuYXV0aDAuY29tLyIsInN1YiI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5QGNsaWVudHMiLCJhdWQiOiJodHRwczovL2NvcmUucmVzZWFyY2h3aXNlYWkuY29tL3B1bHNlL3YxIiwiaWF0IjoxNzU4NDQxMjg3LCJleHAiOjE3NTg1Mjc2ODcsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Ik5tSDRRSWI3bVlBQUdPSXF1bElNMVZxa2VzOGlwajU5In0.oLeq8ROASU7HbICTCQ0hEN0bVMjVvs1U0x2Vu0tvvcrT4J_M9PBEQI8H26oD6yAuHrbfiGg-yAKVyOaOpSr7u9_zv-yHYc7mGeNMdTxGldfdmcen4G7fbqCWw82G1CwFVmPkMunCmwrgALgPzwni1n_JuYoTfSVvBfAmpEgzWuomKM_QVDqLFruC8qcMdptzfOaGOEW0GTxUePQtzx3aqBpiwjrCbMiiTTLY7dHXulKe6Mem8ENtHW72shqVGl84yIX0mw3anMFictGikTC8DQXENN2FlFrdcR_x6Qjn0De3uWve4WFRu-CfAuWYMO-TcRjDvzUNXQ-QBm4Oj68A6g
+      connection:
+      - keep-alive
+      content-length:
+      - '1291'
+      content-type:
+      - application/json
+      host:
+      - pulse.researchwiseai.com
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://pulse.researchwiseai.com/v1/sentiment
+  response:
+    body:
+      string: '{"results":[{"sentiment":"positive","confidence":0.92},{"sentiment":"positive","confidence":0.8},{"sentiment":"mixed","confidence":0.7},{"sentiment":"negative","confidence":0.88},{"sentiment":"positive","confidence":0.93},{"sentiment":"positive","confidence":0.9},{"sentiment":"negative","confidence":0.85},{"sentiment":"positive","confidence":0.95},{"sentiment":"positive","confidence":0.94},{"sentiment":"negative","confidence":0.87},{"sentiment":"positive","confidence":0.92},{"sentiment":"negative","confidence":0.89},{"sentiment":"positive","confidence":0.93},{"sentiment":"negative","confidence":0.86},{"sentiment":"positive","confidence":0.95},{"sentiment":"mixed","confidence":0.68},{"sentiment":"positive","confidence":0.9},{"sentiment":"mixed","confidence":0.75},{"sentiment":"mixed","confidence":0.7},{"sentiment":"positive","confidence":0.91}],"requestId":"160b5d433e42439638bb42056d56ec793a0bfabd","usage":{"records":[{"feature":"sentiment","quantity":1}],"total":1}}'
+    headers:
+      Apigw-Requestid:
+      - RPhUMhfzDoEEPmA=
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '980'
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 21 Sep 2025 07:55:05 GMT
+    status:
+      code: 200
+      message: OK
+version: 1
