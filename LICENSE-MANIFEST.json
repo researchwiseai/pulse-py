@@ -1,0 +1,105 @@
+{
+  "compliance_artifacts": [
+    {
+      "hashes": {
+        "md5": "8ed59122a0f62f7921d84cc5365169f4",
+        "sha1": "b83896124735d019db9e882f7bb47b23d5e855e3",
+        "sha256": "5f240e450978fbf2e9632f3eca48f9ba6782386da733538f934f8cabff77633e"
+      },
+      "path": "scripts/generate_compliance_artifacts.py",
+      "size_bytes": 11507,
+      "type": "compliance_tool"
+    },
+    {
+      "hashes": {
+        "md5": "2099d73866450c84c901fb382026add4",
+        "sha1": "d1aa4fff2f9d2a5876b1d88b28618671182495fb",
+        "sha256": "25abe100de078840835912c2d6c3d6a959909fecec20e41f6fa56d659a809f67"
+      },
+      "path": "security-reports/bandit-report.json",
+      "size_bytes": 6273,
+      "type": "security_scan"
+    },
+    {
+      "hashes": {
+        "md5": "45e1070f033bedf38e60d2f10276bd99",
+        "sha1": "622b76502c62bc2efe52dd535722f5c0d94f6817",
+        "sha256": "fc64e4c5f9174730989ae1aad5907ee0d97ece161f27b755dd3a22fd1fcc7c06"
+      },
+      "path": "security-reports/pip-audit-report.json",
+      "size_bytes": 6283,
+      "type": "vulnerability_scan"
+    }
+  ],
+  "generated_at": "2025-09-21T12:02:29.415876+00:00",
+  "generator": "pulse-sdk-compliance-generator",
+  "license_files": [
+    {
+      "hashes": {
+        "md5": "67a698f03e33e21921e08312ad4d8a34",
+        "sha1": "0766071d825a774cb0a0d6cd231503163f730cf3",
+        "sha256": "98edc9569a2db54aa60cd43afb5d59553f92710ab00d86d5ca45804ed3f8a188"
+      },
+      "path": "LICENSE",
+      "purpose": "Main Apache 2.0 license text",
+      "required": true,
+      "size_bytes": 10959
+    },
+    {
+      "hashes": {
+        "md5": "1cbe3bcad3b8f5fada04a3aeb9a09f9d",
+        "sha1": "01e17a12192236aa1c982f0d7c09fb4f1ff65e1b",
+        "sha256": "e2d8e37293d1249bdec68e8968edef1771e454661ff9274b16555948cb58e21c"
+      },
+      "path": "NOTICE",
+      "purpose": "Attribution notices and third-party acknowledgments",
+      "required": true,
+      "size_bytes": 1134
+    },
+    {
+      "hashes": {
+        "md5": "27114bdc85f9681a2f02e5922103420f",
+        "sha1": "855cef0981d72be5a77882ec2e3ca930d4c0273f",
+        "sha256": "99bab4853f892a2087e3d2ad1f6501ca5e7dc7350be4dfd145f8533ed243e05e"
+      },
+      "path": "LICENSES/Apache-2.0.txt",
+      "purpose": "Full Apache 2.0 license text",
+      "required": false,
+      "size_bytes": 10293
+    },
+    {
+      "hashes": {
+        "md5": "c204f2c234cd12dd61f55cb32f6ed18c",
+        "sha1": "62e496b8fca95fd82b218810a6d0c10124df3bb6",
+        "sha256": "4482534d73727a3cc6172326c741824e410f1cda2a5d89bf3f1d2c6d5c3e52a4"
+      },
+      "path": "LICENSES/SPDX-LICENSE-INFO.md",
+      "purpose": "SPDX license information and compatibility matrix",
+      "required": false,
+      "size_bytes": 9004
+    },
+    {
+      "hashes": {
+        "md5": "fd413732f36d8e2e1443622acf9e3391",
+        "sha1": "d6ad9021501d1490b71286d341ebd35df8bc67fd",
+        "sha256": "7da690dc05db7f8e19735a50eca8e908bce1ac54f87281127d1cc20b0dc284a8"
+      },
+      "path": "COMPLIANCE.md",
+      "purpose": "Compliance guidance and verification instructions",
+      "required": false,
+      "size_bytes": 6259
+    }
+  ],
+  "manifest_version": "1.0",
+  "project": {
+    "commit": "5d077b1d418a908fe58d6fc388416f6ff7e2f515",
+    "commit_date": "2025-09-21 12:57:03 +0100",
+    "copyright": "Copyright 2025 Researchwise AI",
+    "homepage": "https://github.com/researchwiseai/pulse-py",
+    "license": "Apache-2.0",
+    "name": "pulse-sdk",
+    "repository": "git@github.com:researchwiseai/pulse-py.git",
+    "version": "0.4.1"
+  },
+  "third_party_licenses": []
+}

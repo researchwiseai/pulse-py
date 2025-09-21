@@ -52,6 +52,11 @@ jobs:
           syft dist/*.whl -o spdx-json=sbom-wheel.spdx.json
           syft dist/*.whl -o cyclonedx-json=sbom-wheel.cyclonedx.json
 
+      - name: Generate compliance artifacts
+        run: |
+          # Generate Apache 2.0 compliance artifacts
+          python scripts/generate_compliance_artifacts.py
+
       - name: Generate build provenance
         run: |
           # Create build provenance information
@@ -77,7 +82,7 @@ jobs:
             },
             "metadata": {
               "buildInvocationId": "${{ github.run_id }}-${{ github.run_attempt }}",
-              "buildStartedOn": "${{ github.event.head_commit.timestamp }}",
+              "buildStartedOn": "${{ steps.date.outputs.date }}",
               "completeness": {
                 "parameters": true,
                 "environment": false,
@@ -95,6 +100,10 @@ jobs:
             ]
           }
           EOF
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
 
       - name: Generate attestations for distributions
         uses: actions/attest-build-provenance@v1
@@ -159,6 +168,9 @@ jobs:
             *.spdx.json
             *.cyclonedx.json
             build-provenance.json
+            LICENSE-MANIFEST.json
+            THIRD-PARTY-ATTRIBUTIONS.md
+            COMPLIANCE-CHECKLIST.md
           retention-days: 90
 
       - name: Publish to PyPI via OIDC
@@ -176,10 +188,16 @@ jobs:
             signatures/*
             sbom-*.json
             build-provenance.json
+            LICENSE-MANIFEST.json
+            THIRD-PARTY-ATTRIBUTIONS.md
+            COMPLIANCE-CHECKLIST.md
+            LICENSE
+            NOTICE
+            COMPLIANCE.md
           body: |
-            ## Supply Chain Security
+            ## Supply Chain Security & Compliance
 
-            This release includes comprehensive supply chain security artifacts:
+            This release includes comprehensive supply chain security and Apache 2.0 compliance artifacts:
 
             ### 📋 Software Bill of Materials (SBOM)
             - `sbom-source.spdx.json` - SPDX format SBOM for source distribution
@@ -196,6 +214,14 @@ jobs:
             - `build-provenance.json` - Complete build provenance information
             - SLSA Build Level 3 compliant attestations via GitHub's native attestation service
 
+            ### ⚖️ Apache 2.0 License Compliance
+            - `LICENSE` - Apache License 2.0 full text
+            - `NOTICE` - Required attribution notices
+            - `COMPLIANCE.md` - Compliance guidance and verification instructions
+            - `LICENSE-MANIFEST.json` - Comprehensive license manifest with file hashes
+            - `THIRD-PARTY-ATTRIBUTIONS.md` - Third-party license attributions
+            - `COMPLIANCE-CHECKLIST.md` - Release compliance verification checklist
+
             ### ✅ Verification Instructions
             ```bash
             # Download signature files from the release assets, then verify:
@@ -211,4 +237,10 @@ jobs:
               --certificate-identity-regexp "https://github.com/researchwiseai/pulse-py/.*" \\
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
               sbom-wheel.spdx.json
+
+            # Verify license compliance
+            python -c "import json; manifest=json.load(open('LICENSE-MANIFEST.json')); print('License:', manifest['project']['license'])"
             ```
+
+            ### 🏢 Enterprise Compliance
+            This release is fully compliant with Apache License 2.0 requirements and includes all necessary artifacts for enterprise adoption, legal review, and supply chain security verification.

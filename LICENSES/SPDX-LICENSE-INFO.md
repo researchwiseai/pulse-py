@@ -8,10 +8,10 @@ This document provides comprehensive SPDX (Software Package Data Exchange) licen
 
 ### Main Package
 - **Package Name**: pulse-sdk
-- **SPDX License ID**: MIT
+- **SPDX License ID**: Apache-2.0
 - **License File**: [LICENSE](../LICENSE)
-- **Copyright**: Copyright (c) 2024 Researchwise AI
-- **Homepage**: https://github.com/researchwise/pulse-sdk
+- **Copyright**: Copyright (c) 2025 Researchwise AI
+- **Homepage**: https://github.com/researchwiseai/pulse-sdk
 - **Download Location**: https://pypi.org/project/pulse-sdk/
 
 ### SPDX Document Identifier
@@ -27,13 +27,13 @@ Created: 2024-12-19T00:00:00Z
 
 ## License Compatibility Matrix
 
-The Pulse SDK uses the MIT license, which is compatible with the following licenses:
+The Pulse SDK uses the Apache-2.0 license, which is compatible with the following licenses:
 
 ### Compatible Licenses (✅)
-- **MIT**: Fully compatible
+- **Apache-2.0**: Fully compatible
+- **MIT**: Fully compatible (can be combined)
 - **BSD-2-Clause**: Fully compatible
 - **BSD-3-Clause**: Fully compatible
-- **Apache-2.0**: Fully compatible
 - **ISC**: Fully compatible
 - **Unlicense**: Fully compatible
 
@@ -41,11 +41,11 @@ The Pulse SDK uses the MIT license, which is compatible with the following licen
 - **LGPL-2.1**: Compatible for dynamic linking
 - **LGPL-3.0**: Compatible for dynamic linking
 - **MPL-2.0**: Compatible with proper attribution
+- **GPL-3.0**: Compatible (Apache-2.0 can be combined with GPL-3.0+)
 
 ### Incompatible Licenses (❌)
-- **GPL-2.0**: Incompatible (copyleft requirements)
-- **GPL-3.0**: Incompatible (copyleft requirements)
-- **AGPL-3.0**: Incompatible (network copyleft)
+- **GPL-2.0**: Incompatible (Apache-2.0 cannot be combined with GPL-2.0)
+- **AGPL-3.0**: Generally incompatible (network copyleft conflicts)
 
 ## Dependency License Analysis
 
