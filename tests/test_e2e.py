@@ -91,7 +91,7 @@ def test_analyze_sentiment_e2e():
 
 # @pytest.mark.vcr()
 # def test_extract_elements_e2e():
-#     client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1")
+#     client = CoreClient(base_url="https://your-test-endpoint.com/v1")
 
 #     resp = client.extract_elements(
 #         [

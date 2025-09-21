@@ -88,11 +88,10 @@ python -m build
 
 ## Environment Configuration
 
-The SDK supports environment-based configuration via `PULSE_ENV`:
-- `prod` (default): Production endpoints
-- `staging`/`dev`: Staging/development endpoints
+The SDK uses production endpoints by default. All configuration can be overridden via environment variables:
 
 Key environment variables:
 - `PULSE_CLIENT_ID`, `PULSE_CLIENT_SECRET`: OAuth2 credentials
-- `PULSE_BASE_URL`, `PULSE_AUDIENCE`: API endpoints (auto-configured by env)
+- `PULSE_BASE_URL`: API base URL (default: `https://pulse.researchwiseai.com/v1`)
+- `PULSE_AUDIENCE`: OAuth2 audience (default: `https://core.researchwiseai.com/pulse/v1`)
 - `PULSE_TOKEN_URL`, `PULSE_AUTH_DOMAIN`: Auth configuration

@@ -13,7 +13,7 @@ from pulse.core.client import CoreClient
 client = CoreClient()  # base_url defaults to PROD; set auth env vars or pass auth explicitly
 
 # Provide explicit base_url/timeout
-client = CoreClient(base_url="https://dev.core.researchwiseai.com/pulse/v1", timeout=30.0)
+client = CoreClient(base_url="https://your-custom-endpoint.com/v1", timeout=30.0)
 
 # Provide a fully-configured HTTPX client (you manage auth and base_url)
 import httpx

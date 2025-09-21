@@ -143,8 +143,8 @@ Once installed, you can quickly try out the core and DSL APIs.
 ```python
 from pulse.core.client import CoreClient
 
-# Unauthenticated (dev) environment
-client = CoreClient()  # default to dev environment
+# Basic usage
+client = CoreClient()
 emb = client.create_embeddings(["Hello world", "Goodbye"], fast=True)
 print(emb.embeddings)
 print("total usage:", emb.usage_total)
@@ -164,7 +164,7 @@ from pulse.auth import ClientCredentialsAuth, AuthorizationCodePKCEAuth
 
 # Client Credentials flow
 auth = ClientCredentialsAuth(
-    token_url="https://dev.core.researchwiseai.com/oauth2/token",
+    token_url="YOUR_TOKEN_URL",
     client_id="YOUR_CLIENT_ID",
     client_secret="YOUR_CLIENT_SECRET",
     scope="YOUR_SCOPE",  # optional
@@ -174,7 +174,7 @@ resp = client.create_embeddings(["Hello world", "Goodbye"])  # will include Auth
 
 # Authorization Code flow with PKCE
 auth = AuthorizationCodePKCEAuth(
-    token_url="https://dev.core.researchwiseai.com/oauth2/token",
+    token_url="YOUR_TOKEN_URL",
     client_id="YOUR_CLIENT_ID",
     code="AUTHORIZATION_CODE",
     redirect_uri="https://yourapp/callback",
@@ -357,23 +357,20 @@ For authenticated access and test recording/playback, configure the following en
 - `PULSE_TOKEN_URL` (optional): token endpoint URL. Defaults to `https://{AUTH_DOMAIN}/oauth/token`.
 - `PULSE_AUDIENCE` (optional): API audience URL. Defaults to env-based config (see below).
 - `PULSE_BASE_URL` (optional): API base URL. Defaults to env-based config (see below).
-- `PULSE_AUTH_DOMAIN` (optional): Auth0 domain, overrides env-based default.
-- `PULSE_ENV` (optional): selects environment defaults:
-  - `prod` (default):
-    - `PULSE_BASE_URL` = `https://pulse.researchwiseai.com/v1`
-    - `PULSE_AUDIENCE` = `https://core.researchwiseai.com/pulse/v1`
-    - `AUTH_DOMAIN` = `research-wise-ai-eu.eu.auth0.com`
-  - `staging` (or `dev`):
-    - `PULSE_BASE_URL` = `https://staging.pulse.researchwiseai.com/v1`
-    - `PULSE_AUDIENCE` = `https://dev.core.researchwiseai.com/pulse/v1`
-    - `AUTH_DOMAIN` = `wise-dev.eu.auth0.com`
+- `PULSE_AUTH_DOMAIN` (optional): Auth0 domain. Defaults to `research-wise-ai-eu.eu.auth0.com`.
+- `PULSE_TOKEN_URL` (optional): OAuth2 token endpoint URL.
+
+Default configuration uses production endpoints:
+- `PULSE_BASE_URL` = `https://pulse.researchwiseai.com/v1`
+- `PULSE_AUDIENCE` = `https://core.researchwiseai.com/pulse/v1`
+- `PULSE_AUTH_DOMAIN` = `research-wise-ai-eu.eu.auth0.com`
 
 In local development, you can export these variables:
 ```bash
 export PULSE_CLIENT_ID="your_client_id"
 export PULSE_CLIENT_SECRET="your_client_secret"
-# Example: switch to staging defaults
-export PULSE_ENV=staging
+# Optional: override default endpoints
+export PULSE_BASE_URL="https://your-custom-endpoint.com/v1"
 ```
 
 In CI (e.g., GitHub Actions), add these values as repository secrets and reference them in your workflow:

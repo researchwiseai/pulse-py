@@ -65,8 +65,6 @@ info:
 servers:
   - url: https://pulse.researchwiseai.com/v1
     description: Production API server
-  - url: https://staging.pulse.researchwiseai.com/v1
-    description: Staging API server
 
 security:
   - BearerAuth: []

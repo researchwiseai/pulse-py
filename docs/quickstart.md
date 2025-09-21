@@ -43,7 +43,7 @@ Verify everything works with a simple test:
 ```python
 from pulse.core.client import CoreClient
 
-# Quick test - no authentication needed for dev environment
+# Quick test
 client = CoreClient()
 print("✅ Pulse SDK installed successfully!")
 ```
@@ -247,7 +247,7 @@ The SDK works without authentication in development mode:
 ```python
 from pulse.core.client import CoreClient
 
-# Uses development environment by default
+# Uses default configuration
 client = CoreClient()
 ```
 
@@ -259,7 +259,6 @@ Set up authentication with your API credentials:
 ```bash
 export PULSE_CLIENT_ID="your_client_id"
 export PULSE_CLIENT_SECRET="your_client_secret"
-export PULSE_ENV="prod"  # or "staging"
 ```
 
 ```python
@@ -477,7 +476,7 @@ PulseAPIError: 401 Unauthorized
 3. **Test without auth (development only):**
    ```python
    from pulse.core.client import CoreClient
-   client = CoreClient()  # Uses dev environment
+   client = CoreClient()  # Uses default configuration
    ```
 
 **Problem: Network/Timeout Errors**
