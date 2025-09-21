@@ -2,8 +2,10 @@
 """
 Generate compliance artifacts for Apache 2.0 license compliance.
 
-This script generates additional compliance documentation and artifacts
-that are useful for enterprise adoption and legal review.
+This script generates compliance documentation and artifacts for repository use only.
+These artifacts remain in the repository root and are linked from release notes
+rather than being duplicated as release assets, supporting the streamlined
+release process.
 """
 
 import json
@@ -63,7 +65,7 @@ def calculate_file_hashes(file_path: Path) -> Dict[str, str]:
 
 
 def generate_license_manifest() -> Dict[str, Any]:
-    """Generate a comprehensive license manifest."""
+    """Generate a comprehensive license manifest for repository use."""
     git_info = get_git_info()
 
     manifest = {
@@ -164,11 +166,14 @@ def get_artifact_type(file_path: str) -> str:
 
 
 def generate_attribution_file() -> str:
-    """Generate a comprehensive attribution file."""
+    """Generate a comprehensive attribution file for repository use."""
     attribution = """# Third-Party Attributions
 
 This file contains the licenses and notices for third-party software
 included in or used by the Pulse SDK.
+
+This document is maintained in the repository root and linked from release notes
+to provide compliance information without duplicating files as release assets.
 
 ## Direct Dependencies
 
@@ -238,10 +243,10 @@ Generator: pulse-sdk-compliance-generator v1.0
 
 
 def main():
-    """Generate all compliance artifacts."""
-    print("Generating Apache 2.0 compliance artifacts...")
+    """Generate compliance artifacts for repository use only."""
+    print("Generating Apache 2.0 compliance artifacts for repository...")
 
-    # Generate license manifest
+    # Generate license manifest (repository only)
     print("📋 Generating license manifest...")
     manifest = generate_license_manifest()
 
@@ -250,7 +255,7 @@ def main():
 
     print("   ✓ Created LICENSE-MANIFEST.json")
 
-    # Generate attribution file
+    # Generate attribution file (repository only)
     print("📝 Generating attribution file...")
     attribution = generate_attribution_file()
 
@@ -259,129 +264,18 @@ def main():
 
     print("   ✓ Created THIRD-PARTY-ATTRIBUTIONS.md")
 
-    # Generate compliance checklist
-    print("✅ Generating compliance checklist...")
-    checklist = generate_compliance_checklist()
-
-    with open("COMPLIANCE-CHECKLIST.md", "w") as f:
-        f.write(checklist)
-
-    print("   ✓ Created COMPLIANCE-CHECKLIST.md")
-
-    print("\n🎉 All compliance artifacts generated successfully!")
-    print("\nGenerated files:")
+    print("\n🎉 Repository compliance artifacts generated successfully!")
+    print("\nGenerated files (for repository use only):")
     print("  - LICENSE-MANIFEST.json")
     print("  - THIRD-PARTY-ATTRIBUTIONS.md")
-    print("  - COMPLIANCE-CHECKLIST.md")
 
+    print("\nNote: Compliance documents remain in repository root and are")
+    print("      linked from release notes rather than duplicated as assets.")
     print("\nNext steps:")
     print("  1. Review generated files for accuracy")
     print("  2. Add files to version control")
-    print("  3. Include in release artifacts")
+    print("  3. Ensure release notes link to repository documents")
     print("  4. Update documentation as needed")
-
-
-def generate_compliance_checklist() -> str:
-    """Generate a compliance checklist for releases."""
-    checklist = """# Release Compliance Checklist
-
-Use this checklist to ensure Apache 2.0 compliance for each release.
-
-## Pre-Release Verification
-
-### License Files
-- [ ] `LICENSE` file contains current Apache 2.0 license text
-- [ ] `NOTICE` file contains current attribution notices
-- [ ] `LICENSES/Apache-2.0.txt` contains full license text
-- [ ] `LICENSES/SPDX-LICENSE-INFO.md` is up to date
-- [ ] `COMPLIANCE.md` contains current guidance
-
-### Third-Party Dependencies
-- [ ] All dependencies are scanned for license compatibility
-- [ ] New dependencies are reviewed and approved
-- [ ] `THIRD-PARTY-ATTRIBUTIONS.md` is updated
-- [ ] SBOM files include all dependencies
-
-### Security Artifacts
-- [ ] Security scans are passing (Bandit, pip-audit)
-- [ ] Vulnerability reports are reviewed
-- [ ] No high-severity security issues remain
-
-## Release Artifacts
-
-### Required Files (Must be included in every release)
-- [ ] Source distribution (.tar.gz)
-- [ ] Wheel distribution (.whl)
-- [ ] `LICENSE` file
-- [ ] `NOTICE` file
-- [ ] `README.md`
-
-### Supply Chain Security (Generated automatically)
-- [ ] SBOM files (SPDX and CycloneDX formats)
-- [ ] Digital signatures (.sig files)
-- [ ] Signing certificates (.crt files)
-- [ ] Build provenance (build-provenance.json)
-- [ ] GitHub attestations
-
-### Compliance Documentation
-- [ ] `LICENSE-MANIFEST.json`
-- [ ] `THIRD-PARTY-ATTRIBUTIONS.md`
-- [ ] `COMPLIANCE.md`
-- [ ] `COMPLIANCE-CHECKLIST.md` (this file)
-
-## Post-Release Verification
-
-### Distribution Verification
-- [ ] PyPI package includes all required files
-- [ ] GitHub release includes all artifacts
-- [ ] Digital signatures can be verified
-- [ ] SBOM files are valid and complete
-
-### Documentation Updates
-- [ ] Release notes mention license compliance
-- [ ] Documentation reflects any license changes
-- [ ] Compliance guidance is current
-
-### Legal Review (For major releases)
-- [ ] Legal team has reviewed changes
-- [ ] License compatibility is confirmed
-- [ ] Export control requirements are met
-- [ ] Trademark usage is appropriate
-
-## Verification Commands
-
-```bash
-# Verify package contents
-tar -tzf dist/pulse-sdk-*.tar.gz | grep -E "(LICENSE|NOTICE)"
-
-# Verify signatures
-cosign verify-blob --certificate *.crt --signature *.sig *.whl
-
-# Verify SBOM
-python -c "import json; print(json.load(open('sbom-wheel.spdx.json'))['name'])"
-
-# Check license compatibility
-python scripts/generate_compliance_artifacts.py
-```
-
-## Sign-off
-
-- [ ] **Engineering Lead**: Artifacts are complete and accurate
-- [ ] **Security Team**: Security requirements are met
-- [ ] **Legal Team**: License compliance is verified (major releases)
-- [ ] **Release Manager**: All checklist items are complete
-
-**Release Version**: ___________
-**Date**: ___________
-**Signed by**: ___________
-
----
-Generated: {timestamp}
-""".format(
-        timestamp=datetime.now(timezone.utc).isoformat()
-    )
-
-    return checklist
 
 
 if __name__ == "__main__":
