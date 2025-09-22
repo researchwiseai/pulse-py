@@ -47,6 +47,10 @@ from pulse.core.models import (
     UsageEstimateResponse,
 )
 from pulse.core.exceptions import PulseAPIError
+from pulse.core.async_error_handling import (
+    AsyncCancellationError,
+    handle_async_http_errors,
+)
 from pulse.core.validation import (
     validate_before_request,
     PulseValidationError,
@@ -66,22 +70,43 @@ class AsyncCoreClient:
         timeout: float = DEFAULT_TIMEOUT,
         client: Optional[httpx.AsyncClient] = None,
         auth: Optional[httpx.Auth] = None,
+        enable_batch_optimizations: bool = True,
+        max_concurrent_jobs: int = 5,
     ) -> None:
-        """Initialize AsyncCoreClient with optional HTTPX async client
-        (for testing) and optional auth."""
+        """Initialize AsyncCoreClient with enhanced connection pooling and batch optimizations.
+
+        Args:
+            base_url: Base URL for the Pulse API
+            timeout: Default timeout for requests
+            client: Optional pre-configured HTTPX async client (for testing)
+            auth: Optional authentication
+            enable_batch_optimizations: Whether to enable connection pool optimizations for batching
+            max_concurrent_jobs: Expected maximum concurrent jobs for connection pool sizing
+        """
         self.base_url = base_url
         self.timeout = timeout
+        self.enable_batch_optimizations = enable_batch_optimizations
+        self.max_concurrent_jobs = max_concurrent_jobs
+
         if client is not None:
             # Use provided HTTP client (user is responsible for auth)
             self.client = client
         else:
-            # Create an AsyncGzipClient, apply auth for core API calls if provided
-            # Use async auth by default for async client
-            self.client = AsyncGzipClient(
-                base_url=self.base_url,
-                timeout=self.timeout,
-                auth=auth or async_auto_auth(),
-            )
+            # Create an optimized AsyncGzipClient for batch operations
+            if enable_batch_optimizations:
+                self.client = AsyncGzipClient.create_for_batch_operations(
+                    base_url=self.base_url,
+                    concurrent_jobs=max_concurrent_jobs,
+                    auth=auth or async_auto_auth(),
+                    timeout=self.timeout,
+                )
+            else:
+                # Use standard AsyncGzipClient for backward compatibility
+                self.client = AsyncGzipClient(
+                    base_url=self.base_url,
+                    timeout=self.timeout,
+                    auth=auth or async_auto_auth(),
+                )
 
     async def __aenter__(self) -> "AsyncCoreClient":
         """Async context manager entry."""
@@ -92,16 +117,46 @@ class AsyncCoreClient:
         """Async context manager exit with proper resource cleanup."""
         await self.client.__aexit__(exc_type, exc_val, exc_tb)
 
+    @handle_async_http_errors
     async def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
-        """Make an async HTTP request with retry logic and debug support."""
+        """Make an async HTTP request with enhanced retry logic, debug support, and error handling."""
+        from pulse.core.async_retry import (
+            async_retry_request_enhanced,
+            AsyncRetryConfig,
+        )
+
         with debug_request(method, url, **kwargs) as timing:
             try:
-                response = await async_retry_request(
-                    lambda: self.client.request(method, url, **kwargs)
-                )
+                # Use enhanced retry logic for better batch processing support
+                if self.enable_batch_optimizations:
+                    retry_config = AsyncRetryConfig(
+                        max_attempts=4,  # More attempts for batch operations
+                        base_backoff=0.5,
+                        max_backoff=30.0,
+                        exponential_base=2.0,
+                        jitter=True,
+                        jitter_range=0.1,
+                    )
+                    response = await async_retry_request_enhanced(
+                        lambda: self.client.request(method, url, **kwargs),
+                        config=retry_config,
+                    )
+                else:
+                    # Use legacy retry for backward compatibility
+                    response = await async_retry_request(
+                        lambda: self.client.request(method, url, **kwargs)
+                    )
+
                 timing.status_code = response.status_code
                 _log_response(response)
                 return response
+            except asyncio.CancelledError as e:
+                log_request_failure(e)
+                raise AsyncCancellationError(
+                    "HTTP request was cancelled",
+                    operation=f"{method.upper()}_{url}",
+                    context={"method": method, "url": url},
+                ) from e
             except Exception as e:
                 log_request_failure(e)
                 raise
@@ -470,6 +525,60 @@ class AsyncCoreClient:
         """Close underlying HTTP connection."""
         await self.client.aclose()
 
+    def get_connection_stats(self) -> Dict[str, Any]:
+        """Get connection and performance statistics for batch operations.
+
+        Returns:
+            Dictionary containing connection statistics, compression ratios,
+            and performance metrics useful for optimizing batch operations.
+        """
+        stats = {
+            "batch_optimizations_enabled": self.enable_batch_optimizations,
+            "max_concurrent_jobs": self.max_concurrent_jobs,
+            "base_url": self.base_url,
+            "timeout": self.timeout,
+        }
+
+        # Get connection stats from AsyncGzipClient if available
+        if hasattr(self.client, "get_connection_stats"):
+            client_stats = self.client.get_connection_stats()
+            stats.update(client_stats)
+
+        return stats
+
+    def reset_connection_stats(self) -> None:
+        """Reset connection statistics."""
+        if hasattr(self.client, "reset_stats"):
+            self.client.reset_stats()
+
+    @classmethod
+    def create_for_high_throughput(
+        cls,
+        base_url: str = BASE_URL,
+        auth: Optional[httpx.Auth] = None,
+        max_concurrent_jobs: int = 15,
+    ) -> "AsyncCoreClient":
+        """Create AsyncCoreClient optimized for high throughput batch operations.
+
+        This factory method creates a client with aggressive connection pooling
+        and optimizations for processing large numbers of concurrent requests.
+
+        Args:
+            base_url: Base URL for the Pulse API
+            auth: Optional authentication
+            max_concurrent_jobs: Maximum expected concurrent jobs
+
+        Returns:
+            AsyncCoreClient optimized for high throughput operations
+        """
+        return cls(
+            base_url=base_url,
+            auth=auth,
+            enable_batch_optimizations=True,
+            max_concurrent_jobs=max_concurrent_jobs,
+            timeout=60.0,  # Longer timeout for high throughput
+        )
+
     async def create_embeddings(
         self, request: EmbeddingsRequest, *, await_job_result: bool = True
     ) -> Union[EmbeddingsResponse, AsyncJob]:
@@ -530,11 +639,13 @@ class AsyncCoreClient:
     async def _create_embeddings_with_parallel_batching(
         self, request: EmbeddingsRequest, *, await_job_result: bool = True
     ) -> Union[EmbeddingsResponse, AsyncJob]:
-        """Create embeddings with parallel batching for slow mode (fast=False) only.
+        """Create embeddings with enhanced parallel batching for slow mode (fast=False) only.
 
-        This method implements automatic batching for large embedding requests:
-        - Splits inputs into 5,000-text batches
-        - Processes up to 5 batches concurrently
+        This enhanced method implements intelligent batching for large embedding requests:
+        - Adaptive batch sizing based on input count and system resources
+        - Dynamic concurrency control with rate limiting
+        - Enhanced retry logic with exponential backoff
+        - Connection pool optimization for batch operations
         - Preserves input order in results
         - Aggregates usage metrics across all batches
 
@@ -547,61 +658,133 @@ class AsyncCoreClient:
         """
         from pulse.core.validation import ValidationLimits
         from pulse.core.models import UsageReport
+        from pulse.core.async_concurrent import AsyncConcurrentConfig, AsyncJobManager
 
         inputs = request.inputs
-        batch_size = ValidationLimits.EMBEDDINGS_BATCH_SIZE  # 5,000
+        input_count = len(inputs)
 
-        # Create batches
+        # Adaptive batch sizing based on input count
+        if input_count <= 1000:
+            batch_size = 500  # Smaller batches for smaller datasets
+            max_concurrent = 3
+        elif input_count <= 5000:
+            batch_size = 1000  # Medium batches
+            max_concurrent = 5
+        elif input_count <= 20000:
+            batch_size = 2500  # Larger batches for efficiency
+            max_concurrent = 8
+        else:
+            batch_size = ValidationLimits.EMBEDDINGS_BATCH_SIZE  # 5,000
+            max_concurrent = 10
+
+        # Create batches with adaptive sizing
         batches = [
             inputs[i : i + batch_size] for i in range(0, len(inputs), batch_size)
         ]
 
-        # Create job submitters for each batch
-        async def create_batch_submitter(batch_inputs):
+        # Configure concurrent processing with enhanced settings
+        config = AsyncConcurrentConfig(
+            max_concurrent_jobs=min(max_concurrent, len(batches)),
+            timeout_per_job=max(
+                300.0, len(inputs) / 100.0
+            ),  # Scale timeout with input size
+            rate_limit_delay=0.05,  # Reduced delay for better throughput
+            max_retries=3,
+            retry_delay=1.0,
+            connection_pool_limits={
+                "max_keepalive_connections": max_concurrent * 2,
+                "max_connections": max_concurrent * 4,
+                "keepalive_expiry": 120.0,
+            },
+        )
+
+        # Create enhanced job submitters with retry logic
+        async def create_enhanced_batch_submitter(batch_inputs, batch_index):
+            """Create a batch submitter with enhanced error handling and retry logic."""
             batch_request = EmbeddingsRequest(
                 inputs=batch_inputs,
                 fast=False,  # Always use slow mode for batching
                 version=request.version,
             )
-            # Submit batch job without waiting for result, bypassing batching logic
-            return await self._create_single_embeddings_request(
-                batch_request, await_job_result=False
-            )
 
-        job_submitters = [create_batch_submitter(batch) for batch in batches]
+            # Enhanced retry logic for batch submission
+            max_submission_retries = 3
+            for attempt in range(max_submission_retries):
+                try:
+                    # Submit batch job without waiting for result, bypassing batching logic
+                    return await self._create_single_embeddings_request(
+                        batch_request, await_job_result=False
+                    )
+                except Exception as e:
+                    if attempt == max_submission_retries - 1:
+                        raise RuntimeError(
+                            f"Failed to submit batch {batch_index + 1} after "
+                            f"{max_submission_retries} attempts: {e}"
+                        ) from e
+
+                    # Exponential backoff for retry
+                    delay = 2.0**attempt
+                    await asyncio.sleep(delay)
+
+        job_submitters = [
+            lambda batch=batch, idx=i: create_enhanced_batch_submitter(batch, idx)
+            for i, batch in enumerate(batches)
+        ]
 
         # If not waiting for results, return the first job
         if not await_job_result:
             # Submit first job and return it
-            first_job = await job_submitters[0]
+            first_job = await job_submitters[0]()
             return first_job
 
-        # Process all batches concurrently (slow mode only)
-        batch_results = await self._process_batches_concurrently(
-            job_submitters,
-            max_workers=5,  # Maximum 5 concurrent jobs
-            timeout=600.0,
-        )
+        # Use enhanced concurrent processing
+        job_manager = AsyncJobManager(config)
 
-        # Aggregate results while preserving order
+        try:
+            batch_results = await job_manager.submit_and_gather(
+                job_submitters,
+                timeout=config.timeout_per_job,
+                return_exceptions=False,
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to process {len(batches)} embedding batches: {e}"
+            ) from e
+
+        # Aggregate results while preserving order with enhanced error handling
         all_embeddings = []
         total_usage_records = []
         total_quantity = 0
+        successful_batches = 0
 
-        for batch_result in batch_results:
-            # Parse batch result if it's a dict (from job.wait())
-            if isinstance(batch_result, dict):
-                batch_response = EmbeddingsResponse.model_validate(batch_result)
-            else:
-                batch_response = batch_result
+        for i, batch_result in enumerate(batch_results):
+            try:
+                # Parse batch result if it's a dict (from job.wait())
+                if isinstance(batch_result, dict):
+                    batch_response = EmbeddingsResponse.model_validate(batch_result)
+                else:
+                    batch_response = batch_result
 
-            # Add embeddings in order
-            all_embeddings.extend(batch_response.embeddings)
+                # Add embeddings in order
+                all_embeddings.extend(batch_response.embeddings)
+                successful_batches += 1
 
-            # Aggregate usage metrics
-            if batch_response.usage:
-                total_usage_records.extend(batch_response.usage.records)
-                total_quantity += batch_response.usage.total
+                # Aggregate usage metrics
+                if batch_response.usage:
+                    total_usage_records.extend(batch_response.usage.records)
+                    total_quantity += batch_response.usage.total
+
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to process results from batch {i + 1}: {e}"
+                ) from e
+
+        # Validate that we got results for all inputs
+        if len(all_embeddings) != input_count:
+            raise RuntimeError(
+                f"Embedding count mismatch: expected {input_count}, "
+                f"got {len(all_embeddings)} from {successful_batches} batches"
+            )
 
         # Create aggregated usage info
         aggregated_usage = UsageReport(
@@ -665,17 +848,41 @@ class AsyncCoreClient:
     async def _process_batches_concurrently(
         self, job_submitters, max_workers: int = 5, timeout: float = 600.0
     ):
-        """Process batches concurrently with controlled concurrency using utilities."""
-        from pulse.core.async_concurrent import submit_and_gather_jobs
-
-        # Use the new concurrent utilities for better error handling and rate limiting
-        return await submit_and_gather_jobs(
-            job_submitters,
-            max_concurrent=max_workers,
-            timeout=timeout,
-            rate_limit_delay=0.05,  # Small delay to prevent API overload
-            return_exceptions=False,
+        """Process batches concurrently with enhanced concurrency control and retry logic."""
+        from pulse.core.async_concurrent import (
+            AsyncConcurrentConfig,
+            AsyncJobManager,
         )
+
+        # Create enhanced configuration for batch processing
+        config = AsyncConcurrentConfig(
+            max_concurrent_jobs=max_workers,
+            timeout_per_job=timeout,
+            rate_limit_delay=0.03,  # Optimized delay for better throughput
+            max_retries=3,
+            retry_delay=1.0,
+            connection_pool_limits={
+                "max_keepalive_connections": max_workers * 2,
+                "max_connections": max_workers * 4,
+                "keepalive_expiry": 120.0,
+            },
+        )
+
+        # Use enhanced job manager for better error handling and resource management
+        job_manager = AsyncJobManager(config)
+
+        try:
+            return await job_manager.submit_and_gather(
+                job_submitters,
+                timeout=timeout,
+                return_exceptions=False,
+            )
+        except Exception as e:
+            # Enhanced error reporting with context
+            raise RuntimeError(
+                f"Failed to process {len(job_submitters)} batches concurrently "
+                f"with {max_workers} workers: {e}"
+            ) from e
 
     async def compare_similarity(
         self,
@@ -827,7 +1034,14 @@ class AsyncCoreClient:
         split: Any | None = None,
     ) -> Any:
         """
-        Batch large similarity requests intelligently under the 10k-item limit.
+        Batch large similarity requests with enhanced concurrent job processing.
+
+        This enhanced method provides:
+        - Intelligent batching under the 10k-item limit
+        - Concurrent job processing with rate limiting
+        - Enhanced retry logic with exponential backoff
+        - Connection pool optimization for batch operations
+        - Adaptive timeout scaling based on batch complexity
 
         Note: This method requires numpy for matrix operations. Install with:
         pip install pulse-sdk[analysis]
@@ -837,6 +1051,23 @@ class AsyncCoreClient:
                 "Batch similarity requires numpy for matrix operations. "
                 "Install with: pip install pulse-sdk[analysis]"
             )
+
+        from pulse.core.async_concurrent import AsyncConcurrentConfig, AsyncJobManager
+
+        # Determine batch complexity for adaptive configuration
+        if set is not None:
+            total_items = len(set)
+            batch_complexity = total_items * total_items  # Self-similarity complexity
+            full_a = full_b = set
+        else:
+            set_a = set_a or []
+            set_b = set_b or []
+            total_items = len(set_a) + len(set_b)
+            batch_complexity = len(set_a) * len(set_b)  # Cross-similarity complexity
+            full_a = set_a
+            full_b = set_b
+
+        # Create request bodies using existing batching logic
         if set is not None:
             chunks = _make_self_chunks(set)
             bodies: List[Dict[str, Any]] = []
@@ -866,15 +1097,93 @@ class AsyncCoreClient:
                 set_a or [], set_b or [], flatten, version, split
             )
 
-        # submit all jobs
-        jobs = [await self._submit_batch_similarity_job(**body) for body in bodies]
+        # Configure concurrent processing based on batch complexity
+        if batch_complexity <= 10000:
+            # Simple batches - use basic concurrency
+            max_concurrent = min(3, len(bodies))
+            timeout_per_job = 300.0
+            rate_limit_delay = 0.1
+        elif batch_complexity <= 100000:
+            # Medium complexity - moderate concurrency
+            max_concurrent = min(5, len(bodies))
+            timeout_per_job = 450.0
+            rate_limit_delay = 0.05
+        else:
+            # High complexity - aggressive concurrency with careful rate limiting
+            max_concurrent = min(8, len(bodies))
+            timeout_per_job = 600.0
+            rate_limit_delay = 0.02
 
-        # wait for all jobs concurrently
-        results = await asyncio.gather(*[job.wait(600) for job in jobs])
+        config = AsyncConcurrentConfig(
+            max_concurrent_jobs=max_concurrent,
+            timeout_per_job=timeout_per_job,
+            rate_limit_delay=rate_limit_delay,
+            max_retries=3,
+            retry_delay=1.0,
+            connection_pool_limits={
+                "max_keepalive_connections": max_concurrent * 2,
+                "max_connections": max_concurrent * 4,
+                "keepalive_expiry": 180.0,
+            },
+        )
 
-        full_a = set or set_a or []
-        full_b = set or set_b or []
-        return _stitch_results(results, bodies, full_a, full_b)
+        # Create enhanced job submitters with retry logic
+        async def create_enhanced_similarity_submitter(body, job_index):
+            """Create a similarity job submitter with enhanced error handling."""
+            max_submission_retries = 3
+            for attempt in range(max_submission_retries):
+                try:
+                    return await self._submit_batch_similarity_job(**body)
+                except Exception as e:
+                    if attempt == max_submission_retries - 1:
+                        raise RuntimeError(
+                            f"Failed to submit similarity job {job_index + 1} after "
+                            f"{max_submission_retries} attempts: {e}"
+                        ) from e
+
+                    # Exponential backoff for retry
+                    delay = 1.0 * (2.0**attempt)
+                    await asyncio.sleep(delay)
+
+        job_submitters = [
+            lambda body=body, idx=i: create_enhanced_similarity_submitter(body, idx)
+            for i, body in enumerate(bodies)
+        ]
+
+        # Use enhanced concurrent processing
+        job_manager = AsyncJobManager(config)
+
+        try:
+            # Submit jobs with rate limiting and gather results
+            jobs = await job_manager.submit_jobs_with_rate_limit(
+                job_submitters, rate_limit_delay=config.rate_limit_delay
+            )
+
+            # Wait for all jobs with enhanced timeout and error handling
+            results = await job_manager.gather_jobs(
+                jobs, timeout=config.timeout_per_job, return_exceptions=False
+            )
+
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to process {len(bodies)} similarity batches "
+                f"(complexity: {batch_complexity:,}): {e}"
+            ) from e
+
+        # Validate results before stitching
+        if len(results) != len(bodies):
+            raise RuntimeError(
+                f"Result count mismatch: expected {len(bodies)} results, "
+                f"got {len(results)}"
+            )
+
+        # Stitch results using existing logic with enhanced error handling
+        try:
+            return _stitch_results(results, bodies, full_a, full_b)
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to stitch similarity results from {len(results)} batches: {e}"
+            ) from e
 
     async def generate_themes(
         self,

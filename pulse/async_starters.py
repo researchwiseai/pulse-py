@@ -1,5 +1,6 @@
 """Async starter functions for common Pulse API operations."""
 
+import asyncio
 import os
 from typing import List, Union, Optional
 import pandas as pd
@@ -18,6 +19,11 @@ from pulse.core.models import (
     ExtractionsResponse,
     SimilarityResponse,
     UsageEstimateResponse,
+)
+from pulse.core.async_error_handling import (
+    AsyncCancellationError,
+    async_timeout_context,
+    handle_async_http_errors,
 )
 
 
@@ -60,6 +66,7 @@ def get_strings(source: Union[List[str], str]) -> List[str]:
     raise ValueError(f"Unsupported file type: {ext}")
 
 
+@handle_async_http_errors
 async def generate_themes_async(
     input_data: Union[List[str], str],
     *,
@@ -73,8 +80,9 @@ async def generate_themes_async(
     await_job_result: bool = True,
     auth: _BaseOAuth2Auth | None = None,
     client: Optional[AsyncCoreClient] = None,
+    timeout: Optional[float] = None,
 ) -> Union[ThemesResponse, ThemeSetsResponse, AsyncJob]:
-    """Generate themes from input data using the async core client.
+    """Generate themes using async core client with enhanced error handling.
 
     Args:
         input_data: List of strings or a path to load strings from.
@@ -88,41 +96,70 @@ async def generate_themes_async(
         await_job_result: When False, return an AsyncJob handle instead of waiting.
         auth: Optional authentication object.
         client: Existing AsyncCoreClient instance.
+        timeout: Optional timeout for the operation in seconds.
 
     Returns:
         ThemesResponse, ThemeSetsResponse, or AsyncJob handle.
+
+    Raises:
+        AsyncTimeoutError: If operation times out.
+        AsyncCancellationError: If operation is cancelled.
+        PulseAPIError: If API request fails.
     """
     texts = get_strings(input_data)
     fast = len(texts) <= 200
 
-    if client is None:
-        client = AsyncCoreClient(auth=auth)
-        async with client:
-            return await client.generate_themes(
-                texts,
-                min_themes=min_themes,
-                max_themes=max_themes,
-                context=context,
-                version=version,
-                prune=prune,
-                interactive=interactive,
-                initial_sets=initial_sets,
-                fast=fast,
-                await_job_result=await_job_result,
-            )
-    else:
-        return await client.generate_themes(
-            texts,
-            min_themes=min_themes,
-            max_themes=max_themes,
-            context=context,
-            version=version,
-            prune=prune,
-            interactive=interactive,
-            initial_sets=initial_sets,
-            fast=fast,
-            await_job_result=await_job_result,
-        )
+    # Calculate appropriate timeout based on data size and mode
+    if timeout is None:
+        if fast:
+            timeout = 60.0  # 1 minute for fast mode
+        else:
+            timeout = max(300.0, len(texts) * 0.5)  # Scale with input size
+
+    try:
+        async with async_timeout_context(
+            timeout,
+            "generate_themes_async",
+            {"text_count": len(texts), "fast_mode": fast},
+        ):
+
+            async def generate_themes_operation():
+                if client is None:
+                    async_client = AsyncCoreClient(auth=auth)
+                    async with async_client:
+                        return await async_client.generate_themes(
+                            texts,
+                            min_themes=min_themes,
+                            max_themes=max_themes,
+                            context=context,
+                            version=version,
+                            prune=prune,
+                            interactive=interactive,
+                            initial_sets=initial_sets,
+                            fast=fast,
+                            await_job_result=await_job_result,
+                        )
+                else:
+                    return await client.generate_themes(
+                        texts,
+                        min_themes=min_themes,
+                        max_themes=max_themes,
+                        context=context,
+                        version=version,
+                        prune=prune,
+                        interactive=interactive,
+                        initial_sets=initial_sets,
+                        fast=fast,
+                        await_job_result=await_job_result,
+                    )
+
+            return await asyncio.wait_for(generate_themes_operation(), timeout=timeout)
+    except asyncio.CancelledError as e:
+        raise AsyncCancellationError(
+            "Generate themes operation was cancelled",
+            operation="generate_themes_async",
+            context={"text_count": len(texts), "fast_mode": fast},
+        ) from e
 
 
 async def sentiment_analysis_async(

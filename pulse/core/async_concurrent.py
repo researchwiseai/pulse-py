@@ -6,6 +6,10 @@ from typing import Any, List, Optional, Union, Callable, Awaitable, Dict, TypeVa
 from dataclasses import dataclass, field
 import httpx
 from pulse.core.async_jobs import AsyncJob
+from pulse.core.async_error_handling import (
+    AsyncCancellationError,
+    gather_with_timeout,
+)
 
 T = TypeVar("T")
 
@@ -94,25 +98,27 @@ class AsyncJobManager:
         tasks = [wait_with_semaphore(job) for job in jobs]
 
         try:
-            # Use asyncio.gather with timeout
-            results = await asyncio.wait_for(
-                asyncio.gather(*tasks, return_exceptions=return_exceptions),
-                timeout=timeout * len(jobs),  # Scale timeout with job count
+            # Use enhanced gather with timeout and error handling
+            total_timeout = timeout * len(jobs)  # Scale timeout with job count
+
+            return await gather_with_timeout(
+                *tasks,
+                timeout=total_timeout,
+                return_exceptions=return_exceptions,
+                operation="gather_async_jobs",
+                context={"job_count": len(jobs), "timeout_per_job": timeout},
             )
-            return results
-        except asyncio.TimeoutError:
-            # Cancel remaining tasks - need to create tasks first
-            created_tasks = [
-                asyncio.create_task(task) if asyncio.iscoroutine(task) else task
-                for task in tasks
-            ]
-            for task in created_tasks:
-                if hasattr(task, "done") and not task.done():
+        except asyncio.CancelledError as e:
+            # Cancel remaining tasks
+            for task in tasks:
+                if hasattr(task, "cancel"):
                     task.cancel()
-            raise asyncio.TimeoutError(
-                f"Failed to complete {len(jobs)} jobs within "
-                f"{timeout * len(jobs)} seconds"
-            )
+
+            raise AsyncCancellationError(
+                "Job gathering was cancelled",
+                operation="gather_async_jobs",
+                context={"job_count": len(jobs)},
+            ) from e
 
     async def submit_jobs_with_rate_limit(
         self,

@@ -1,5 +1,6 @@
 """High-level async orchestrator for running processes."""
 
+import asyncio
 from typing import Sequence, Optional, Union, Any
 import pandas as pd
 
@@ -12,6 +13,10 @@ from pulse.analysis.results import (
     ThemeAllocationResult,
     ClusterResult,
     ThemeExtractionResult,
+)
+from pulse.core.async_error_handling import (
+    AsyncCancellationError,
+    async_timeout_context,
 )
 
 
@@ -74,48 +79,96 @@ class AsyncAnalyzer:
         self.processes = resolved
 
     async def run(self) -> "AsyncAnalysisResult":
-        """Run the configured processes asynchronously with caching and wrapping."""
+        """Run configured processes asynchronously with enhanced error handling."""
         results: dict[str, Any] = {}
         texts = self.dataset.tolist()
+
+        try:
+            # Use timeout context for the entire analysis run
+            async with async_timeout_context(
+                300.0,  # 5 minute timeout for full analysis
+                "async_analyzer_run",
+                {"process_count": len(self.processes), "text_count": len(texts)},
+            ):
+                return await asyncio.wait_for(
+                    self._run_analysis_processes(texts), timeout=300.0
+                )
+        except asyncio.CancelledError as e:
+            raise AsyncCancellationError(
+                "Async analyzer run was cancelled",
+                operation="async_analyzer_run",
+                context={
+                    "completed_processes": len(results),
+                    "total_processes": len(self.processes),
+                },
+            ) from e
+
+    async def _run_analysis_processes(self, texts: list) -> "AsyncAnalysisResult":
+        """Run all analysis processes."""
+        results: dict[str, Any] = {}
+
         for process in self.processes:
-            key = self._make_cache_key(process) if self._cache is not None else None
-            if self.use_cache and self._cache is not None and key in self._cache:
-                from pulse.debug import log_cache_hit
+            try:
+                key = self._make_cache_key(process) if self._cache is not None else None
+                if self.use_cache and self._cache is not None and key in self._cache:
+                    from pulse.debug import log_cache_hit
 
-                log_cache_hit(key)
-                wrapped = self._cache[key]
-            else:
-                from pulse.debug import log_cache_miss
-
-                if key:
-                    log_cache_miss(key)
-                raw = await self._run_process_async(process)
-                # Wrap raw response in high-level result based on original process id
-                orig_id = getattr(process, "_orig_id", process.id)
-                if orig_id == "theme_generation":
-                    wrapped = ThemeGenerationResult(raw, texts)
-                elif orig_id == "sentiment":
-                    wrapped = SentimentResult(raw, texts)
-                elif orig_id == "theme_allocation":
-                    wrapped = ThemeAllocationResult(
-                        texts,
-                        raw["themes"],
-                        raw["assignments"],
-                        process.single_label,
-                        process.threshold,
-                        similarity=raw.get("similarity"),
-                    )
-                elif orig_id == "cluster":
-                    wrapped = ClusterResult(raw, texts)
-                elif orig_id == "theme_extraction":
-                    wrapped = ThemeExtractionResult(raw, texts, process.themes)
+                    log_cache_hit(key)
+                    wrapped = self._cache[key]
                 else:
-                    wrapped = raw
-                if self.use_cache and self._cache is not None:
-                    self._cache[key] = wrapped
-            results[process.id] = wrapped
-            # expose partial results for downstream dependencies
-            self.results = results
+                    from pulse.debug import log_cache_miss
+
+                    if key:
+                        log_cache_miss(key)
+
+                    # Run individual process with timeout
+                    raw = await self._run_process_async(process)
+
+                    # Wrap raw response in high-level result based on process id
+                    orig_id = getattr(process, "_orig_id", process.id)
+                    if orig_id == "theme_generation":
+                        wrapped = ThemeGenerationResult(raw, texts)
+                    elif orig_id == "sentiment":
+                        wrapped = SentimentResult(raw, texts)
+                    elif orig_id == "theme_allocation":
+                        wrapped = ThemeAllocationResult(
+                            texts,
+                            raw["themes"],
+                            raw["assignments"],
+                            process.single_label,
+                            process.threshold,
+                            similarity=raw.get("similarity"),
+                        )
+                    elif orig_id == "cluster":
+                        wrapped = ClusterResult(raw, texts)
+                    elif orig_id == "theme_extraction":
+                        wrapped = ThemeExtractionResult(raw, texts, process.themes)
+                    else:
+                        wrapped = raw
+
+                    if self.use_cache and self._cache is not None:
+                        self._cache[key] = wrapped
+
+                results[process.id] = wrapped
+                # expose partial results for downstream dependencies
+                self.results = results
+
+            except asyncio.CancelledError as e:
+                raise AsyncCancellationError(
+                    f"Process '{process.id}' was cancelled",
+                    operation="async_analyzer_process",
+                    context={
+                        "process_id": process.id,
+                        "completed_processes": len(results),
+                    },
+                ) from e
+            except Exception as e:
+                # Log process-specific errors but continue with other processes
+                import logging
+
+                logging.error(f"Process '{process.id}' failed: {e}")
+                raise RuntimeError(f"Process '{process.id}' failed: {e}") from e
+
         self.results = results
         return AsyncAnalysisResult(results)
 
