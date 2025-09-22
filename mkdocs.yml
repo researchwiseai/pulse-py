@@ -7,12 +7,15 @@ theme:
     - navigation.instant
     - navigation.tracking
     - content.code.copy
+extra_javascript:
+  - https://unpkg.com/mermaid@8.6.4/dist/mermaid.min.js
 markdown_extensions:
   - admonition
   - codehilite
   - toc:
       permalink: true
   - tables
+  - pymdownx.superfences
 nav:
   - Home: index.md
   - Getting Started:
@@ -29,6 +32,9 @@ nav:
     - Starters: starters.md
     - Data Models: models.md
     - Jobs & Errors: jobs-and-errors.md
+  - Large-Scale Processing:
+    - Batching Guide: batching-guide.md
+    - Batching Error Reference: batching-errors.md
   - Troubleshooting & Debugging:
     - Error Recovery Guide: error-recovery.md
     - Debugging Tools: debugging.md

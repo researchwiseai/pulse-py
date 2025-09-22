@@ -20,9 +20,15 @@ Welcome to the Pulse SDK docs. This section documents the complete public API of
 - Data Models: `models.md`
 - Jobs and Errors: `jobs-and-errors.md`
 
+## 🚀 Large-Scale Processing
+
+- **[Batching Guide](batching-guide.md)** - Comprehensive guide to automatic batching for large datasets
+- **[Batching Error Reference](batching-errors.md)** - Complete error reference with troubleshooting
+
 ## 🔧 Troubleshooting and Debugging
 
 - **[Error Recovery Guide](error-recovery.md)** - Comprehensive error handling and recovery strategies
+- **[Batching Error Reference](batching-errors.md)** - Complete batching error reference with solutions
 - **[Debugging Tools](debugging.md)** - Built-in debugging and introspection capabilities
 - **[Dependency Troubleshooting](dependency-troubleshooting.md)** - Resolve installation conflicts
 
