@@ -45,7 +45,6 @@ from pulse.core.validation import (
     PulseValidationError,
 )
 
-MAX_EMBEDDINGS = 2000
 MAX_SENTIMENT = 10000
 MAX_THEMES = 500
 MAX_CLUSTERING = 500
@@ -287,6 +286,156 @@ class CoreClient:
         except PulseValidationError as e:
             raise ValueError(str(e)) from e
 
+        # Check if parallel batching is needed for slow mode
+        input_count = len(request.inputs)
+        fast = bool(request.fast)
+
+        # Parallel batching for slow mode (fast=False) only when input > 200
+        if not fast and input_count > 200:
+            return self._create_embeddings_with_parallel_batching(
+                request, await_job_result=await_job_result
+            )
+
+        # Original single request logic for fast mode or small inputs
+        # Request body according to OpenAPI spec: inputs
+        body = request.model_dump(exclude_none=True)
+
+        response = self._request("post", "/embeddings", json=body)
+
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+
+        data = response.json()
+
+        # If service enqueues an async job during fast sync, treat as error
+        if response.status_code == 202 and fast:
+            raise PulseAPIError(response)
+
+        # Async/job path: wrap and wait for completion (slow sync)
+        if response.status_code == 202:
+            # Async/job path: initial submission returned only jobId
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(jobId=submission.jobId, jobStatus="pending")
+            job._client = self.client
+            if not await_job_result:
+                return job
+            result = job.wait()
+            return EmbeddingsResponse.model_validate(result)
+        # Synchronous response
+        return EmbeddingsResponse.model_validate(data)
+
+    def _create_embeddings_with_parallel_batching(
+        self, request: EmbeddingsRequest, *, await_job_result: bool = True
+    ) -> Union[EmbeddingsResponse, Job]:
+        """Create embeddings with parallel batching for slow mode (fast=False) only.
+
+        This method implements automatic batching for large embedding requests:
+        - Splits inputs into 5,000-text batches
+        - Processes up to 5 batches concurrently
+        - Preserves input order in results
+        - Aggregates usage metrics across all batches
+
+        Args:
+            request: EmbeddingsRequest payload with >200 inputs and fast=False
+            await_job_result: When False, return a Job handle for the first batch
+
+        Returns:
+            EmbeddingsResponse with aggregated results or Job handle
+        """
+        from pulse.core.validation import ValidationLimits
+        from pulse.core.batching import process_batches_concurrently
+        from pulse.core.models import UsageReport
+
+        inputs = request.inputs
+        batch_size = ValidationLimits.EMBEDDINGS_BATCH_SIZE  # 5,000
+
+        # Create batches
+        batches = [
+            inputs[i : i + batch_size] for i in range(0, len(inputs), batch_size)
+        ]
+
+        # Create job submitters for each batch
+        def create_batch_submitter(batch_inputs):
+            def submitter():
+                batch_request = EmbeddingsRequest(
+                    inputs=batch_inputs,
+                    fast=False,  # Always use slow mode for batching
+                    version=request.version,
+                )
+                # Submit batch job without waiting for result, bypassing batching logic
+                return self._create_single_embeddings_request(
+                    batch_request, await_job_result=False
+                )
+
+            return submitter
+
+        job_submitters = [create_batch_submitter(batch) for batch in batches]
+
+        # If not waiting for results, return the first job
+        if not await_job_result:
+            # Submit first job and return it
+            first_job = job_submitters[0]()
+            return first_job
+
+        # Process all batches concurrently (slow mode only)
+        batch_results = process_batches_concurrently(
+            job_submitters,
+            max_workers=5,  # Maximum 5 concurrent jobs
+            timeout=600.0,
+            fast=False,  # Use concurrent processing for slow mode
+        )
+
+        # Aggregate results while preserving order
+        all_embeddings = []
+        total_usage_records = []
+        total_quantity = 0
+
+        for batch_result in batch_results:
+            # Parse batch result if it's a dict (from job.wait())
+            if isinstance(batch_result, dict):
+                batch_response = EmbeddingsResponse.model_validate(batch_result)
+            else:
+                batch_response = batch_result
+
+            # Add embeddings in order
+            all_embeddings.extend(batch_response.embeddings)
+
+            # Aggregate usage metrics
+            if batch_response.usage:
+                total_usage_records.extend(batch_response.usage.records)
+                total_quantity += batch_response.usage.total
+
+        # Create aggregated usage info
+        aggregated_usage = UsageReport(
+            records=total_usage_records, total=total_quantity
+        )
+
+        # Create final response with aggregated results
+        return EmbeddingsResponse(
+            embeddings=all_embeddings,
+            usage=aggregated_usage,
+            request_id=(
+                batch_results[0].get("request_id")
+                if isinstance(batch_results[0], dict)
+                else getattr(batch_results[0], "request_id", None)
+            ),
+        )
+
+    def _create_single_embeddings_request(
+        self, request: EmbeddingsRequest, *, await_job_result: bool = True
+    ) -> Union[EmbeddingsResponse, Job]:
+        """Create embeddings for a single request without batching logic.
+
+        This method contains the original embeddings logic and is used by the
+        parallel batching system to avoid infinite recursion.
+
+        Args:
+            request: EmbeddingsRequest payload
+            await_job_result: When False, return a Job handle instead of waiting
+
+        Returns:
+            EmbeddingsResponse or Job handle
+        """
         # Request body according to OpenAPI spec: inputs
         body = request.model_dump(exclude_none=True)
         fast = bool(request.fast)

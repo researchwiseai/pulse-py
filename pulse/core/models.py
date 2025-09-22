@@ -62,7 +62,7 @@ class EmbeddingsRequest(BaseModel):
     """
 
     inputs: List[Any] = Field(
-        ..., min_length=1, max_length=2000, description="Input texts"
+        ..., min_length=1, max_length=1_000_000, description="Input texts"
     )
     fast: Optional[bool] = Field(
         None, description="Synchronous (True) or asynchronous (False)"
