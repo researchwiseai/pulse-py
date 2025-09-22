@@ -654,49 +654,130 @@ class CoreClient:
         except PulseValidationError as e:
             raise ValueError(str(e)) from e
 
-        limit = 200 if fast else MAX_SENTIMENT
-        if len(texts) > limit:
-            all_results: List[SentimentResult] = []
-            for chunk in chunk_texts(texts, limit):
-                sub_body: Dict[str, Any] = {"inputs": chunk}
-                if version is not None:
-                    sub_body["version"] = version
-                if fast:
-                    sub_body["fast"] = True
-                resp = self._request("post", "/sentiment", json=sub_body)
-                if resp.status_code not in (200, 202):
-                    raise PulseAPIError(resp)
-                payload = resp.json()
-                if resp.status_code == 202:
-                    submission = JobSubmissionResponse.model_validate(payload)
-                    job = Job(id=submission.jobId, status="pending")
-                    job._client = self.client
-                    result = job.wait() if await_job_result else job.wait()
-                    chunk_resp = SentimentResponse.model_validate(result)
-                else:
-                    chunk_resp = SentimentResponse.model_validate(payload)
-                all_results.extend(chunk_resp.results)
-            return SentimentResponse(results=all_results, requestId=None)
+        # For small requests or fast mode, use direct API call
+        fast_limit = 200
+        slow_batch_size = 2000
 
-        body: Dict[str, Any] = {"inputs": texts}
+        if fast and len(texts) > fast_limit:
+            # This should be caught by validation, but double-check
+            from pulse.core.validation import BatchingErrorHelper
+
+            raise ValueError(
+                str(
+                    BatchingErrorHelper.create_fast_mode_error(
+                        "sentiment", len(texts), fast_limit
+                    )
+                )
+            )
+
+        if len(texts) <= fast_limit or fast:
+            # Direct API call for small requests or fast mode
+            body: Dict[str, Any] = {"inputs": texts}
+            if version is not None:
+                body["version"] = version
+            if fast:
+                body["fast"] = True
+
+            response = self._request("post", "/sentiment", json=body)
+            if response.status_code not in (200, 202):
+                raise PulseAPIError(response)
+            data = response.json()
+            if response.status_code == 202:
+                submission = JobSubmissionResponse.model_validate(data)
+                job = Job(jobId=submission.jobId, jobStatus="pending")
+                job._client = self.client
+                if not await_job_result:
+                    return job
+                result = job.wait()
+                return SentimentResponse.model_validate(result)
+            return SentimentResponse.model_validate(data)
+
+        # Large request in slow mode - use parallel batching
+        from pulse.core.concurrent import (
+            ConcurrentJobConfig,
+            AsyncJobProcessor,
+        )
+
+        # Create batches for parallel processing
+        chunks = chunk_texts(texts, slow_batch_size)
+
+        # Create job submitters for each batch
+        job_submitters = []
+        for chunk in chunks:
+            submitter = AsyncJobProcessor.create_job_submitter(
+                self._submit_sentiment_batch_job,
+                inputs=chunk,
+                version=version,
+                fast=False,  # Always use slow mode for batching
+            )
+            job_submitters.append(submitter)
+
+        # Process batches in parallel with controlled concurrency
+        config = ConcurrentJobConfig(max_workers=5, timeout=600.0)
+        try:
+            batch_results = AsyncJobProcessor.batch_process_with_concurrency(
+                job_submitters, config
+            )
+        except Exception as e:
+            from pulse.core.validation import BatchingErrorHelper
+
+            raise ValueError(
+                str(
+                    BatchingErrorHelper.create_batch_failure_error(
+                        "sentiment", 0, len(chunks), str(e), len(texts)
+                    )
+                )
+            ) from e
+
+        # Aggregate results from all batches while preserving order
+        all_results: List[SentimentResult] = []
+        total_usage = None
+
+        for i, batch_result in enumerate(batch_results):
+            if not isinstance(batch_result, dict):
+                continue
+
+            batch_response = SentimentResponse.model_validate(batch_result)
+            all_results.extend(batch_response.results)
+
+            # Aggregate usage metrics
+            if batch_response.usage and total_usage is None:
+                total_usage = batch_response.usage.model_copy()
+            elif batch_response.usage and total_usage:
+                # Sum up the usage metrics
+                total_usage.total += batch_response.usage.total
+                total_usage.records.extend(batch_response.usage.records)
+
+        return SentimentResponse(results=all_results, usage=total_usage, requestId=None)
+
+    def _submit_sentiment_batch_job(
+        self, inputs: List[str], version: Optional[str] = None, fast: bool = False
+    ) -> Job:
+        """Submit a sentiment analysis batch job for parallel processing.
+
+        Args:
+            inputs: List of input texts for this batch
+            version: Optional model version
+            fast: Whether to use fast mode (should be False for batching)
+
+        Returns:
+            Job instance for the submitted batch
+        """
+        body: Dict[str, Any] = {"inputs": inputs}
         if version is not None:
             body["version"] = version
         if fast:
             body["fast"] = True
 
         response = self._request("post", "/sentiment", json=body)
-        if response.status_code not in (200, 202):
+        if response.status_code != 202:
             raise PulseAPIError(response)
+
         data = response.json()
-        if response.status_code == 202:
-            submission = JobSubmissionResponse.model_validate(data)
-            job = Job(jobId=submission.jobId, jobStatus="pending")
-            job._client = self.client
-            if not await_job_result:
-                return job
-            result = job.wait()
-            return SentimentResponse.model_validate(result)
-        return SentimentResponse.model_validate(data)
+        submission = JobSubmissionResponse.model_validate(data)
+        job = Job(jobId=submission.jobId, jobStatus="pending")
+        job._client = self.client
+        return job
 
     def estimate_usage(
         self,
