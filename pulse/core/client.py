@@ -1072,6 +1072,23 @@ class CoreClient:
         if len(dictionary) > 200:
             raise ValueError("dictionary cannot exceed 200 terms")
 
+        # Check if parallel batching is needed for slow mode
+        input_count = len(inputs)
+        fast_mode = bool(fast)
+
+        # Parallel batching for slow mode (fast=False) only when input > 200
+        if not fast_mode and input_count > 200:
+            return self._extract_elements_with_parallel_batching(
+                inputs=inputs,
+                dictionary=dictionary,
+                type=type,
+                expand_dictionary=expand_dictionary,
+                expand_dictionary_limit=expand_dictionary_limit,
+                version=version,
+                await_job_result=await_job_result,
+            )
+
+        # Original single request logic for fast mode or small inputs
         body: Dict[str, Any] = {
             "inputs": inputs,
             "dictionary": dictionary,
@@ -1091,6 +1108,195 @@ class CoreClient:
             raise PulseAPIError(response)
 
         data = response.json()
+
+        # If service enqueues an async job during fast sync, treat as error
+        if response.status_code == 202 and fast_mode:
+            raise PulseAPIError(response)
+
+        if response.status_code == 202:
+            submission = JobSubmissionResponse.model_validate(data)
+            job = Job(jobId=submission.jobId, jobStatus="pending")
+            job._client = self.client
+            if not await_job_result:
+                return job
+            result = job.wait()
+            return ExtractionsResponse.model_validate(result)
+
+        return ExtractionsResponse.model_validate(data)
+
+    def _extract_elements_with_parallel_batching(
+        self,
+        inputs: list[str],
+        dictionary: list[str],
+        *,
+        type: str = "named-entities",
+        expand_dictionary: bool = False,
+        expand_dictionary_limit: Optional[int] = None,
+        version: Optional[str] = None,
+        await_job_result: bool = True,
+    ) -> Union[ExtractionsResponse, Job]:
+        """Extract elements with parallel batching for slow mode (fast=False) only.
+
+        This method implements automatic batching for large extraction requests:
+        - Splits inputs into 2,000-text batches
+        - Processes up to 5 batches concurrently
+        - Preserves input order in results
+        - Aggregates usage metrics across all batches
+
+        Args:
+            inputs: Input strings to analyze with >200 inputs and fast=False
+            dictionary: List of terms to extract from texts
+            type: Extraction type ("named-entities" or "themes")
+            expand_dictionary: Expand dictionary entries with synonyms
+            expand_dictionary_limit: Limit for dictionary expansions
+            version: Optional model version for reproducible output
+            await_job_result: When False, return a Job handle for the first batch
+
+        Returns:
+            ExtractionsResponse with aggregated results or Job handle
+        """
+        from pulse.core.validation import ValidationLimits
+        from pulse.core.batching import process_batches_concurrently
+        from pulse.core.models import UsageReport
+
+        batch_size = ValidationLimits.EXTRACTIONS_BATCH_SIZE  # 2,000
+
+        # Create batches
+        batches = [
+            inputs[i : i + batch_size] for i in range(0, len(inputs), batch_size)
+        ]
+
+        # Create job submitters for each batch
+        def create_batch_submitter(batch_inputs):
+            def submitter():
+                # Submit batch job without waiting for result, bypassing batching logic
+                return self._extract_single_elements_request(
+                    inputs=batch_inputs,
+                    dictionary=dictionary,
+                    type=type,
+                    expand_dictionary=expand_dictionary,
+                    expand_dictionary_limit=expand_dictionary_limit,
+                    version=version,
+                    fast=False,  # Always use slow mode for batching
+                    await_job_result=False,
+                )
+
+            return submitter
+
+        job_submitters = [create_batch_submitter(batch) for batch in batches]
+
+        # If not waiting for results, return the first job
+        if not await_job_result:
+            # Submit first job and return it
+            first_job = job_submitters[0]()
+            return first_job
+
+        # Process all batches concurrently (slow mode only)
+        batch_results = process_batches_concurrently(
+            job_submitters,
+            max_workers=5,  # Maximum 5 concurrent jobs
+            timeout=600.0,
+            fast=False,  # Use concurrent processing for slow mode
+        )
+
+        # Aggregate results while preserving order
+        all_columns = []
+        all_matrix_rows = []
+        total_usage_records = []
+        total_quantity = 0
+
+        for batch_result in batch_results:
+            # Parse batch result if it's a dict (from job.wait())
+            if isinstance(batch_result, dict):
+                batch_response = ExtractionsResponse.model_validate(batch_result)
+            else:
+                batch_response = batch_result
+
+            # For the first batch, capture the column structure
+            if not all_columns:
+                all_columns = batch_response.columns
+
+            # Add matrix rows in order
+            all_matrix_rows.extend(batch_response.matrix)
+
+            # Aggregate usage metrics
+            if batch_response.usage:
+                total_usage_records.extend(batch_response.usage.records)
+                total_quantity += batch_response.usage.total
+
+        # Create aggregated usage info
+        aggregated_usage = UsageReport(
+            records=total_usage_records, total=total_quantity
+        )
+
+        # Create final response with aggregated results
+        return ExtractionsResponse(
+            columns=all_columns,
+            matrix=all_matrix_rows,
+            usage=aggregated_usage,
+            requestId=(
+                batch_results[0].get("request_id")
+                if isinstance(batch_results[0], dict)
+                else getattr(batch_results[0], "requestId", None)
+            ),
+        )
+
+    def _extract_single_elements_request(
+        self,
+        inputs: list[str],
+        dictionary: list[str],
+        *,
+        type: str = "named-entities",
+        expand_dictionary: bool = False,
+        expand_dictionary_limit: Optional[int] = None,
+        version: Optional[str] = None,
+        fast: Optional[bool] = None,
+        await_job_result: bool = True,
+    ) -> Union[ExtractionsResponse, Job]:
+        """Extract elements for a single request without batching logic.
+
+        This method contains the original extraction logic and is used by the
+        parallel batching system to avoid infinite recursion.
+
+        Args:
+            inputs: Input strings to analyze
+            dictionary: List of terms to extract from texts
+            type: Extraction type ("named-entities" or "themes")
+            expand_dictionary: Expand dictionary entries with synonyms
+            expand_dictionary_limit: Limit for dictionary expansions
+            version: Optional model version for reproducible output
+            fast: Use synchronous (True) or asynchronous (False) mode
+            await_job_result: When False, return a Job handle instead of waiting
+
+        Returns:
+            ExtractionsResponse or Job handle
+        """
+        body: Dict[str, Any] = {
+            "inputs": inputs,
+            "dictionary": dictionary,
+            "type": type,
+            "expand_dictionary": expand_dictionary,
+        }
+
+        if expand_dictionary_limit is not None:
+            body["expand_dictionary_limit"] = expand_dictionary_limit
+        if version is not None:
+            body["version"] = version
+        if fast is not None:
+            body["fast"] = fast
+
+        fast_mode = bool(fast)
+
+        response = self._request("post", "/extractions", json=body)
+        if response.status_code not in (200, 202):
+            raise PulseAPIError(response)
+
+        data = response.json()
+
+        # If service enqueues an async job during fast sync, treat as error
+        if response.status_code == 202 and fast_mode:
+            raise PulseAPIError(response)
+
         if response.status_code == 202:
             submission = JobSubmissionResponse.model_validate(data)
             job = Job(jobId=submission.jobId, jobStatus="pending")

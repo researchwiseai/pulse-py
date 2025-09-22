@@ -1,7 +1,6 @@
 """Input validation utilities for Pulse API endpoints."""
 
 from typing import List, Optional, Any, Dict
-from pydantic import ValidationError
 
 
 class ValidationLimits:
@@ -712,6 +711,21 @@ def get_validation_summary() -> Dict[str, Dict[str, int]]:
     }
 
 
+def validate_before_request(endpoint: str, **kwargs) -> None:
+    """
+    Main validation entry point for API requests.
+
+    Args:
+        endpoint: The API endpoint name
+        **kwargs: Request parameters to validate
+
+    Raises:
+        PulseValidationError: If validation fails
+        BatchingError: If batching-related validation fails
+    """
+    ValidationHelper.validate_request(endpoint, **kwargs)
+
+
 class ValidationHelper:
     """Helper class for client-side validation with user-friendly error messages."""
 
@@ -919,37 +933,3 @@ class ValidationHelper:
             return "Input size is within limits."
 
         return "Suggestions to handle large input:\n" + "\n".join(suggestions)
-
-
-def validate_before_request(endpoint: str, **kwargs) -> None:
-    """
-    Convenience function to validate a request before sending to API.
-
-    Args:
-        endpoint: The API endpoint name
-        **kwargs: Request parameters to validate
-
-    Raises:
-        PulseValidationError: If validation fails with user-friendly message
-    """
-    try:
-        ValidationHelper.validate_request(endpoint, **kwargs)
-    except ValidationError as e:
-        # Enhance error message with optimization suggestions
-        if "Too many inputs" in e.message:
-            input_count = len(kwargs.get("inputs", kwargs.get("set", [])))
-            fast = kwargs.get("fast")
-            suggestions = ValidationHelper.suggest_optimization(
-                endpoint, input_count, fast
-            )
-            enhanced_message = f"{e.message}\n\n{suggestions}"
-            raise PulseValidationError(
-                enhanced_message,
-                field=e.field,
-                value=e.value,
-                limit=e.limit,
-                endpoint=e.endpoint,
-                mode=e.mode,
-            ) from e
-        else:
-            raise
