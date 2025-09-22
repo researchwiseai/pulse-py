@@ -2,7 +2,7 @@
 
 import asyncio
 import time
-from typing import Any, Optional, Literal
+from typing import Any, Optional, Literal, Callable, Awaitable, Union
 import httpx
 from pydantic import BaseModel, PrivateAttr, Field, ConfigDict
 from pulse.core.exceptions import PulseAPIError
@@ -59,8 +59,29 @@ class AsyncJob(BaseModel):
         raise PulseAPIError(response)
 
     async def wait(self, timeout: float = 180.0) -> Any:
-        """Wait for job completion with timeout support."""
-        start = time.time()
+        """
+        Wait for job completion with timeout support.
+
+        Args:
+            timeout: Maximum time to wait in seconds
+
+        Returns:
+            Job result when completed
+
+        Raises:
+            asyncio.TimeoutError: If job doesn't complete within timeout
+            RuntimeError: If job fails or encounters an error
+            PulseAPIError: If API request fails
+        """
+        try:
+            return await asyncio.wait_for(self._wait_loop(), timeout=timeout)
+        except asyncio.TimeoutError:
+            raise asyncio.TimeoutError(
+                f"Job {self.id} did not finish in {timeout} seconds"
+            )
+
+    async def _wait_loop(self) -> Any:
+        """Internal wait loop without timeout handling."""
         while True:
             job = await self.refresh()
             if job.status in ("pending", "queued"):
@@ -76,8 +97,6 @@ class AsyncJob(BaseModel):
                 error_msg = job.message or ""
                 raise RuntimeError(f"Job {self.id} {job.status}: {error_msg}")
 
-            if time.time() - start > timeout:
-                raise TimeoutError(f"Job {self.id} did not finish in {timeout} seconds")
             await asyncio.sleep(2.0)
 
     async def result(self, timeout: float = 180.0) -> Any:
@@ -88,58 +107,90 @@ class AsyncJob(BaseModel):
         """
         Attempt to cancel the job.
 
+        This method attempts to cancel a running job by sending a DELETE request
+        to the jobs endpoint. Note that cancellation may not be possible for all
+        job states (e.g., already completed jobs).
+
         Returns:
             True if cancellation was successful, False otherwise.
+
+        Note:
+            This method does not raise exceptions on failure, returning False instead
+            to maintain compatibility with concurrent.futures.Future.cancel()
         """
         try:
             response = await self._client.delete(f"/jobs/{self.id}")
-            return response.status_code == 200
+            if response.status_code == 200:
+                # Try to update our status to reflect cancellation
+                try:
+                    await self.refresh()
+                except Exception:
+                    # Ignore refresh errors - cancellation was still successful
+                    pass
+                return True
+            return False
         except Exception:
             return False
 
     async def wait_with_callback(
-        self, callback: callable, timeout: float = 180.0
+        self,
+        callback: Union[Callable[[str], None], Callable[[str], Awaitable[None]]],
+        timeout: float = 180.0,
     ) -> Any:
         """
         Wait for completion with periodic status callbacks.
 
+        The callback function will be called whenever the job status changes.
+        Both sync and async callback functions are supported.
+
         Args:
-            callback: Async function called with status updates
+            callback: Function called with status updates. Can be sync or async.
             timeout: Maximum time to wait in seconds
 
         Returns:
             Job result when completed
+
+        Raises:
+            asyncio.TimeoutError: If job doesn't complete within timeout
+            RuntimeError: If job fails or encounters an error
+            PulseAPIError: If API request fails
         """
-        start = time.time()
-        last_status = None
 
-        while True:
-            job = await self.refresh()
+        async def callback_loop():
+            last_status = None
 
-            # Call callback if status changed
-            if job.status != last_status:
-                if asyncio.iscoroutinefunction(callback):
-                    await callback(job.status)
+            while True:
+                job = await self.refresh()
+
+                # Call callback if status changed
+                if job.status != last_status:
+                    if asyncio.iscoroutinefunction(callback):
+                        await callback(job.status)
+                    else:
+                        callback(job.status)
+                    last_status = job.status
+
+                if job.status in ("pending", "queued"):
+                    pass
+                elif job.status == "completed":
+                    if job.result_url:
+                        response = await self._client.get(job.result_url)
+                        if response.status_code != 200:
+                            raise PulseAPIError(response)
+                        return response.json()
+                    return job
                 else:
-                    callback(job.status)
-                last_status = job.status
+                    error_msg = job.message or ""
+                    raise RuntimeError(f"Job {self.id} {job.status}: {error_msg}")
 
-            if job.status in ("pending", "queued"):
-                pass
-            elif job.status == "completed":
-                if job.result_url:
-                    response = await self._client.get(job.result_url)
-                    if response.status_code != 200:
-                        raise PulseAPIError(response)
-                    return response.json()
-                return job
-            else:
-                error_msg = job.message or ""
-                raise RuntimeError(f"Job {self.id} {job.status}: {error_msg}")
+                await asyncio.sleep(2.0)
 
-            if time.time() - start > timeout:
-                raise TimeoutError(f"Job {self.id} did not finish in {timeout} seconds")
-            await asyncio.sleep(2.0)
+        try:
+            return await asyncio.wait_for(callback_loop(), timeout=timeout)
+        except asyncio.TimeoutError:
+            raise asyncio.TimeoutError(
+                f"Job {self.id} did not finish in {timeout} seconds"
+            )
 
     async def wait_for_status(
         self, target_status: str, timeout: float = 180.0
@@ -147,28 +198,38 @@ class AsyncJob(BaseModel):
         """
         Wait until job reaches specific status.
 
+        This method is useful when you want to wait for a specific intermediate
+        status rather than completion (e.g., waiting for "queued" status).
+
         Args:
-            target_status: Status to wait for
+            target_status: Status to wait for (e.g., "pending", "queued", "completed")
             timeout: Maximum time to wait in seconds
 
         Returns:
             AsyncJob instance when target status is reached
+
+        Raises:
+            asyncio.TimeoutError: If target status not reached within timeout
+            RuntimeError: If job fails before reaching target status
         """
-        start = time.time()
 
-        while True:
-            job = await self.refresh()
+        async def status_loop():
+            while True:
+                job = await self.refresh()
 
-            if job.status == target_status:
-                return job
+                if job.status == target_status:
+                    return job
 
-            if job.status in ("error", "failed"):
-                error_msg = job.message or ""
-                raise RuntimeError(f"Job {self.id} {job.status}: {error_msg}")
+                if job.status in ("error", "failed"):
+                    error_msg = job.message or ""
+                    raise RuntimeError(f"Job {self.id} {job.status}: {error_msg}")
 
-            if time.time() - start > timeout:
-                raise TimeoutError(
-                    f"Job {self.id} did not reach status '{target_status}' "
-                    f"in {timeout} seconds"
-                )
-            await asyncio.sleep(2.0)
+                await asyncio.sleep(2.0)
+
+        try:
+            return await asyncio.wait_for(status_loop(), timeout=timeout)
+        except asyncio.TimeoutError:
+            raise asyncio.TimeoutError(
+                f"Job {self.id} did not reach status '{target_status}' "
+                f"in {timeout} seconds"
+            )
