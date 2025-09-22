@@ -665,20 +665,17 @@ class AsyncCoreClient:
     async def _process_batches_concurrently(
         self, job_submitters, max_workers: int = 5, timeout: float = 600.0
     ):
-        """Process batches concurrently with controlled concurrency."""
-        # Create semaphore to limit concurrent jobs
-        semaphore = asyncio.Semaphore(max_workers)
+        """Process batches concurrently with controlled concurrency using utilities."""
+        from pulse.core.async_concurrent import submit_and_gather_jobs
 
-        async def process_with_semaphore(submitter):
-            async with semaphore:
-                job = await submitter
-                if isinstance(job, AsyncJob):
-                    return await job.wait(timeout)
-                return job
-
-        # Submit all jobs with concurrency control
-        tasks = [process_with_semaphore(submitter) for submitter in job_submitters]
-        return await asyncio.gather(*tasks)
+        # Use the new concurrent utilities for better error handling and rate limiting
+        return await submit_and_gather_jobs(
+            job_submitters,
+            max_concurrent=max_workers,
+            timeout=timeout,
+            rate_limit_delay=0.05,  # Small delay to prevent API overload
+            return_exceptions=False,
+        )
 
     async def compare_similarity(
         self,
