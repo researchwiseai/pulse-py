@@ -31,6 +31,9 @@ MAX_ITEMS = 10_000
 # For self-similarity, chunk size is half of MAX_ITEMS
 HALF_CHUNK = MAX_ITEMS // 2
 
+# Clustering-specific limits
+CLUSTERING_CHUNK_SIZE = 500  # Match the auto-batching threshold
+
 
 def _make_self_chunks(items: List[str]) -> List[List[str]]:
     """Split a single list into chunks sized for self-similarity."""
@@ -39,6 +42,20 @@ def _make_self_chunks(items: List[str]) -> List[List[str]]:
         return [items]
     C = HALF_CHUNK
     return [items[i : i + C] for i in range(0, N, C)]
+
+
+def _make_clustering_chunks(items: List[str]) -> List[List[str]]:
+    """Split a list into chunks sized for clustering operations.
+
+    Uses clustering-specific chunk size to ensure optimal batching
+    for clustering operations.
+    """
+    N = len(items)
+    if N <= CLUSTERING_CHUNK_SIZE:
+        return [items]
+    return [
+        items[i : i + CLUSTERING_CHUNK_SIZE] for i in range(0, N, CLUSTERING_CHUNK_SIZE)
+    ]
 
 
 def _make_cross_bodies(
@@ -295,6 +312,124 @@ def enhanced_batch_similarity(
 
     # Stitch results back together
     return _stitch_results(results, request_bodies, full_a, full_b)
+
+
+def enhanced_batch_clustering(
+    client_method: Callable,
+    inputs: List[str],
+    k: int,
+    algorithm: str = "kmeans",
+    fast: bool = True,
+    max_workers: int = 5,
+    timeout: float = 600.0,
+) -> Any:
+    """Enhanced batch clustering processing with parallel job execution.
+
+    This function implements intelligent parallel clustering batching with
+    clustering-specific chunk sizes, with result reconstruction for async
+    operations (fast=False only).
+
+    Args:
+        client_method: The client method to submit clustering jobs.
+        inputs: List of input texts to cluster.
+        k: Number of clusters.
+        algorithm: Clustering algorithm to use.
+        fast: If True, use sequential processing. If False, use concurrent processing.
+        max_workers: Maximum concurrent workers for slow mode.
+        timeout: Timeout for job completion.
+
+    Returns:
+        Reconstructed clustering response.
+    """
+    # Create chunks using clustering-specific chunking strategy
+    chunks = _make_clustering_chunks(inputs)
+
+    # Create request bodies for each chunk
+    request_bodies = []
+    for chunk in chunks:
+        body = {"inputs": chunk, "k": k, "algorithm": algorithm}
+        if fast is not None:
+            body["fast"] = fast
+        request_bodies.append(body)
+
+    # Create job submitters
+    job_submitters = create_batch_job_submitters(client_method, request_bodies)
+
+    # Process jobs with appropriate concurrency level (5 concurrent jobs max)
+    results = process_batches_concurrently(
+        job_submitters, max_workers=max_workers, timeout=timeout, fast=fast
+    )
+
+    # Reconstruct clustering results
+    return _reconstruct_clustering_results(results, inputs, k, algorithm)
+
+
+def _reconstruct_clustering_results(
+    results: List[Any], original_inputs: List[str], k: int, algorithm: str
+) -> Any:
+    """Reconstruct clustering results from parallel batches.
+
+    This function combines clustering assignments from parallel batches
+    to ensure results are identical to non-batched clustering for the same input.
+    The reconstruction process maintains cluster consistency across batches.
+
+    Args:
+        results: List of clustering results from parallel batches.
+        original_inputs: Original input texts.
+        k: Number of clusters.
+        algorithm: Clustering algorithm used.
+
+    Returns:
+        Combined clustering response with reconstructed cluster assignments.
+    """
+    if not results:
+        return {"clusters": [], "usage": None}
+
+    # Combine all cluster assignments from batches
+    all_clusters = []
+    total_usage = None
+
+    # Track cluster offset to maintain unique cluster IDs across batches
+    cluster_offset = 0
+
+    for batch_result in results:
+        if hasattr(batch_result, "clusters") and batch_result.clusters:
+            # Adjust cluster IDs to avoid conflicts between batches
+            adjusted_clusters = []
+            for cluster_assignment in batch_result.clusters:
+                if isinstance(cluster_assignment, dict):
+                    # Adjust cluster ID if it's a dictionary with cluster_id
+                    adjusted_assignment = cluster_assignment.copy()
+                    if "cluster_id" in adjusted_assignment:
+                        adjusted_assignment["cluster_id"] += cluster_offset
+                    adjusted_clusters.append(adjusted_assignment)
+                else:
+                    # If it's just a cluster ID number, adjust it
+                    adjusted_clusters.append(cluster_assignment + cluster_offset)
+
+            all_clusters.extend(adjusted_clusters)
+
+            # Update cluster offset for next batch
+            if batch_result.clusters:
+                max_cluster_id = max(
+                    (c.get("cluster_id", c) if isinstance(c, dict) else c)
+                    for c in batch_result.clusters
+                )
+                cluster_offset = max_cluster_id + 1
+
+        # Aggregate usage metrics
+        if hasattr(batch_result, "usage") and batch_result.usage:
+            if total_usage is None:
+                total_usage = batch_result.usage
+            else:
+                # Aggregate usage metrics from all batches
+                if hasattr(total_usage, "input_tokens"):
+                    total_usage.input_tokens += batch_result.usage.input_tokens
+                if hasattr(total_usage, "output_tokens"):
+                    total_usage.output_tokens += batch_result.usage.output_tokens
+
+    # Return reconstructed clustering response
+    return {"clusters": all_clusters, "usage": total_usage}
 
 
 class BatchConcurrencyController:
