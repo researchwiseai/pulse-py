@@ -531,7 +531,7 @@ ERROR: pip's dependency resolver does not currently consider all the packages th
 1. **Use fast mode for small datasets:**
    ```python
    # Automatically enabled for < 200 texts
-   result = sentiment_analysis(texts)  # fast=True by default
+   result = sentiment_analysis(texts)  # fast mode auto-detected by starters
 
    # Force fast mode
    result = client.analyze_sentiment(texts, fast=True)

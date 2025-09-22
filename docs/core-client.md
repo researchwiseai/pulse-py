@@ -118,7 +118,7 @@ Keyword parameters:
 
 Returns a full similarity matrix (`list[list[float]]`).
 
-### `generate_themes(texts: list[str], min_themes=2, max_themes=50, fast=True, *, context=None, version=None, prune=None, interactive=None, initial_sets=None, await_job_result=True) -> ThemesResponse | ThemeSetsResponse | Job`
+### `generate_themes(texts: list[str], min_themes=2, max_themes=50, fast=False, *, context=None, version=None, prune=None, interactive=None, initial_sets=None, await_job_result=True) -> ThemesResponse | ThemeSetsResponse | Job`
 Cluster texts into latent themes with enhanced functionality.
 
 Parameters:

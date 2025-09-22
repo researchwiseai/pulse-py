@@ -519,7 +519,7 @@ class CoreClient:
         texts: list[str],
         min_themes: Optional[int] = None,
         max_themes: Optional[int] = None,
-        fast: bool = True,
+        fast: bool = False,
         *,
         context: Optional[str] = None,
         version: Optional[str] = None,
@@ -635,7 +635,7 @@ class CoreClient:
         texts: list[str],
         *,
         version: str | None = None,
-        fast: bool = True,
+        fast: bool = False,
         await_job_result: bool = True,
     ) -> Union[SentimentResponse, Job]:
         """Classify sentiment for the given texts.
