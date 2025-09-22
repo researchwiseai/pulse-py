@@ -1,6 +1,6 @@
 """Batching utilities for similarity requests under Pulse API limits."""
 
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Callable
 
 try:
     import numpy as np
@@ -9,6 +9,22 @@ try:
 except ImportError:
     HAS_NUMPY = False
     np = None
+
+
+# Lazy import to avoid circular dependencies
+def _get_concurrent_classes():
+    """Lazy import of concurrent processing classes."""
+    try:
+        from pulse.core.concurrent import (
+            ConcurrentJobManager,
+            ConcurrentJobConfig,
+            AsyncJobProcessor,
+        )
+
+        return ConcurrentJobManager, ConcurrentJobConfig, AsyncJobProcessor, True
+    except ImportError:
+        return None, None, None, False
+
 
 # Maximum total items per similarity request
 MAX_ITEMS = 10_000
@@ -168,3 +184,168 @@ def _stitch_results(
                     matrix[r0:r1, c0:c1] = block
                     idx += 1
     return matrix
+
+
+def process_batches_concurrently(
+    job_submitters: List[Callable[[], Any]],
+    max_workers: int = 5,
+    timeout: float = 600.0,
+    fast: bool = True,
+) -> List[Any]:
+    """Process multiple batch jobs concurrently for async operations only (fast=False).
+
+    This function provides controlled parallel processing for slow mode operations.
+    For fast mode operations (fast=True), jobs are processed sequentially to maintain
+    thread safety and compatibility with testing frameworks like VCR.
+
+    Args:
+        job_submitters: List of callables that return Job instances when called.
+        max_workers: Maximum number of concurrent workers for slow mode.
+        timeout: Timeout for individual job completion.
+        fast: If True, process sequentially. If False, use concurrent processing.
+
+    Returns:
+        List of job results in the same order as input submitters.
+
+    Raises:
+        ImportError: If concurrent processing is requested but dependencies are missing.
+    """
+    if fast:
+        # Fast mode: sequential processing for thread safety
+        jobs = [submitter() for submitter in job_submitters]
+        return [job.wait(timeout) for job in jobs]
+
+    # Slow mode: concurrent processing
+    ConcurrentJobManager, ConcurrentJobConfig, AsyncJobProcessor, has_concurrent = (
+        _get_concurrent_classes()
+    )
+
+    if not has_concurrent:
+        raise ImportError(
+            "Concurrent processing requires additional dependencies. "
+            "This should not happen as concurrent.py is part of the core module."
+        )
+
+    config = ConcurrentJobConfig(
+        max_workers=max_workers, timeout=timeout, enable_progress=True
+    )
+
+    return AsyncJobProcessor.batch_process_with_concurrency(job_submitters, config)
+
+
+def create_batch_job_submitters(
+    client_method: Callable, request_bodies: List[Dict[str, Any]]
+) -> List[Callable[[], Any]]:
+    """Create job submitter functions for batch processing.
+
+    Args:
+        client_method: The client method to call for each batch.
+        request_bodies: List of request body dictionaries.
+
+    Returns:
+        List of job submitter functions.
+    """
+    ConcurrentJobManager, ConcurrentJobConfig, AsyncJobProcessor, has_concurrent = (
+        _get_concurrent_classes()
+    )
+
+    if not has_concurrent:
+        # Fallback for when concurrent processing is not available
+        return [lambda body=body: client_method(**body) for body in request_bodies]
+
+    return [
+        AsyncJobProcessor.create_job_submitter(client_method, **body)
+        for body in request_bodies
+    ]
+
+
+def enhanced_batch_similarity(
+    client_method: Callable,
+    request_bodies: List[Dict[str, Any]],
+    full_a: List[str],
+    full_b: List[str],
+    fast: bool = True,
+    max_workers: int = 5,
+    timeout: float = 600.0,
+) -> Any:
+    """Enhanced batch similarity processing with optional concurrency.
+
+    This function extends the existing batch similarity logic with controlled
+    parallel processing for async operations (fast=False only).
+
+    Args:
+        client_method: The client method to submit batch jobs.
+        request_bodies: List of request body dictionaries for batching.
+        full_a: Full list A for result stitching.
+        full_b: Full list B for result stitching.
+        fast: If True, use sequential processing. If False, use concurrent processing.
+        max_workers: Maximum concurrent workers for slow mode.
+        timeout: Timeout for job completion.
+
+    Returns:
+        Stitched similarity matrix or result.
+    """
+    # Create job submitters
+    job_submitters = create_batch_job_submitters(client_method, request_bodies)
+
+    # Process jobs with appropriate concurrency level
+    results = process_batches_concurrently(
+        job_submitters, max_workers=max_workers, timeout=timeout, fast=fast
+    )
+
+    # Stitch results back together
+    return _stitch_results(results, request_bodies, full_a, full_b)
+
+
+class BatchConcurrencyController:
+    """Controller for managing batch processing concurrency with semaphore-based
+    limits."""
+
+    def __init__(self, max_concurrent_batches: int = 5):
+        """Initialize the concurrency controller.
+
+        Args:
+            max_concurrent_batches: Maximum number of concurrent batch operations.
+        """
+        self.max_concurrent_batches = max_concurrent_batches
+        self._config = None
+
+    def get_config(self) -> Any:
+        """Get the concurrent job configuration.
+
+        Returns:
+            ConcurrentJobConfig instance or None if concurrent processing unavailable.
+        """
+        if self._config is None:
+            (
+                ConcurrentJobManager,
+                ConcurrentJobConfig,
+                AsyncJobProcessor,
+                has_concurrent,
+            ) = _get_concurrent_classes()
+            if has_concurrent:
+                self._config = ConcurrentJobConfig(
+                    max_workers=self.max_concurrent_batches,
+                    timeout=600.0,
+                    enable_progress=True,
+                )
+        return self._config
+
+    def process_with_controlled_concurrency(
+        self, job_submitters: List[Callable[[], Any]], fast: bool = True
+    ) -> List[Any]:
+        """Process jobs with controlled concurrency based on fast mode setting.
+
+        Args:
+            job_submitters: List of job submitter functions.
+            fast: If True, process sequentially. If False, use concurrent processing.
+
+        Returns:
+            List of job results.
+        """
+        return process_batches_concurrently(
+            job_submitters,
+            max_workers=self.max_concurrent_batches,
+            timeout=600.0,
+            fast=fast,
+        )

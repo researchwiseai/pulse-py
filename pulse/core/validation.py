@@ -9,7 +9,8 @@ class ValidationLimits:
 
     # Embeddings limits
     EMBEDDINGS_SYNC_MAX = 200
-    EMBEDDINGS_ASYNC_MAX = 5000
+    EMBEDDINGS_ASYNC_MAX = 1_000_000
+    EMBEDDINGS_BATCH_SIZE = 5_000
 
     # Similarity limits
     SIMILARITY_SELF_SYNC_MAX = 500
@@ -20,17 +21,103 @@ class ValidationLimits:
     THEMES_SYNC_MAX = 200
     THEMES_ASYNC_MAX = 500
 
-    # Clustering limits
+    # Clustering limits - following similarity pattern
     CLUSTERING_SYNC_MAX = 500
     CLUSTERING_ASYNC_MAX = 44721
+    CLUSTERING_AUTO_BATCH_THRESHOLD = 500
 
     # Sentiment limits
     SENTIMENT_SYNC_MAX = 200
-    SENTIMENT_ASYNC_MAX = 5000
+    SENTIMENT_ASYNC_MAX = 1_000_000
+    SENTIMENT_BATCH_SIZE = 2_000
 
     # Extractions limits
     EXTRACTIONS_SYNC_MAX = 200
-    EXTRACTIONS_ASYNC_MAX = 5000
+    EXTRACTIONS_ASYNC_MAX = 1_000_000
+    EXTRACTIONS_BATCH_SIZE = 2_000
+
+
+# Error documentation structure for comprehensive error handling
+ERROR_DOCUMENTATION = {
+    "FAST_MODE_LIMIT_EXCEEDED": {
+        "code": "BATCH_001",
+        "message_template": (
+            "Fast mode supports up to {limit} texts. "
+            "Use slow mode for larger datasets or reduce input size."
+        ),
+        "resolution_steps": [
+            "Set fast=False to enable slow mode processing",
+            "Reduce input size to {limit} or fewer texts",
+            "Consider processing data in smaller batches",
+        ],
+        "examples": {
+            "sentiment": "client.analyze_sentiment(texts[:200], fast=True)",
+            "embeddings": (
+                "client.create_embeddings("
+                "EmbeddingsRequest(inputs=texts[:200], fast=True))"
+            ),
+            "extractions": (
+                "client.extract_elements(texts[:200], dictionary, fast=True)"
+            ),
+        },
+    },
+    "SLOW_MODE_LIMIT_EXCEEDED": {
+        "code": "BATCH_002",
+        "message_template": (
+            "Maximum input limit is {limit:,} texts. "
+            "Please reduce your dataset size."
+        ),
+        "resolution_steps": [
+            "Split dataset into chunks of {limit:,} or fewer texts",
+            "Process data in multiple separate requests",
+            "Consider data sampling or filtering strategies",
+        ],
+        "examples": {
+            "chunking": "for chunk in chunks(texts, {limit}): process_chunk(chunk)"
+        },
+    },
+    "BATCH_JOB_FAILED": {
+        "code": "BATCH_003",
+        "message_template": (
+            "Batch {batch_num} of {total_batches} failed: {error_message}"
+        ),
+        "resolution_steps": [
+            "Check individual batch data for issues",
+            "Retry with smaller batch sizes",
+            "Verify network connectivity and API limits",
+            "Review batch content for problematic inputs",
+        ],
+        "examples": {
+            "retry": (
+                "try: result = process_batch(batch) "
+                "except BatchingError: retry_with_smaller_batch()"
+            )
+        },
+    },
+    "CONCURRENCY_LIMIT_EXCEEDED": {
+        "code": "BATCH_004",
+        "message_template": (
+            "Too many concurrent jobs: {current_jobs}. " "Maximum allowed: {max_jobs}"
+        ),
+        "resolution_steps": [
+            "Reduce concurrent job limit in configuration",
+            "Wait for existing jobs to complete before starting new ones",
+            "Consider sequential processing for resource-constrained environments",
+        ],
+    },
+    "CLUSTERING_AUTO_BATCH_TRIGGERED": {
+        "code": "BATCH_005",
+        "message_template": (
+            "Input size {input_count} exceeds threshold {threshold}. "
+            "Automatic batching enabled."
+        ),
+        "resolution_steps": [
+            "This is informational - batching will proceed automatically",
+            "Results will be reconstructed to match non-batched clustering",
+            "Consider reducing input size if processing time is too long",
+        ],
+    },
+}
 
 
 class PulseValidationError(Exception):
@@ -74,6 +161,194 @@ class PulseValidationError(Exception):
         return " ".join(parts)
 
 
+class BatchingError(PulseValidationError):
+    """Specialized error for batching operations with structured error information."""
+
+    def __init__(
+        self,
+        message: str,
+        feature: str,
+        input_count: int,
+        limit: int,
+        suggested_action: str,
+        error_code: Optional[str] = None,
+        batch_number: Optional[int] = None,
+        total_batches: Optional[int] = None,
+        resolution_steps: Optional[List[str]] = None,
+        **kwargs,
+    ):
+        self.feature = feature
+        self.input_count = input_count
+        self.suggested_action = suggested_action
+        self.error_code = error_code
+        self.batch_number = batch_number
+        self.total_batches = total_batches
+        self.resolution_steps = resolution_steps or []
+
+        super().__init__(message, limit=limit, endpoint=feature, **kwargs)
+
+    def get_structured_info(self) -> Dict[str, Any]:
+        """Get structured error information for programmatic handling."""
+        return {
+            "error_code": self.error_code,
+            "feature": self.feature,
+            "input_count": self.input_count,
+            "limit": self.limit,
+            "mode": self.mode,
+            "suggested_action": self.suggested_action,
+            "batch_number": self.batch_number,
+            "total_batches": self.total_batches,
+            "resolution_steps": self.resolution_steps,
+        }
+
+
+class BatchingErrorHelper:
+    """Helper class for generating actionable error guidance and diagnostics."""
+
+    @staticmethod
+    def create_fast_mode_error(
+        feature: str, input_count: int, limit: int
+    ) -> BatchingError:
+        """Create a fast mode limit exceeded error with structured information."""
+        error_info = ERROR_DOCUMENTATION["FAST_MODE_LIMIT_EXCEEDED"]
+        message = error_info["message_template"].format(limit=limit)
+
+        resolution_steps = [
+            step.format(limit=limit) for step in error_info["resolution_steps"]
+        ]
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=input_count,
+            limit=limit,
+            suggested_action=f"Set fast=False or reduce input to {limit} texts",
+            error_code=error_info["code"],
+            mode="fast",
+            resolution_steps=resolution_steps,
+        )
+
+    @staticmethod
+    def create_slow_mode_error(
+        feature: str, input_count: int, limit: int
+    ) -> BatchingError:
+        """Create a slow mode limit exceeded error with structured information."""
+        error_info = ERROR_DOCUMENTATION["SLOW_MODE_LIMIT_EXCEEDED"]
+        message = error_info["message_template"].format(limit=limit)
+
+        resolution_steps = [
+            step.format(limit=limit) for step in error_info["resolution_steps"]
+        ]
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=input_count,
+            limit=limit,
+            suggested_action=f"Split dataset into chunks of {limit:,} or fewer texts",
+            error_code=error_info["code"],
+            mode="slow",
+            resolution_steps=resolution_steps,
+        )
+
+    @staticmethod
+    def create_batch_failure_error(
+        feature: str,
+        batch_num: int,
+        total_batches: int,
+        error_message: str,
+        input_count: int = 0,
+    ) -> BatchingError:
+        """Create a batch job failure error with structured information."""
+        error_info = ERROR_DOCUMENTATION["BATCH_JOB_FAILED"]
+        message = error_info["message_template"].format(
+            batch_num=batch_num,
+            total_batches=total_batches,
+            error_message=error_message,
+        )
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=input_count,
+            limit=0,  # Not applicable for batch failures
+            suggested_action="Check batch data and retry with smaller batches",
+            error_code=error_info["code"],
+            batch_number=batch_num,
+            total_batches=total_batches,
+            resolution_steps=error_info["resolution_steps"],
+        )
+
+    @staticmethod
+    def create_concurrency_error(current_jobs: int, max_jobs: int) -> BatchingError:
+        """Create a concurrency limit exceeded error."""
+        error_info = ERROR_DOCUMENTATION["CONCURRENCY_LIMIT_EXCEEDED"]
+        message = error_info["message_template"].format(
+            current_jobs=current_jobs, max_jobs=max_jobs
+        )
+
+        return BatchingError(
+            message=message,
+            feature="batching",
+            input_count=current_jobs,
+            limit=max_jobs,
+            suggested_action=f"Reduce concurrent jobs to {max_jobs} or fewer",
+            error_code=error_info["code"],
+            resolution_steps=error_info["resolution_steps"],
+        )
+
+    @staticmethod
+    def get_error_documentation(error_code: str) -> Optional[Dict[str, Any]]:
+        """Get documentation for a specific error code."""
+        for error_type, info in ERROR_DOCUMENTATION.items():
+            if info["code"] == error_code:
+                return info
+        return None
+
+    @staticmethod
+    def generate_example_code(feature: str, error_code: str) -> Optional[str]:
+        """Generate example code for handling a specific error."""
+        error_info = BatchingErrorHelper.get_error_documentation(error_code)
+        if not error_info or "examples" not in error_info:
+            return None
+
+        examples = error_info["examples"]
+
+        # Return feature-specific example if available, otherwise return first example
+        if feature in examples:
+            return examples[feature]
+        elif examples:
+            return list(examples.values())[0]
+
+        return None
+
+    @staticmethod
+    def diagnose_error(error: Exception) -> Dict[str, Any]:
+        """Analyze error and provide diagnostic information."""
+        if isinstance(error, BatchingError):
+            return {
+                "error_type": "BatchingError",
+                "structured_info": error.get_structured_info(),
+                "example_code": BatchingErrorHelper.generate_example_code(
+                    error.feature, error.error_code
+                ),
+                "documentation": BatchingErrorHelper.get_error_documentation(
+                    error.error_code
+                ),
+            }
+        elif isinstance(error, PulseValidationError):
+            return {
+                "error_type": "PulseValidationError",
+                "endpoint": error.endpoint,
+                "mode": error.mode,
+                "field": error.field,
+                "value": error.value,
+                "limit": error.limit,
+            }
+        else:
+            return {"error_type": type(error).__name__, "message": str(error)}
+
+
 def validate_embeddings_input(inputs: List[Any], fast: Optional[bool] = None) -> None:
     """
     Validate embeddings input according to sync/async limits.
@@ -83,7 +358,7 @@ def validate_embeddings_input(inputs: List[Any], fast: Optional[bool] = None) ->
         fast: Sync (True) or async (False/None) mode
 
     Raises:
-        PulseValidationError: If validation fails
+        BatchingError: If validation fails with enhanced error information
     """
     if not inputs:
         raise PulseValidationError(
@@ -93,26 +368,16 @@ def validate_embeddings_input(inputs: List[Any], fast: Optional[bool] = None) ->
     input_count = len(inputs)
 
     if fast is True:
-        # Sync mode
+        # Fast mode - reject with clear error message
         if input_count > ValidationLimits.EMBEDDINGS_SYNC_MAX:
-            raise PulseValidationError(
-                f"Too many inputs for sync mode: {input_count}",
-                field="inputs",
-                value=input_count,
-                limit=ValidationLimits.EMBEDDINGS_SYNC_MAX,
-                endpoint="embeddings",
-                mode="sync",
+            raise BatchingErrorHelper.create_fast_mode_error(
+                "embeddings", input_count, ValidationLimits.EMBEDDINGS_SYNC_MAX
             )
     else:
-        # Async mode (fast=False or fast=None)
+        # Slow mode
         if input_count > ValidationLimits.EMBEDDINGS_ASYNC_MAX:
-            raise PulseValidationError(
-                f"Too many inputs for async mode: {input_count}",
-                field="inputs",
-                value=input_count,
-                limit=ValidationLimits.EMBEDDINGS_ASYNC_MAX,
-                endpoint="embeddings",
-                mode="async",
+            raise BatchingErrorHelper.create_slow_mode_error(
+                "embeddings", input_count, ValidationLimits.EMBEDDINGS_ASYNC_MAX
             )
 
 
@@ -248,6 +513,9 @@ def validate_clustering_input(inputs: List[str], fast: Optional[bool] = None) ->
     """
     Validate clustering input according to sync/async limits.
 
+    Note: Clustering automatically triggers batching when input > 500 texts,
+    similar to similarity analysis pattern.
+
     Args:
         inputs: List of input texts
         fast: Sync (True) or async (False/None) mode
@@ -274,7 +542,7 @@ def validate_clustering_input(inputs: List[str], fast: Optional[bool] = None) ->
                 mode="sync",
             )
     else:
-        # Async mode
+        # Async mode - follows similarity pattern with intelligent batching
         if input_count > ValidationLimits.CLUSTERING_ASYNC_MAX:
             raise PulseValidationError(
                 f"Too many inputs for async mode: {input_count}",
@@ -295,7 +563,7 @@ def validate_sentiment_input(inputs: List[Any], fast: Optional[bool] = None) -> 
         fast: Sync (True) or async (False/None) mode
 
     Raises:
-        PulseValidationError: If validation fails
+        BatchingError: If validation fails with enhanced error information
     """
     if not inputs:
         raise PulseValidationError(
@@ -305,26 +573,16 @@ def validate_sentiment_input(inputs: List[Any], fast: Optional[bool] = None) -> 
     input_count = len(inputs)
 
     if fast is True:
-        # Sync mode
+        # Fast mode - reject with clear error message
         if input_count > ValidationLimits.SENTIMENT_SYNC_MAX:
-            raise PulseValidationError(
-                f"Too many inputs for sync mode: {input_count}",
-                field="inputs",
-                value=input_count,
-                limit=ValidationLimits.SENTIMENT_SYNC_MAX,
-                endpoint="sentiment",
-                mode="sync",
+            raise BatchingErrorHelper.create_fast_mode_error(
+                "sentiment", input_count, ValidationLimits.SENTIMENT_SYNC_MAX
             )
     else:
-        # Async mode
+        # Slow mode
         if input_count > ValidationLimits.SENTIMENT_ASYNC_MAX:
-            raise PulseValidationError(
-                f"Too many inputs for async mode: {input_count}",
-                field="inputs",
-                value=input_count,
-                limit=ValidationLimits.SENTIMENT_ASYNC_MAX,
-                endpoint="sentiment",
-                mode="async",
+            raise BatchingErrorHelper.create_slow_mode_error(
+                "sentiment", input_count, ValidationLimits.SENTIMENT_ASYNC_MAX
             )
 
 
@@ -337,7 +595,7 @@ def validate_extractions_input(inputs: List[str], fast: Optional[bool] = None) -
         fast: Sync (True) or async (False/None) mode
 
     Raises:
-        PulseValidationError: If validation fails
+        BatchingError: If validation fails with enhanced error information
     """
     if not inputs:
         raise PulseValidationError(
@@ -347,26 +605,16 @@ def validate_extractions_input(inputs: List[str], fast: Optional[bool] = None) -
     input_count = len(inputs)
 
     if fast is True:
-        # Sync mode
+        # Fast mode - reject with clear error message
         if input_count > ValidationLimits.EXTRACTIONS_SYNC_MAX:
-            raise PulseValidationError(
-                f"Too many inputs for sync mode: {input_count}",
-                field="inputs",
-                value=input_count,
-                limit=ValidationLimits.EXTRACTIONS_SYNC_MAX,
-                endpoint="extractions",
-                mode="sync",
+            raise BatchingErrorHelper.create_fast_mode_error(
+                "extractions", input_count, ValidationLimits.EXTRACTIONS_SYNC_MAX
             )
     else:
-        # Async mode
+        # Slow mode
         if input_count > ValidationLimits.EXTRACTIONS_ASYNC_MAX:
-            raise PulseValidationError(
-                f"Too many inputs for async mode: {input_count}",
-                field="inputs",
-                value=input_count,
-                limit=ValidationLimits.EXTRACTIONS_ASYNC_MAX,
-                endpoint="extractions",
-                mode="async",
+            raise BatchingErrorHelper.create_slow_mode_error(
+                "extractions", input_count, ValidationLimits.EXTRACTIONS_ASYNC_MAX
             )
 
 
