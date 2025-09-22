@@ -36,10 +36,12 @@ class ValidationLimits:
     EXTRACTIONS_BATCH_SIZE = 2_000
 
 
-# Error documentation structure for comprehensive error handling
+# Comprehensive error documentation structure for all batching scenarios
 ERROR_DOCUMENTATION = {
     "FAST_MODE_LIMIT_EXCEEDED": {
         "code": "BATCH_001",
+        "category": "limit_exceeded",
+        "severity": "user_error",
         "message_template": (
             "Fast mode supports up to {limit} texts. "
             "Use slow mode for larger datasets or reduce input size."
@@ -49,6 +51,7 @@ ERROR_DOCUMENTATION = {
             "Reduce input size to {limit} or fewer texts",
             "Consider processing data in smaller batches",
         ],
+        "context_fields": ["feature", "input_count", "limit", "mode"],
         "examples": {
             "sentiment": "client.analyze_sentiment(texts[:200], fast=True)",
             "embeddings": (
@@ -59,9 +62,13 @@ ERROR_DOCUMENTATION = {
                 "client.extract_elements(texts[:200], dictionary, fast=True)"
             ),
         },
+        "related_errors": ["BATCH_002"],
+        "documentation_url": "/docs/batching-errors#batch-001",
     },
     "SLOW_MODE_LIMIT_EXCEEDED": {
         "code": "BATCH_002",
+        "category": "limit_exceeded",
+        "severity": "user_error",
         "message_template": (
             "Maximum input limit is {limit:,} texts. "
             "Please reduce your dataset size."
@@ -71,12 +78,18 @@ ERROR_DOCUMENTATION = {
             "Process data in multiple separate requests",
             "Consider data sampling or filtering strategies",
         ],
+        "context_fields": ["feature", "input_count", "limit", "mode"],
         "examples": {
-            "chunking": "for chunk in chunks(texts, {limit}): process_chunk(chunk)"
+            "chunking": "for chunk in chunks(texts, {limit}): process_chunk(chunk)",
+            "sampling": "sampled_texts = random.sample(texts, {limit})",
         },
+        "related_errors": ["BATCH_001"],
+        "documentation_url": "/docs/batching-errors#batch-002",
     },
     "BATCH_JOB_FAILED": {
         "code": "BATCH_003",
+        "category": "batch_failed",
+        "severity": "runtime_error",
         "message_template": (
             "Batch {batch_num} of {total_batches} failed: {error_message}"
         ),
@@ -86,26 +99,57 @@ ERROR_DOCUMENTATION = {
             "Verify network connectivity and API limits",
             "Review batch content for problematic inputs",
         ],
+        "context_fields": [
+            "feature",
+            "batch_num",
+            "total_batches",
+            "error_message",
+            "input_count",
+        ],
         "examples": {
             "retry": (
-                "try: result = process_batch(batch) "
-                "except BatchingError: retry_with_smaller_batch()"
-            )
+                "try:\n    result = process_batch(batch)\n"
+                "except BatchingError as e:\n    if e.batch_number:\n"
+                "        retry_batch_with_smaller_size(e.batch_number)"
+            ),
+            "inspect": (
+                "failed_batch_data = batches[error.batch_number - 1]\n"
+                "print(f'Failed batch contains {len(failed_batch_data)} items')"
+            ),
         },
+        "related_errors": ["BATCH_006", "BATCH_007"],
+        "documentation_url": "/docs/batching-errors#batch-003",
     },
     "CONCURRENCY_LIMIT_EXCEEDED": {
         "code": "BATCH_004",
+        "category": "concurrency_error",
+        "severity": "configuration_error",
         "message_template": (
-            "Too many concurrent jobs: {current_jobs}. " "Maximum allowed: {max_jobs}"
+            "Too many concurrent jobs: {current_jobs}. Maximum allowed: {max_jobs}"
         ),
         "resolution_steps": [
             "Reduce concurrent job limit in configuration",
             "Wait for existing jobs to complete before starting new ones",
             "Consider sequential processing for resource-constrained environments",
         ],
+        "context_fields": ["current_jobs", "max_jobs", "feature"],
+        "examples": {
+            "config": (
+                "config = BatchingConfig(max_concurrent_jobs={max_jobs})\n"
+                "client = CoreClient(batching_config=config)"
+            ),
+            "sequential": (
+                "# Process batches sequentially\n"
+                "for batch in batches:\n    result = process_batch(batch)"
+            ),
+        },
+        "related_errors": ["BATCH_007"],
+        "documentation_url": "/docs/batching-errors#batch-004",
     },
     "CLUSTERING_AUTO_BATCH_TRIGGERED": {
         "code": "BATCH_005",
+        "category": "informational",
+        "severity": "info",
         "message_template": (
             "Input size {input_count} exceeds threshold {threshold}. "
             "Automatic batching enabled."
@@ -115,6 +159,149 @@ ERROR_DOCUMENTATION = {
             "Results will be reconstructed to match non-batched clustering",
             "Consider reducing input size if processing time is too long",
         ],
+        "context_fields": ["input_count", "threshold", "feature"],
+        "examples": {
+            "reduce_size": (
+                "# Reduce input size if needed\n"
+                "if len(texts) > 500:\n    texts = texts[:500]"
+            )
+        },
+        "related_errors": [],
+        "documentation_url": "/docs/batching-errors#batch-005",
+    },
+    "BATCH_TIMEOUT": {
+        "code": "BATCH_006",
+        "category": "timeout_error",
+        "severity": "runtime_error",
+        "message_template": ("Batch {batch_num} timed out after {timeout} seconds"),
+        "resolution_steps": [
+            "Increase timeout_per_batch in BatchingConfig",
+            "Reduce batch sizes to process faster",
+            "Check network connectivity",
+            "Verify API endpoint performance",
+        ],
+        "context_fields": ["batch_num", "timeout", "feature", "total_batches"],
+        "examples": {
+            "increase_timeout": (
+                "config = BatchingConfig(timeout_per_batch=600.0)\n"
+                "client = CoreClient(batching_config=config)"
+            ),
+            "smaller_batches": (
+                "# Use smaller batch sizes\n"
+                "config = BatchingConfig(default_batch_sizes={'sentiment': 1000})"
+            ),
+        },
+        "related_errors": ["BATCH_003"],
+        "documentation_url": "/docs/batching-errors#batch-006",
+    },
+    "RESOURCE_EXHAUSTION": {
+        "code": "BATCH_007",
+        "category": "resource_error",
+        "severity": "system_error",
+        "message_template": (
+            "Resource exhaustion: {resource_type} usage too high ({current_usage})"
+        ),
+        "resolution_steps": [
+            "Reduce concurrent jobs to lower resource usage",
+            "Process smaller batches to reduce memory footprint",
+            "Monitor resource usage during processing",
+            "Consider upgrading system resources",
+        ],
+        "context_fields": ["resource_type", "current_usage", "feature"],
+        "examples": {
+            "reduce_concurrency": (
+                "config = BatchingConfig(max_concurrent_jobs=2)\n"
+                "client = CoreClient(batching_config=config)"
+            ),
+            "monitor": (
+                "import psutil\n"
+                "memory_percent = psutil.virtual_memory().percent\n"
+                "if memory_percent > 80:\n    # Reduce batch size"
+            ),
+        },
+        "related_errors": ["BATCH_004"],
+        "documentation_url": "/docs/batching-errors#batch-007",
+    },
+    "BATCH_ORDER_CORRUPTION": {
+        "code": "BATCH_008",
+        "category": "data_integrity_error",
+        "severity": "critical_error",
+        "message_template": (
+            "Batch result order corruption detected in {feature}. "
+            "Expected {expected_count} results, got {actual_count}"
+        ),
+        "resolution_steps": [
+            "This indicates a serious bug - please report to support",
+            "Retry the operation with sequential processing",
+            "Verify input data integrity",
+            "Check for concurrent modifications to input data",
+        ],
+        "context_fields": ["feature", "expected_count", "actual_count", "batch_num"],
+        "examples": {
+            "sequential_fallback": (
+                "# Fallback to sequential processing\n"
+                "config = BatchingConfig(max_concurrent_jobs=1)\n"
+                "client = CoreClient(batching_config=config)"
+            )
+        },
+        "related_errors": [],
+        "documentation_url": "/docs/batching-errors#batch-008",
+    },
+    "INVALID_BATCH_CONFIGURATION": {
+        "code": "BATCH_009",
+        "category": "configuration_error",
+        "severity": "user_error",
+        "message_template": (
+            "Invalid batching configuration: {config_field} = "
+            "{config_value}. {constraint}"
+        ),
+        "resolution_steps": [
+            "Check BatchingConfig parameter values",
+            "Ensure all configuration values are within valid ranges",
+            "Refer to documentation for valid configuration options",
+        ],
+        "context_fields": ["config_field", "config_value", "constraint"],
+        "examples": {
+            "valid_config": (
+                "config = BatchingConfig(\n"
+                "    max_concurrent_jobs=5,  # 1-10\n"
+                "    timeout_per_batch=300.0,  # > 0\n"
+                "    default_batch_sizes={'sentiment': 2000}  # > 0\n"
+                ")"
+            )
+        },
+        "related_errors": ["BATCH_004"],
+        "documentation_url": "/docs/batching-errors#batch-009",
+    },
+    "BATCH_RESULT_AGGREGATION_FAILED": {
+        "code": "BATCH_010",
+        "category": "data_processing_error",
+        "severity": "runtime_error",
+        "message_template": (
+            "Failed to aggregate results from {completed_batches} of "
+            "{total_batches} batches: {error_message}"
+        ),
+        "resolution_steps": [
+            "Check individual batch results for consistency",
+            "Verify that all batches completed successfully",
+            "Retry with smaller batch sizes",
+            "Check for memory issues during aggregation",
+        ],
+        "context_fields": [
+            "completed_batches",
+            "total_batches",
+            "error_message",
+            "feature",
+        ],
+        "examples": {
+            "debug_aggregation": (
+                "# Debug batch results\n"
+                "for i, batch_result in enumerate(batch_results):\n"
+                "    print(f'Batch {i}: {len(batch_result)} items')"
+            )
+        },
+        "related_errors": ["BATCH_003", "BATCH_007"],
+        "documentation_url": "/docs/batching-errors#batch-010",
     },
 }
 
@@ -161,7 +348,7 @@ class PulseValidationError(Exception):
 
 
 class BatchingError(PulseValidationError):
-    """Specialized error for batching operations with structured error information."""
+    """Specialized error for batching operations with comprehensive structured info."""
 
     def __init__(
         self,
@@ -174,6 +361,10 @@ class BatchingError(PulseValidationError):
         batch_number: Optional[int] = None,
         total_batches: Optional[int] = None,
         resolution_steps: Optional[List[str]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        alternatives: Optional[List[str]] = None,
+        severity: Optional[str] = None,
+        category: Optional[str] = None,
         **kwargs,
     ):
         self.feature = feature
@@ -183,21 +374,249 @@ class BatchingError(PulseValidationError):
         self.batch_number = batch_number
         self.total_batches = total_batches
         self.resolution_steps = resolution_steps or []
+        self.context = context or {}
+        self.alternatives = alternatives or []
+        self.severity = severity or "user_error"
+        self.category = category or "unknown"
+
+        # Add error-specific context
+        self.context.update(
+            {
+                "feature": feature,
+                "input_count": input_count,
+                "limit": limit,
+                "error_code": error_code,
+                "batch_number": batch_number,
+                "total_batches": total_batches,
+            }
+        )
 
         super().__init__(message, limit=limit, endpoint=feature, **kwargs)
 
     def get_structured_info(self) -> Dict[str, Any]:
-        """Get structured error information for programmatic handling."""
+        """Get comprehensive structured error information for programmatic handling."""
         return {
             "error_code": self.error_code,
+            "category": self.category,
+            "severity": self.severity,
             "feature": self.feature,
             "input_count": self.input_count,
             "limit": self.limit,
             "mode": self.mode,
             "suggested_action": self.suggested_action,
+            "alternatives": self.alternatives,
             "batch_number": self.batch_number,
             "total_batches": self.total_batches,
             "resolution_steps": self.resolution_steps,
+            "context": self.context,
+            "timestamp": self._get_timestamp(),
+            "is_retryable": self._is_retryable(),
+            "expected_fix_time": self._get_expected_fix_time(),
+        }
+
+    def _get_timestamp(self) -> str:
+        """Get current timestamp for error tracking."""
+        from datetime import datetime
+
+        return datetime.utcnow().isoformat() + "Z"
+
+    def _is_retryable(self) -> bool:
+        """Determine if this error is retryable."""
+        retryable_codes = ["BATCH_003", "BATCH_006", "BATCH_007", "BATCH_010"]
+        return self.error_code in retryable_codes
+
+    def _get_expected_fix_time(self) -> str:
+        """Get expected time to fix based on error type."""
+        if self.error_code in ["BATCH_001", "BATCH_002"]:
+            return "immediate"  # User can fix immediately
+        elif self.error_code in ["BATCH_003", "BATCH_006"]:
+            return "short"  # Retry or configuration change
+        elif self.error_code in ["BATCH_004", "BATCH_007"]:
+            return "medium"  # Resource or configuration adjustment
+        else:
+            return "unknown"
+
+    def get_error_context_for_field(self, field: str) -> Any:
+        """Get context value for a specific field."""
+        return self.context.get(field)
+
+    def add_context(self, key: str, value: Any) -> None:
+        """Add additional context information."""
+        self.context[key] = value
+
+    def get_retry_strategy(self) -> Optional[Dict[str, Any]]:
+        """Get retry strategy if error is retryable."""
+        if not self._is_retryable():
+            return None
+
+        if self.error_code == "BATCH_003":  # Batch job failed
+            return {
+                "strategy": "exponential_backoff",
+                "max_retries": 3,
+                "base_delay": 1.0,
+                "max_delay": 60.0,
+                "modify_request": "reduce_batch_size",
+            }
+        elif self.error_code == "BATCH_006":  # Timeout
+            return {
+                "strategy": "linear_backoff",
+                "max_retries": 2,
+                "base_delay": 5.0,
+                "modify_request": "increase_timeout",
+            }
+        elif self.error_code == "BATCH_007":  # Resource exhaustion
+            return {
+                "strategy": "wait_and_retry",
+                "max_retries": 2,
+                "base_delay": 30.0,
+                "modify_request": "reduce_concurrency",
+            }
+
+        return {"strategy": "simple_retry", "max_retries": 1, "base_delay": 1.0}
+
+    def format_for_logging(self) -> Dict[str, Any]:
+        """Format error information for structured logging."""
+        return {
+            "error_type": "BatchingError",
+            "error_code": self.error_code,
+            "category": self.category,
+            "severity": self.severity,
+            "feature": self.feature,
+            "message": str(self),
+            "context": self.context,
+            "is_retryable": self._is_retryable(),
+            "timestamp": self._get_timestamp(),
+        }
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert error to dictionary for serialization."""
+        return {
+            "type": "BatchingError",
+            "message": str(self),
+            "structured_info": self.get_structured_info(),
+            "retry_strategy": self.get_retry_strategy(),
+        }
+
+
+class BatchingErrorCategory:
+    """Error category classification for different batching error types."""
+
+    LIMIT_EXCEEDED = "limit_exceeded"
+    BATCH_FAILED = "batch_failed"
+    CONCURRENCY_ERROR = "concurrency_error"
+    TIMEOUT_ERROR = "timeout_error"
+    NETWORK_ERROR = "network_error"
+    RESOURCE_ERROR = "resource_error"
+    CONFIGURATION_ERROR = "configuration_error"
+
+
+class ErrorRecoveryStrategy:
+    """Defines recovery strategies for different error types with specific guidance."""
+
+    @staticmethod
+    def handle_limit_exceeded(error: BatchingError) -> Dict[str, Any]:
+        """Provide specific guidance for limit exceeded errors."""
+        if error.mode == "fast":
+            return {
+                "primary_action": "Switch to slow mode",
+                "alternative_actions": [
+                    f"Reduce input size to {error.limit} or fewer texts",
+                    "Process data in smaller chunks manually",
+                ],
+                "code_example": (
+                    f"# Switch to slow mode\n"
+                    f"result = client.{error.feature}(texts, fast=False)"
+                ),
+                "expected_outcome": ("Automatic batching will handle large datasets"),
+            }
+        else:
+            return {
+                "primary_action": "Split dataset into smaller chunks",
+                "alternative_actions": [
+                    "Filter or sample your data",
+                    "Process data in multiple separate requests",
+                ],
+                "code_example": (
+                    f"# Process in chunks\n"
+                    f"for chunk in chunks(texts, {error.limit}):\n"
+                    f"    result = client.{error.feature}(chunk)"
+                ),
+                "expected_outcome": "Each chunk will be processed successfully",
+            }
+
+    @staticmethod
+    def handle_batch_failure(error: BatchingError) -> Dict[str, Any]:
+        """Provide guidance for individual batch failures."""
+        return {
+            "primary_action": "Inspect failed batch data",
+            "alternative_actions": [
+                "Retry with smaller batch sizes",
+                "Check for problematic input texts",
+                "Verify network connectivity",
+            ],
+            "code_example": (
+                "# Retry with smaller batches\n"
+                "try:\n    result = process_batch(batch)\n"
+                "except BatchingError as e:\n    if e.batch_number:\n"
+                "        retry_batch_with_smaller_size(e.batch_number)"
+            ),
+            "expected_outcome": ("Individual batches will process successfully"),
+        }
+
+    @staticmethod
+    def handle_concurrency_error(error: BatchingError) -> Dict[str, Any]:
+        """Provide guidance for concurrency errors."""
+        return {
+            "primary_action": "Reduce concurrent job limit",
+            "alternative_actions": [
+                "Wait for existing jobs to complete",
+                "Use sequential processing",
+                "Increase system resources",
+            ],
+            "code_example": (
+                f"# Configure lower concurrency\n"
+                f"config = BatchingConfig(max_concurrent_jobs={error.limit})\n"
+                f"client = CoreClient(batching_config=config)"
+            ),
+            "expected_outcome": "Jobs will run within concurrency limits",
+        }
+
+    @staticmethod
+    def handle_timeout_error(error: Exception) -> Dict[str, Any]:
+        """Provide guidance for timeout errors."""
+        return {
+            "primary_action": "Increase timeout duration",
+            "alternative_actions": [
+                "Reduce batch sizes",
+                "Check network connectivity",
+                "Retry with exponential backoff",
+            ],
+            "code_example": (
+                "# Increase timeout\n"
+                "config = BatchingConfig(timeout_per_batch=600.0)\n"
+                "client = CoreClient(batching_config=config)"
+            ),
+            "expected_outcome": "Batches will have more time to complete",
+        }
+
+    @staticmethod
+    def handle_network_error(error: Exception) -> Dict[str, Any]:
+        """Provide guidance for network errors."""
+        return {
+            "primary_action": "Check network connectivity",
+            "alternative_actions": [
+                "Retry with exponential backoff",
+                "Reduce concurrent requests",
+                "Check API endpoint status",
+            ],
+            "code_example": (
+                "# Retry with backoff\n"
+                "import time\n"
+                "for attempt in range(3):\n"
+                "    try:\n        result = client.process(data)\n        break\n"
+                "    except NetworkError:\n        time.sleep(2 ** attempt)"
+            ),
+            "expected_outcome": "Network issues will be resolved through retries",
         }
 
 
@@ -223,8 +642,11 @@ class BatchingErrorHelper:
             limit=limit,
             suggested_action=f"Set fast=False or reduce input to {limit} texts",
             error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
             mode="fast",
             resolution_steps=resolution_steps,
+            context={"limit": limit, "input_count": input_count},
         )
 
     @staticmethod
@@ -246,8 +668,11 @@ class BatchingErrorHelper:
             limit=limit,
             suggested_action=f"Split dataset into chunks of {limit:,} or fewer texts",
             error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
             mode="slow",
             resolution_steps=resolution_steps,
+            context={"limit": limit, "input_count": input_count},
         )
 
     @staticmethod
@@ -273,9 +698,16 @@ class BatchingErrorHelper:
             limit=0,  # Not applicable for batch failures
             suggested_action="Check batch data and retry with smaller batches",
             error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
             batch_number=batch_num,
             total_batches=total_batches,
             resolution_steps=error_info["resolution_steps"],
+            context={
+                "batch_num": batch_num,
+                "total_batches": total_batches,
+                "error_message": error_message,
+            },
         )
 
     @staticmethod
@@ -293,7 +725,168 @@ class BatchingErrorHelper:
             limit=max_jobs,
             suggested_action=f"Reduce concurrent jobs to {max_jobs} or fewer",
             error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
             resolution_steps=error_info["resolution_steps"],
+            context={"current_jobs": current_jobs, "max_jobs": max_jobs},
+        )
+
+    @staticmethod
+    def create_timeout_error(
+        feature: str, timeout_seconds: float, batch_num: Optional[int] = None
+    ) -> BatchingError:
+        """Create a timeout error with structured information."""
+        error_info = ERROR_DOCUMENTATION["BATCH_TIMEOUT"]
+        message = error_info["message_template"].format(
+            batch_num=batch_num or "operation", timeout=timeout_seconds
+        )
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=0,
+            limit=int(timeout_seconds),
+            suggested_action="Increase timeout or reduce batch size",
+            error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
+            batch_number=batch_num,
+            resolution_steps=error_info["resolution_steps"],
+            context={"timeout": timeout_seconds, "batch_num": batch_num},
+        )
+
+    @staticmethod
+    def create_resource_error(
+        feature: str, resource_type: str, current_usage: str
+    ) -> BatchingError:
+        """Create a resource exhaustion error with structured information."""
+        error_info = ERROR_DOCUMENTATION["RESOURCE_EXHAUSTION"]
+        message = error_info["message_template"].format(
+            resource_type=resource_type, current_usage=current_usage
+        )
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=0,
+            limit=0,
+            suggested_action=(
+                f"Reduce {resource_type} usage or increase system resources"
+            ),
+            error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
+            resolution_steps=error_info["resolution_steps"],
+            context={"resource_type": resource_type, "current_usage": current_usage},
+        )
+
+    @staticmethod
+    def create_order_corruption_error(
+        feature: str,
+        expected_count: int,
+        actual_count: int,
+        batch_num: Optional[int] = None,
+    ) -> BatchingError:
+        """Create a batch result order corruption error."""
+        error_info = ERROR_DOCUMENTATION["BATCH_ORDER_CORRUPTION"]
+        message = error_info["message_template"].format(
+            feature=feature, expected_count=expected_count, actual_count=actual_count
+        )
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=expected_count,
+            limit=actual_count,
+            suggested_action="Report to support and retry with sequential processing",
+            error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
+            batch_number=batch_num,
+            resolution_steps=error_info["resolution_steps"],
+            context={
+                "expected_count": expected_count,
+                "actual_count": actual_count,
+                "batch_num": batch_num,
+            },
+        )
+
+    @staticmethod
+    def create_configuration_error(
+        config_field: str, config_value: Any, constraint: str
+    ) -> BatchingError:
+        """Create an invalid configuration error."""
+        error_info = ERROR_DOCUMENTATION["INVALID_BATCH_CONFIGURATION"]
+        message = error_info["message_template"].format(
+            config_field=config_field, config_value=config_value, constraint=constraint
+        )
+
+        return BatchingError(
+            message=message,
+            feature="configuration",
+            input_count=0,
+            limit=0,
+            suggested_action=f"Fix {config_field} configuration value",
+            error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
+            resolution_steps=error_info["resolution_steps"],
+            context={
+                "config_field": config_field,
+                "config_value": config_value,
+                "constraint": constraint,
+            },
+        )
+
+    @staticmethod
+    def create_aggregation_error(
+        feature: str, completed_batches: int, total_batches: int, error_message: str
+    ) -> BatchingError:
+        """Create a result aggregation failure error."""
+        error_info = ERROR_DOCUMENTATION["BATCH_RESULT_AGGREGATION_FAILED"]
+        message = error_info["message_template"].format(
+            completed_batches=completed_batches,
+            total_batches=total_batches,
+            error_message=error_message,
+        )
+
+        return BatchingError(
+            message=message,
+            feature=feature,
+            input_count=completed_batches,
+            limit=total_batches,
+            suggested_action="Check batch results and retry with smaller batches",
+            error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
+            total_batches=total_batches,
+            resolution_steps=error_info["resolution_steps"],
+            context={
+                "completed_batches": completed_batches,
+                "total_batches": total_batches,
+                "error_message": error_message,
+            },
+        )
+
+    @staticmethod
+    def create_clustering_info(input_count: int, threshold: int) -> BatchingError:
+        """Create an informational message for clustering auto-batching."""
+        error_info = ERROR_DOCUMENTATION["CLUSTERING_AUTO_BATCH_TRIGGERED"]
+        message = error_info["message_template"].format(
+            input_count=input_count, threshold=threshold
+        )
+
+        return BatchingError(
+            message=message,
+            feature="clustering",
+            input_count=input_count,
+            limit=threshold,
+            suggested_action="Batching will proceed automatically",
+            error_code=error_info["code"],
+            category=error_info["category"],
+            severity=error_info["severity"],
+            resolution_steps=error_info["resolution_steps"],
+            context={"input_count": input_count, "threshold": threshold},
         )
 
     @staticmethod
@@ -322,30 +915,280 @@ class BatchingErrorHelper:
         return None
 
     @staticmethod
+    def classify_error(error: Exception) -> str:
+        """Classify an error into a specific category."""
+        if isinstance(error, BatchingError):
+            if error.error_code in ["BATCH_001", "BATCH_002"]:
+                return BatchingErrorCategory.LIMIT_EXCEEDED
+            elif error.error_code == "BATCH_003":
+                return BatchingErrorCategory.BATCH_FAILED
+            elif error.error_code == "BATCH_004":
+                return BatchingErrorCategory.CONCURRENCY_ERROR
+            elif error.error_code == "BATCH_006":
+                return BatchingErrorCategory.TIMEOUT_ERROR
+            elif error.error_code == "BATCH_007":
+                return BatchingErrorCategory.RESOURCE_ERROR
+
+        # Import here to avoid circular imports
+        from .exceptions import NetworkError, TimeoutError
+
+        if isinstance(error, NetworkError):
+            return BatchingErrorCategory.NETWORK_ERROR
+        elif isinstance(error, TimeoutError):
+            return BatchingErrorCategory.TIMEOUT_ERROR
+        elif isinstance(error, ValueError) and "configuration" in str(error).lower():
+            return BatchingErrorCategory.CONFIGURATION_ERROR
+
+        return "unknown"
+
+    @staticmethod
+    def suggest_fix(
+        error: Exception, context: Optional[Dict[str, Any]] = None
+    ) -> List[str]:
+        """Suggest specific fixes based on error and context."""
+        category = BatchingErrorHelper.classify_error(error)
+
+        if isinstance(error, BatchingError):
+            if category == BatchingErrorCategory.LIMIT_EXCEEDED:
+                recovery = ErrorRecoveryStrategy.handle_limit_exceeded(error)
+            elif category == BatchingErrorCategory.BATCH_FAILED:
+                recovery = ErrorRecoveryStrategy.handle_batch_failure(error)
+            elif category == BatchingErrorCategory.CONCURRENCY_ERROR:
+                recovery = ErrorRecoveryStrategy.handle_concurrency_error(error)
+            else:
+                return ["Check error message and documentation"]
+
+            suggestions = [recovery["primary_action"]]
+            suggestions.extend(recovery["alternative_actions"])
+            return suggestions
+
+        elif category == BatchingErrorCategory.TIMEOUT_ERROR:
+            recovery = ErrorRecoveryStrategy.handle_timeout_error(error)
+            suggestions = [recovery["primary_action"]]
+            suggestions.extend(recovery["alternative_actions"])
+            return suggestions
+
+        elif category == BatchingErrorCategory.NETWORK_ERROR:
+            recovery = ErrorRecoveryStrategy.handle_network_error(error)
+            suggestions = [recovery["primary_action"]]
+            suggestions.extend(recovery["alternative_actions"])
+            return suggestions
+
+        return ["Check error message and documentation"]
+
+    @staticmethod
     def diagnose_error(error: Exception) -> Dict[str, Any]:
-        """Analyze error and provide diagnostic information."""
+        """Analyze error and provide comprehensive diagnostic information."""
+        category = BatchingErrorHelper.classify_error(error)
+
+        base_info = {
+            "error_type": type(error).__name__,
+            "category": category,
+            "message": str(error),
+            "suggestions": BatchingErrorHelper.suggest_fix(error),
+        }
+
+        if isinstance(error, BatchingError):
+            structured_info = error.get_structured_info()
+            recovery_strategy = None
+
+            if category == BatchingErrorCategory.LIMIT_EXCEEDED:
+                recovery_strategy = ErrorRecoveryStrategy.handle_limit_exceeded(error)
+            elif category == BatchingErrorCategory.BATCH_FAILED:
+                recovery_strategy = ErrorRecoveryStrategy.handle_batch_failure(error)
+            elif category == BatchingErrorCategory.CONCURRENCY_ERROR:
+                recovery_strategy = ErrorRecoveryStrategy.handle_concurrency_error(
+                    error
+                )
+
+            base_info.update(
+                {
+                    "structured_info": structured_info,
+                    "example_code": BatchingErrorHelper.generate_example_code(
+                        error.feature, error.error_code or ""
+                    ),
+                    "documentation": BatchingErrorHelper.get_error_documentation(
+                        error.error_code or ""
+                    ),
+                    "recovery_strategy": recovery_strategy,
+                }
+            )
+
+        elif isinstance(error, PulseValidationError):
+            base_info.update(
+                {
+                    "endpoint": error.endpoint,
+                    "mode": error.mode,
+                    "field": error.field,
+                    "value": error.value,
+                    "limit": error.limit,
+                }
+            )
+
+        return base_info
+
+    @staticmethod
+    def create_structured_error_response(
+        error_code: str, context: Dict[str, Any], feature: str = "unknown"
+    ) -> Dict[str, Any]:
+        """Create a structured error response for programmatic handling."""
+        error_info = BatchingErrorHelper.get_error_documentation(error_code)
+        if not error_info:
+            return {
+                "error_code": error_code,
+                "message": "Unknown error",
+                "category": "unknown",
+                "severity": "unknown",
+                "context": context,
+                "resolution_steps": [],
+                "alternatives": [],
+            }
+
+        # Format message with context
+        try:
+            message = error_info["message_template"].format(**context)
+        except KeyError:
+            message = error_info["message_template"]
+
+        # Format resolution steps with context
+        resolution_steps = []
+        for step in error_info["resolution_steps"]:
+            try:
+                formatted_step = step.format(**context)
+                resolution_steps.append(formatted_step)
+            except KeyError:
+                resolution_steps.append(step)
+
+        return {
+            "error_code": error_code,
+            "message": message,
+            "category": error_info["category"],
+            "severity": error_info["severity"],
+            "feature": feature,
+            "context": context,
+            "resolution_steps": resolution_steps,
+            "alternatives": list(context.get("alternatives", [])),
+            "examples": error_info.get("examples", {}),
+            "related_errors": error_info.get("related_errors", []),
+            "documentation_url": error_info.get("documentation_url", ""),
+            "is_retryable": error_code
+            in ["BATCH_003", "BATCH_006", "BATCH_007", "BATCH_010"],
+            "expected_fix_time": BatchingErrorHelper._get_fix_time_for_code(error_code),
+        }
+
+    @staticmethod
+    def _get_fix_time_for_code(error_code: str) -> str:
+        """Get expected fix time for an error code."""
+        immediate_fix = ["BATCH_001", "BATCH_002", "BATCH_009"]
+        short_fix = ["BATCH_003", "BATCH_006"]
+        medium_fix = ["BATCH_004", "BATCH_007"]
+        long_fix = ["BATCH_008", "BATCH_010"]
+
+        if error_code in immediate_fix:
+            return "immediate"
+        elif error_code in short_fix:
+            return "short"
+        elif error_code in medium_fix:
+            return "medium"
+        elif error_code in long_fix:
+            return "long"
+        else:
+            return "unknown"
+
+    @staticmethod
+    def validate_error_context(error_code: str, context: Dict[str, Any]) -> List[str]:
+        """Validate that context contains required fields for error code."""
+        error_info = BatchingErrorHelper.get_error_documentation(error_code)
+        if not error_info:
+            return ["Unknown error code"]
+
+        required_fields = error_info.get("context_fields", [])
+        missing_fields = []
+
+        for field in required_fields:
+            if field not in context:
+                missing_fields.append(field)
+
+        return missing_fields
+
+    @staticmethod
+    def get_all_error_codes() -> List[str]:
+        """Get list of all available error codes."""
+        return [info["code"] for info in ERROR_DOCUMENTATION.values()]
+
+    @staticmethod
+    def get_errors_by_category(category: str) -> List[Dict[str, Any]]:
+        """Get all errors in a specific category."""
+        return [
+            {"code": info["code"], "message_template": info["message_template"]}
+            for info in ERROR_DOCUMENTATION.values()
+            if info.get("category") == category
+        ]
+
+    @staticmethod
+    def get_errors_by_severity(severity: str) -> List[Dict[str, Any]]:
+        """Get all errors with a specific severity level."""
+        return [
+            {"code": info["code"], "message_template": info["message_template"]}
+            for info in ERROR_DOCUMENTATION.values()
+            if info.get("severity") == severity
+        ]
+
+    @staticmethod
+    def format_error_for_user(error: Exception) -> str:
+        """Format error information in a user-friendly way."""
+        diagnosis = BatchingErrorHelper.diagnose_error(error)
+
+        lines = [
+            f"Error: {diagnosis['message']}",
+            f"Category: {diagnosis['category']}",
+            "",
+            "Suggested fixes:",
+        ]
+
+        for i, suggestion in enumerate(diagnosis["suggestions"], 1):
+            lines.append(f"  {i}. {suggestion}")
+
+        if isinstance(error, BatchingError) and diagnosis.get("recovery_strategy"):
+            recovery = diagnosis["recovery_strategy"]
+            lines.extend(
+                [
+                    "",
+                    "Recovery strategy:",
+                    f"  Primary action: {recovery['primary_action']}",
+                    f"  Expected outcome: {recovery['expected_outcome']}",
+                    "",
+                    "Example code:",
+                    recovery["code_example"],
+                ]
+            )
+
+        return "\n".join(lines)
+
+    @staticmethod
+    def format_error_for_api(error: Exception) -> Dict[str, Any]:
+        """Format error for API response with consistent structure."""
         if isinstance(error, BatchingError):
             return {
-                "error_type": "BatchingError",
-                "structured_info": error.get_structured_info(),
-                "example_code": BatchingErrorHelper.generate_example_code(
-                    error.feature, error.error_code
-                ),
-                "documentation": BatchingErrorHelper.get_error_documentation(
-                    error.error_code
-                ),
-            }
-        elif isinstance(error, PulseValidationError):
-            return {
-                "error_type": "PulseValidationError",
-                "endpoint": error.endpoint,
-                "mode": error.mode,
-                "field": error.field,
-                "value": error.value,
-                "limit": error.limit,
+                "error": {
+                    "code": error.error_code,
+                    "message": str(error),
+                    "category": error.category,
+                    "severity": error.severity,
+                    "details": error.get_structured_info(),
+                    "retry_strategy": error.get_retry_strategy(),
+                }
             }
         else:
-            return {"error_type": type(error).__name__, "message": str(error)}
+            return {
+                "error": {
+                    "code": "UNKNOWN",
+                    "message": str(error),
+                    "category": "unknown",
+                    "severity": "unknown",
+                    "details": {"type": type(error).__name__},
+                }
+            }
 
 
 def validate_embeddings_input(inputs: List[Any], fast: Optional[bool] = None) -> None:
