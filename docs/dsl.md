@@ -4,6 +4,31 @@ The DSL provides a fluent way to compose named sources and processes into a work
 
 Module: `pulse.dsl`
 
+## Async Support
+
+For async/await applications, use `AsyncWorkflow` from `pulse.async_dsl`:
+
+```python
+import asyncio
+from pulse.async_dsl import AsyncWorkflow
+
+async def main():
+    texts = ["I love pizza", "I hate rain"]
+
+    async with AsyncWorkflow() as workflow:
+        workflow.source("docs", texts)
+        workflow.theme_generation(source="docs", min_themes=2)
+        workflow.sentiment(source="docs")
+
+        result = await workflow.run(fast=True)
+        print(result.theme_generation.themes)
+        print(result.sentiment.sentiments)
+
+asyncio.run(main())
+```
+
+The async workflow provides the same DSL interface as the sync version but with full async/await support. See the [Async Patterns Guide](async-patterns.md) for detailed documentation.
+
 ## Workflow Basics
 
 ```python
@@ -115,4 +140,3 @@ edges = wf.graph()
 for node, deps in edges.items():
     print(node, "<-", deps)
 ```
-

@@ -187,6 +187,56 @@ df = results.sentiment.to_dataframe()
 print(df[['text', 'sentiment', 'confidence']])
 ```
 
+### ⚡ Async/Await Path: High-Performance Applications
+
+If you're building web applications, processing large datasets, or need concurrent operations:
+
+1. **[Async Patterns](async-patterns.md)** - Complete async/await functionality
+2. **[Sync to Async Migration](sync-to-async-migration.md)** - Migrate existing code
+3. **[Async Job Management](async-job-management.md)** - Advanced concurrency patterns
+
+**Async Example: Concurrent Processing**
+```python
+import asyncio
+from pulse.async_starters import sentiment_analysis_async, generate_themes_async
+
+async def analyze_multiple_datasets():
+    # Process multiple datasets concurrently
+    restaurant_reviews = ["Great food!", "Poor service", "Amazing experience"]
+    product_reviews = ["High quality", "Broke quickly", "Good value"]
+
+    # Run analyses concurrently
+    restaurant_task = sentiment_analysis_async(restaurant_reviews, fast=True)
+    product_task = sentiment_analysis_async(product_reviews, fast=True)
+    themes_task = generate_themes_async(restaurant_reviews + product_reviews, fast=True)
+
+    # Wait for all to complete
+    restaurant_sentiment, product_sentiment, themes = await asyncio.gather(
+        restaurant_task, product_task, themes_task
+    )
+
+    print(f"Restaurant sentiments: {[r.sentiment for r in restaurant_sentiment.results]}")
+    print(f"Product sentiments: {[r.sentiment for r in product_sentiment.results]}")
+    print(f"Generated themes: {[t.shortLabel for t in themes.themes]}")
+
+# Run async function
+asyncio.run(analyze_multiple_datasets())
+```
+
+**Web Framework Integration (FastAPI)**
+```python
+from fastapi import FastAPI
+from pulse.async_starters import sentiment_analysis_async
+
+app = FastAPI()
+
+@app.post("/analyze")
+async def analyze_endpoint(texts: list[str]):
+    # Native async - no thread pools needed
+    result = await sentiment_analysis_async(texts, fast=True)
+    return {"sentiments": [r.sentiment for r in result.results]}
+```
+
 ---
 
 ## 🔧 Installation Options

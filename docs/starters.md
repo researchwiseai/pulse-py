@@ -4,6 +4,31 @@ The `pulse.starters` module provides convenient helpers for common tasks. Each f
 
 Supported file types: `.txt`, `.csv`, `.tsv`, `.xls`, `.xlsx`.
 
+## Async Support
+
+All starter functions have async equivalents in the `pulse.async_starters` module. Simply add `_async` to the function name and use `await`:
+
+```python
+import asyncio
+from pulse.async_starters import sentiment_analysis_async, generate_themes_async
+
+async def main():
+    # Async versions of all starter functions
+    sentiment_result = await sentiment_analysis_async(["great", "bad"])
+    themes_result = await generate_themes_async(["food good", "service slow"])
+
+    # Process multiple operations concurrently
+    tasks = [
+        sentiment_analysis_async(["text1", "text2"]),
+        generate_themes_async(["text3", "text4"])
+    ]
+    results = await asyncio.gather(*tasks)
+
+asyncio.run(main())
+```
+
+For detailed async patterns, see the [Async Patterns Guide](async-patterns.md).
+
 ## Loading Inputs
 
 `get_strings(source: list[str] | str) -> list[str]` loads strings from a list or file path.
@@ -78,4 +103,3 @@ Parameters:
 - `await_job_result: bool = True`
 - `auth: pulse.auth._BaseOAuth2Auth | None = None`
 - `client: CoreClient | None = None`
-

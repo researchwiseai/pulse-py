@@ -20,6 +20,12 @@ Welcome to the Pulse SDK docs. This section documents the complete public API of
 - Data Models: `models.md`
 - Jobs and Errors: `jobs-and-errors.md`
 
+## ⚡ Async/Await Support
+
+- **[Async Patterns](async-patterns.md)** - Comprehensive guide to async/await functionality
+- **[Sync to Async Migration](sync-to-async-migration.md)** - Step-by-step migration guide
+- **[Async Job Management](async-job-management.md)** - Advanced concurrency and job control patterns
+
 ## 🚀 Large-Scale Processing
 
 - **[Batching Guide](batching-guide.md)** - Comprehensive guide to automatic batching for large datasets

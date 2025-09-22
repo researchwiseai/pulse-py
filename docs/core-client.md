@@ -4,6 +4,26 @@ Module: `pulse.core.client`
 
 `CoreClient` is a synchronous, HTTPX-based client for the Pulse REST API. It exposes endpoints for embeddings, similarity, themes, sentiment, extractions, clustering, and summaries. Methods support both synchronous (fast) and asynchronous (job) modes where applicable.
 
+## Async Support
+
+For async/await applications, use `AsyncCoreClient` from `pulse.core.async_client`:
+
+```python
+import asyncio
+from pulse.core.async_client import AsyncCoreClient
+from pulse.core.models import SentimentRequest
+
+async def main():
+    async with AsyncCoreClient.with_client_credentials_async() as client:
+        request = SentimentRequest(inputs=["Great product!", "Poor quality"], fast=True)
+        result = await client.analyze_sentiment(request)
+        print([r.sentiment for r in result.results])
+
+asyncio.run(main())
+```
+
+The async client provides the same interface as the sync client but with full async/await support, concurrent processing capabilities, and advanced job management. See the [Async Patterns Guide](async-patterns.md) for comprehensive documentation.
+
 ## Enhanced Automatic Batching
 
 The Core Client features comprehensive automatic batching capabilities that handle large-scale data processing transparently. When processing large datasets, the client automatically:

@@ -4,6 +4,30 @@ The Analyzer orchestrates one or more processes against a dataset, with simple c
 
 Module: `pulse.analysis.analyzer`, `pulse.analysis.processes`, `pulse.analysis.results`
 
+## Async Support
+
+For async/await applications, use `AsyncAnalyzer` from `pulse.analysis.async_analyzer`:
+
+```python
+import asyncio
+from pulse.analysis.async_analyzer import AsyncAnalyzer
+from pulse.analysis.processes import ThemeGeneration, SentimentProcess
+
+async def main():
+    texts = ["I love pizza", "I hate rain"]
+    processes = [ThemeGeneration(min_themes=2), SentimentProcess()]
+
+    async with AsyncAnalyzer(dataset=texts, processes=processes, cache_dir=".pulse_cache") as analyzer:
+        results = await analyzer.run()
+
+    print(results.theme_generation.to_dataframe())
+    print(results.sentiment.summary())
+
+asyncio.run(main())
+```
+
+The async analyzer provides the same interface as the sync version but with full async/await support. See the [Async Patterns Guide](async-patterns.md) for detailed documentation.
+
 ## Analyzer
 
 ```python
