@@ -930,7 +930,7 @@ class PerformanceBenchmark:
                 "batched_faster": True,
                 "speedup_factor": float("inf"),
                 "time_saved": batched_duration,
-                "recommendation": "Batching provides significant performance improvement",
+                "recommendation": "Batching provides significant perf improvement",
             }
 
         speedup_factor = estimated_manual_duration / batched_duration
@@ -975,7 +975,7 @@ class PerformanceBenchmark:
 
 
 class BatchConcurrencyController:
-    """Controller for managing batch processing concurrency with resource optimization."""
+    """Controller for managing batch processing concurrency with optimization."""
 
     def __init__(
         self, max_concurrent_batches: int = 5, enable_optimization: bool = True
@@ -1037,14 +1037,14 @@ class BatchConcurrencyController:
         total_items: int = 0,
         batch_size: int = 1000,
     ) -> List[Any]:
-        """Process jobs with controlled concurrency, resource optimization, and perf tracking.
+        """Process jobs with controlled concurrency and resource optimization.
 
         Args:
             job_submitters: List of job submitter functions.
             fast: If True, process sequentially. If False, use concurrent processing.
             feature: Name of the feature being processed.
-            total_items: Total number of items being processed (for perf comparison).
-            batch_size: Size of each batch (for performance comparison).
+            total_items: Total number of items being processed.
+            batch_size: Size of each batch.
 
         Returns:
             List of job results.
