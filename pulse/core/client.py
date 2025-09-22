@@ -841,30 +841,36 @@ class CoreClient:
             return SentimentResponse.model_validate(data)
 
         # Large request in slow mode - use parallel batching
-        from pulse.core.concurrent import (
-            ConcurrentJobConfig,
-            AsyncJobProcessor,
+        from pulse.core.batching import (
+            process_batches_concurrently,
+            create_batch_job_submitters,
         )
 
         # Create batches for parallel processing
         chunks = chunk_texts(texts, slow_batch_size)
 
-        # Create job submitters for each batch
-        job_submitters = []
+        # Create request bodies for each batch
+        request_bodies = []
         for chunk in chunks:
-            submitter = AsyncJobProcessor.create_job_submitter(
-                self._submit_sentiment_batch_job,
-                inputs=chunk,
-                version=version,
-                fast=False,  # Always use slow mode for batching
-            )
-            job_submitters.append(submitter)
+            body = {"inputs": chunk}
+            if version is not None:
+                body["version"] = version
+            body["fast"] = False  # Always use slow mode for batching
+            request_bodies.append(body)
 
-        # Process batches in parallel with controlled concurrency
-        config = ConcurrentJobConfig(max_workers=5, timeout=600.0)
+        # Create job submitters for batch processing
+        job_submitters = create_batch_job_submitters(
+            self._submit_sentiment_batch_job, request_bodies
+        )
+
+        # Process batches with controlled concurrency (5 concurrent jobs max)
+        # Only use parallel processing for slow mode (fast=False)
         try:
-            batch_results = AsyncJobProcessor.batch_process_with_concurrency(
-                job_submitters, config
+            batch_results = process_batches_concurrently(
+                job_submitters,
+                max_workers=5,
+                timeout=600.0,
+                fast=False,  # Use concurrent processing for slow mode
             )
         except Exception as e:
             from pulse.core.validation import BatchingErrorHelper
@@ -898,26 +904,16 @@ class CoreClient:
 
         return SentimentResponse(results=all_results, usage=total_usage, requestId=None)
 
-    def _submit_sentiment_batch_job(
-        self, inputs: List[str], version: Optional[str] = None, fast: bool = False
-    ) -> Job:
+    def _submit_sentiment_batch_job(self, **kwargs) -> Job:
         """Submit a sentiment analysis batch job for parallel processing.
 
         Args:
-            inputs: List of input texts for this batch
-            version: Optional model version
-            fast: Whether to use fast mode (should be False for batching)
+            **kwargs: Request body parameters including inputs, version, fast
 
         Returns:
             Job instance for the submitted batch
         """
-        body: Dict[str, Any] = {"inputs": inputs}
-        if version is not None:
-            body["version"] = version
-        if fast:
-            body["fast"] = True
-
-        response = self._request("post", "/sentiment", json=body)
+        response = self._request("post", "/sentiment", json=kwargs)
         if response.status_code != 202:
             raise PulseAPIError(response)
 
